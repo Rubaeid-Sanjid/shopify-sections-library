@@ -22,7 +22,6 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | Preview | Section | Description | Link |
 |---|---|---|---|
 | ![preview](sections/branding-grid/preview.png) | **Branding Grid** | Asymmetrical 5-image brand grid with a floating arched center portrait, plus a mobile stack/slider mode | [View](sections/branding-grid) |
-| ![preview](sections/example-section/preview.png) | **Example Section** | One-line description of what it does and where to use it | [View](sections/example-section) |
 
 <!-- Add new rows above this line as you build new sections -->
 
