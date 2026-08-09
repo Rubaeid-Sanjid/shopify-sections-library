@@ -2,7 +2,7 @@
 
 A growing collection of custom, reusable Shopify Liquid sections — free to copy, customize, and use in your own theme.
 
-Built and maintained by [Rubaeid](https://github.com/Rubaeid-Sanjid). Every section here was designed for real projects, cleaned up, and documented so anyone can drop it into their theme.
+Built and maintained by [Rubaeid](https://github.com/YOUR-USERNAME). Every section here was designed for real projects, cleaned up, and documented so anyone can drop it into their theme.
 
 ---
 
@@ -21,6 +21,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 
 | Preview | Section | Description | Link |
 |---|---|---|---|
+| ![preview](sections/branding-grid/preview.png) | **Branding Grid** | Asymmetrical 5-image brand grid with a floating arched center portrait, plus a mobile stack/slider mode | [View](sections/branding-grid) |
 | ![preview](sections/example-section/preview.png) | **Example Section** | One-line description of what it does and where to use it | [View](sections/example-section) |
 
 <!-- Add new rows above this line as you build new sections -->
