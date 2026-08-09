@@ -1,0 +1,57 @@
+{{ 'example-section.css' | asset_url | stylesheet_tag }}
+
+<div class="example-section">
+  {% if section.settings.heading != blank %}
+    <h2>{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  {% if section.settings.image %}
+    <img
+      src="{{ section.settings.image | image_url: width: 1200 }}"
+      alt="{{ section.settings.image.alt | escape }}"
+      width="{{ section.settings.image.width }}"
+      height="{{ section.settings.image.height }}"
+      loading="lazy"
+    >
+  {% endif %}
+
+  {% if section.settings.button_label != blank %}
+    <a href="{{ section.settings.button_link }}" class="example-section__button">
+      {{ section.settings.button_label }}
+    </a>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Example Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Section heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Example Section"
+    }
+  ]
+}
+{% endschema %}
