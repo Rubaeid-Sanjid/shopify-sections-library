@@ -2,7 +2,7 @@
 
 A growing collection of custom, reusable Shopify Liquid sections — free to copy, customize, and use in your own theme.
 
-Built and maintained by [Rubaeid](https://github.com/YOUR-USERNAME). Every section here was designed for real projects, cleaned up, and documented so anyone can drop it into their theme.
+Built and maintained by [Rubaeid](https://github.com/Rubaeid-Sanjid). Every section here was designed for real projects, cleaned up, and documented so anyone can drop it into their theme.
 
 ---
 
