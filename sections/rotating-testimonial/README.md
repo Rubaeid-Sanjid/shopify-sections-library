@@ -2,6 +2,8 @@
 
 A 3D coverflow-style testimonial carousel — center card full size and forward, side cards scaled down and rotated in 3D for a stacked-deck effect. Shows customer image, star rating, review text, and a verified-purchase badge. Falls back to a simple center-only view on smaller screens.
 
+![preview](Rotating%20Testimonial.png)
+
 ## Features
 
 - Up to 5 testimonials, each with:

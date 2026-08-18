@@ -23,6 +23,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 |---|---|---|---|
 | ![preview](sections/branding-grid/preview.png) | **Branding Grid** | Asymmetrical 5-image brand grid with a floating arched center portrait, plus a mobile stack/slider mode | [View](sections/branding-grid) |
 | ![preview](sections/pricing-cards/Pricing-cards-preview.png) | **Pricing Cards** | 4-card pricing/service grid with background images, overlays, and per-card CTAs, with a mobile swipe slider | [View](sections/pricing-cards) |
+| ![preview](sections/rotating-testimonial/Rotating%20Testimonial.png) | **Rotating Testimonial** | 3D coverflow-style testimonial carousel with star ratings, verified badges, and prev/next navigation | [View](sections/rotating-testimonial) |
 
 <!-- Add new rows above this line as you build new sections -->
 
