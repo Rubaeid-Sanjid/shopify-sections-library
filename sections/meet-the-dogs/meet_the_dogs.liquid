@@ -1,0 +1,950 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color }};
+    --heading-color: {{ section.settings.heading_color }};
+    --subtitle-color: {{ section.settings.subtitle_color }};
+    --gradient-start: {{ section.settings.gradient_start }};
+    --gradient-end: {{ section.settings.gradient_end }};
+    --card-bg: {{ section.settings.card_bg }};
+    --card-hover-bg: {{ section.settings.card_hover_bg }};
+    --card-border: {{ section.settings.card_border }};
+    --card-hover-border: {{ section.settings.card_hover_border }};
+    --card-radius: {{ section.settings.card_radius }}px;
+    --card-glow-color: {{ section.settings.card_glow_color }};
+    --dog-name-color: {{ section.settings.dog_name_color }};
+    --dog-meta-color: {{ section.settings.dog_meta_color }};
+    --dog-bio-color: {{ section.settings.dog_bio_color }};
+    --container-width: {{ section.settings.container_max_width }}px;
+    --padding-top-desktop: {{ section.settings.padding_top_desktop }}px;
+    --padding-bottom-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --padding-top-mobile: {{ section.settings.padding_top_mobile }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+    --grid-gap: {{ section.settings.grid_gap }}px;
+
+    background-color: var(--bg-color);
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: var(--padding-top-desktop);
+      padding-bottom: var(--padding-bottom-desktop);
+    }
+  }
+
+  /* Ambient Glow */
+  .meet-dogs-glow-{{ section_id }} {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur({{ section.settings.glow_blur }}px);
+    background: radial-gradient(circle, var(--gradient-start) 0%, var(--gradient-end) 60%, transparent 100%);
+    width: {{ section.settings.glow_size }}px;
+    height: {{ section.settings.glow_size }}px;
+    left: {{ section.settings.glow_pos_x }}%;
+    top: {{ section.settings.glow_pos_y }}%;
+    transform: translate(-50%, -50%);
+    opacity: {{ section.settings.glow_opacity | divided_by: 100.0 }};
+    z-index: 0;
+  }
+
+  .meet-dogs-container-{{ section_id }} {
+    position: relative;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    z-index: 1;
+  }
+
+  @media (min-width: 640px) {
+    .meet-dogs-container-{{ section_id }} {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* Header */
+  .meet-dogs-header-{{ section_id }} {
+    max-width: {{ section.settings.header_max_width }}px;
+    text-align: {{ section.settings.heading_align }};
+    {% if section.settings.heading_align == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+    margin-bottom: {{ section.settings.header_margin_bottom }}px;
+  }
+
+  .meet-dogs-tag-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: {{ section.settings.tagline_size }}px;
+    text-transform: uppercase;
+    letter-spacing: {{ section.settings.tagline_spacing }}px;
+    color: var(--subtitle-color);
+    margin-bottom: 0.75rem;
+  }
+
+  .meet-dogs-dot-{{ section_id }} {
+    display: inline-block;
+    height: 7px;
+    width: 7px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    box-shadow: 0 0 12px 2px var(--gradient-start);
+  }
+
+  .meet-dogs-heading-{{ section_id }} {
+    font-size: {{ section.settings.heading_size_mobile }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--heading-color);
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    word-break: break-word;
+  }
+
+  @media (min-width: 768px) {
+    .meet-dogs-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+    }
+  }
+
+  .meet-dogs-gradient-text-{{ section_id }} {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline;
+  }
+
+  .meet-dogs-subtitle-{{ section_id }} {
+    font-size: {{ section.settings.subtitle_size_mobile }}px;
+    line-height: 1.5;
+    color: var(--subtitle-color);
+    margin: 0;
+    font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    .meet-dogs-subtitle-{{ section_id }} {
+      font-size: {{ section.settings.subtitle_size_desktop }}px;
+    }
+  }
+
+  /* Grid Layout */
+  .meet-dogs-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  @media (min-width: 640px) {
+    .meet-dogs-grid-{{ section_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .meet-dogs-grid-{{ section_id }} {
+      grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    }
+  }
+
+  /* Dog Card */
+  .meet-dogs-card-{{ section_id }} {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    {% if section.settings.enable_card_glow %}
+      box-shadow: 0 0 24px -6px var(--card-glow-color);
+    {% endif %}
+  }
+
+  .meet-dogs-card-{{ section_id }}:hover {
+    background: var(--card-hover-bg);
+    border-color: var(--card-hover-border);
+    transform: translateY(-4px);
+    {% if section.settings.enable_card_glow %}
+      box-shadow: 0 0 35px 2px var(--card-glow-color);
+    {% endif %}
+  }
+
+  /* Card Image Wrapper */
+  .meet-dogs-img-wrap-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.img_aspect_ratio }};
+    overflow: hidden;
+    background-color: #0b0c10;
+  }
+
+  .meet-dogs-img-wrap-{{ section_id }} img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .meet-dogs-card-{{ section_id }}:hover .meet-dogs-img-wrap-{{ section_id }} img {
+    transform: scale(1.05);
+  }
+
+  /* Image Bottom Gradient Fade into Card */
+  .meet-dogs-img-overlay-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 11, 15, 0.8) 0%, rgba(10, 11, 15, 0.1) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Card Body */
+  .meet-dogs-card-body-{{ section_id }} {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.875rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 768px) {
+    .meet-dogs-card-body-{{ section_id }} {
+      padding: 1.625rem;
+      gap: 1rem;
+    }
+  }
+
+  /* Dog Name & Meta Tag Line */
+  .meet-dogs-info-header-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .meet-dogs-name-{{ section_id }} {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--dog-name-color);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .meet-dogs-meta-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dog-meta-color);
+    opacity: 0.9;
+  }
+
+  .meet-dogs-meta-badge-{{ section_id }} {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Dog Personality Bio */
+  .meet-dogs-bio-{{ section_id }} {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--dog-bio-color);
+    margin: 0;
+    font-weight: 400;
+    flex-grow: 1;
+  }
+
+  /* Action / CTA Button */
+  .meet-dogs-cta-wrap-{{ section_id }} {
+    margin-top: {{ section.settings.btn_margin_top }}px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .meet-dogs-cta-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 2.25rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    transition: all 0.35s ease;
+  }
+
+  .meet-dogs-cta-btn-{{ section_id }}:hover {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    border-color: transparent;
+    box-shadow: 0 0 24px -2px var(--gradient-start);
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
+
+  .meet-dogs-cta-arrow-{{ section_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .meet-dogs-cta-btn-{{ section_id }}:hover .meet-dogs-cta-arrow-{{ section_id }} {
+    transform: translateX(4px);
+  }
+{%- endstyle -%}
+
+<section id="meet-the-dogs-{{ section_id }}" class="meet-the-dogs-root" {{ section.shopify_attributes }}>
+  {%- if section.settings.enable_glow -%}
+    <div aria-hidden="true" class="meet-dogs-glow-{{ section_id }}"></div>
+  {%- endif -%}
+
+  <div class="meet-dogs-container-{{ section_id }}">
+    <!-- Section Header -->
+    <div class="meet-dogs-header-{{ section_id }}">
+      {%- if section.settings.tagline != blank -%}
+        <div class="meet-dogs-tag-{{ section_id }}">
+          <span class="meet-dogs-dot-{{ section_id }}"></span>
+          <span>{{ section.settings.tagline }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="meet-dogs-heading-{{ section_id }}">
+          {%- if section.settings.heading_highlight != blank and section.settings.heading contains section.settings.heading_highlight -%}
+            {%- assign heading_parts = section.settings.heading | split: section.settings.heading_highlight -%}
+            {{ heading_parts[0] -}}
+            <span class="meet-dogs-gradient-text-{{ section_id }}">{{ section.settings.heading_highlight }}</span>
+            {{- heading_parts[1] -}}
+          {%- else -%}
+            {{ section.settings.heading }}
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.subtitle != blank -%}
+        <p class="meet-dogs-subtitle-{{ section_id }}">
+          {{ section.settings.subtitle }}
+        </p>
+      {%- endif -%}
+    </div>
+
+    <!-- Dogs Cards Grid -->
+    <div class="meet-dogs-grid-{{ section_id }}">
+      {%- for block in section.blocks -%}
+        <div class="meet-dogs-grid-item" {{ block.shopify_attributes }}>
+          <div class="meet-dogs-card-{{ section_id }}">
+            <div class="meet-dogs-img-wrap-{{ section_id }}">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 1x, {{ block.settings.image | image_url: width: 800 }} 2x, {{ block.settings.image | image_url: width: 1200 }} 3x"
+                  alt="{{ block.settings.name | escape }} - {{ block.settings.breed | escape }}"
+                  loading="lazy"
+                >
+              {%- elsif block.settings.image_url != blank -%}
+                <img
+                  src="{{ block.settings.image_url }}"
+                  alt="{{ block.settings.name | escape }} - {{ block.settings.breed | escape }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'w-full h-full opacity-25 bg-neutral-900' }}
+              {%- endif -%}
+              <div class="meet-dogs-img-overlay-{{ section_id }}"></div>
+            </div>
+
+            <div class="meet-dogs-card-body-{{ section_id }}">
+              <div class="meet-dogs-info-header-{{ section_id }}">
+                {%- if block.settings.name != blank -%}
+                  <h3 class="meet-dogs-name-{{ section_id }}">
+                    {{ block.settings.name }}
+                  </h3>
+                {%- endif -%}
+
+                {%- if block.settings.breed != blank or block.settings.age != blank -%}
+                  <div class="meet-dogs-meta-{{ section_id }}">
+                    <span class="meet-dogs-meta-badge-{{ section_id }}">
+                      {%- if block.settings.breed != blank -%}
+                        {{ block.settings.breed }}
+                      {%- endif -%}
+                      {%- if block.settings.breed != blank and block.settings.age != blank %} • {% endif -%}
+                      {%- if block.settings.age != blank -%}
+                        {{ block.settings.age }}
+                      {%- endif -%}
+                    </span>
+                  </div>
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.bio != blank -%}
+                <p class="meet-dogs-bio-{{ section_id }}">
+                  {{ block.settings.bio }}
+                </p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Bottom CTA Button -->
+    {%- if section.settings.show_button and section.settings.button_text != blank -%}
+      <div class="meet-dogs-cta-wrap-{{ section_id }}">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="meet-dogs-cta-btn-{{ section_id }}">
+          <span>{{ section.settings.button_text }}</span>
+          <svg class="meet-dogs-cta-arrow-{{ section_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Meet the Dogs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header Text"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Top Tagline",
+      "default": "THE INSPIRATION"
+    },
+    {
+      "type": "range",
+      "id": "tagline_size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline Size",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "tagline_spacing",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline Letter Spacing (px)",
+      "default": 3
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "MEET THE DOGS BEHIND PETRIX"
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Highlighted Part of Heading",
+      "info": "Word(s) from the heading to receive the vibrant gradient color effect",
+      "default": "PETRIX"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "800"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The real personalities that inspired the Petrix vision."
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_max_width",
+      "min": 400,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "label": "Header Max Width",
+      "default": 780
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Header Bottom Spacing",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Colors & Gradients"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "gradient_start",
+      "label": "Gradient Color 1 (Cyan / Blue)",
+      "default": "#2e5bff"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end",
+      "label": "Gradient Color 2 (Purple / Magenta)",
+      "default": "#a855f7"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#94a3b8"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "rgba(255, 255, 255, 0.03)"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_bg",
+      "label": "Card Hover Background",
+      "default": "rgba(255, 255, 255, 0.05)"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Card Border",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border",
+      "label": "Card Hover Border",
+      "default": "rgba(255, 255, 255, 0.22)"
+    },
+    {
+      "type": "color",
+      "id": "dog_name_color",
+      "label": "Dog Name Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dog_meta_color",
+      "label": "Breed & Age Tag Color",
+      "default": "#a78bfa"
+    },
+    {
+      "type": "color",
+      "id": "dog_bio_color",
+      "label": "Bio Description Color",
+      "default": "#cbd5e1"
+    },
+    {
+      "type": "header",
+      "content": "Ambient Glow"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_glow",
+      "label": "Enable Ambient Background Glow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Opacity",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "glow_size",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Glow Size",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "glow_blur",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Glow Blur Filter (px)",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "glow_pos_x",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Position X (%)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "glow_pos_y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Position Y (%)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Card Style & Glow"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "img_aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "1 / 1", "label": "1:1 (Square)" },
+        { "value": "4 / 3", "label": "4:3 (Landscape)" },
+        { "value": "4 / 5", "label": "4:5 (Portrait)" },
+        { "value": "3 / 2", "label": "3:2 (Standard)" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_glow",
+      "label": "Enable Card Rim Glow",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "card_glow_color",
+      "label": "Card Rim Glow Color",
+      "default": "rgba(46, 91, 255, 0.18)"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show Bottom Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Meet the Dogs"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "btn_margin_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Button Top Spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Layout & Padding"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1240
+    },
+    {
+      "type": "select",
+      "id": "cols_desktop",
+      "label": "Columns on Desktop",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "cols_mobile",
+      "label": "Columns on Mobile",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 55
+    }
+  ],
+  "blocks": [
+    {
+      "type": "dog_card",
+      "name": "Dog Profile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Dog Photograph (Upload from Theme)"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Direct Image URL (Fallback)",
+          "info": "Upload an image above OR paste direct image link here"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Dog Name",
+          "default": "WILLIE"
+        },
+        {
+          "type": "text",
+          "id": "breed",
+          "label": "Breed",
+          "default": "FRENCH BULLDOG"
+        },
+        {
+          "type": "text",
+          "id": "age",
+          "label": "Age",
+          "default": "AGE 3"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "Personality Description",
+          "default": "Willie is my loyal little shadow and follows me everywhere. He loves food, spinning around in circles and having a good sleep—although his loud snoring makes sure everyone knows about it! We also have to watch what we feed him, as he can let out some seriously smelly pumps from time to time."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Meet the Dogs Behind Petrix",
+      "blocks": [
+        {
+          "type": "dog_card",
+          "settings": {
+            "name": "WILLIE",
+            "breed": "FRENCH BULLDOG",
+            "age": "AGE 3",
+            "bio": "Willie is my loyal little shadow and follows me everywhere. He loves food, spinning around in circles and having a good sleep—although his loud snoring makes sure everyone knows about it! We also have to watch what we feed him, as he can let out some seriously smelly pumps from time to time.",
+            "image_url": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"
+          }
+        },
+        {
+          "type": "dog_card",
+          "settings": {
+            "name": "POPPY",
+            "breed": "COCKAPOO",
+            "age": "AGE 4",
+            "bio": "Poppy is as daft as a brush and a natural poser whenever the camera appears. She loves being the center of attention but can become a little huffy when things don't go her way.",
+            "image_url": "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80"
+          }
+        },
+        {
+          "type": "dog_card",
+          "settings": {
+            "name": "PRINCE",
+            "breed": "MINIATURE DACHSHUND",
+            "age": "5 MONTHS",
+            "bio": "Prince is the newest addition to the family and is still finding his feet and developing his personality. He loves being carried around, exploring on his own, and letting out the occasional little bark as he discovers his voice.",
+            "image_url": "https://images.unsplash.com/photo-1612195583950-b8fd34c87093?auto=format&fit=crop&w=800&q=80"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
