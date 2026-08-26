@@ -1,0 +1,889 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .custom-product-spotlight-{{ section_id }} {
+    position: relative;
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.section_padding_mobile }}px 20px;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+  }
+
+  .shopify-section:not(:first-child) .bordered-section {
+    border-block-start-width: 0px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-{{ section_id }} {
+      padding: {{ section.settings.section_padding_desktop }}px 40px;
+    }
+  }
+
+  .custom-product-spotlight-gradient-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 100%;
+    background: radial-gradient(circle, {{ section.settings.glow_color }}77 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .custom-product-spotlight-container-{{ section_id }} {
+    position: relative;
+    max-width: 1240px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .custom-product-spotlight-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-grid-{{ section_id }} {
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+  }
+
+  .custom-product-spotlight-content-{{ section_id }} {
+    order: 2;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-content-{{ section_id }} {
+      order: 1;
+    }
+  }
+
+  .custom-product-spotlight-tag-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: {{ section.settings.tag_color }};
+    margin-bottom: 20px;
+    font-family: monospace;
+  }
+
+  .custom-product-spotlight-tag-dot-{{ section_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: {{ section.settings.tag_dot_color }};
+    box-shadow: 0 0 12px {{ section.settings.tag_dot_color }};
+  }
+
+  .custom-product-spotlight-heading-{{ section_id }} {
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 20px 0;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size }}px;
+    }
+  }
+
+  .custom-product-spotlight-description-{{ section_id }} {
+    font-size: 15px;
+    line-height: 1.6;
+    color: {{ section.settings.description_color }};
+    margin-bottom: 32px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-description-{{ section_id }} {
+      font-size: {{ section.settings.description_size }}px;
+    }
+  }
+
+  .custom-product-spotlight-features-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  @media screen and (min-width: 480px) {
+    .custom-product-spotlight-features-{{ section_id }} {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .custom-product-spotlight-feature-{{ section_id }} {
+    background: {{ section.settings.feature_pill_bg }};
+    backdrop-filter: blur(12px);
+    border: 1px solid {{ section.settings.feature_pill_border }};
+    border-radius: {{ section.settings.feature_pill_radius }}px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .custom-product-spotlight-feature-{{ section_id }}:hover {
+    background: {{ section.settings.feature_pill_hover_bg }};
+    border-color: {{ section.settings.feature_pill_hover_border }};
+  }
+
+  .custom-product-spotlight-feature-icon-{{ section_id }} {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: {{ section.settings.feature_icon_color }};
+  }
+
+  .custom-product-spotlight-feature-icon-{{ section_id }} svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .custom-product-spotlight-feature-content-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+  }
+
+  .custom-product-spotlight-feature-title-{{ section_id }} {
+    font-size: 14px;
+    color: {{ section.settings.feature_text_color }};
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .custom-product-spotlight-feature-desc-{{ section_id }} {
+    font-size: 13px;
+    line-height: 1.4;
+    color: {{ section.settings.feature_desc_color }};
+  }
+
+  .custom-product-spotlight-cta-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: {{ section.settings.cta_color }};
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .custom-product-spotlight-cta-{{ section_id }}:hover {
+    color: {{ section.settings.cta_hover_color }};
+    gap: 12px;
+  }
+
+  .custom-product-spotlight-cta-arrow-{{ section_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .custom-product-spotlight-cta-{{ section_id }}:hover .custom-product-spotlight-cta-arrow-{{ section_id }} {
+    transform: translateX(4px);
+  }
+
+  .custom-product-spotlight-image-wrapper-{{ section_id }} {
+    position: relative;
+    order: 1;
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-product-spotlight-image-wrapper-{{ section_id }} {
+      order: 2;
+    }
+  }
+
+  .custom-product-spotlight-image-container-{{ section_id }} {
+    position: relative;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .custom-product-spotlight-image-glow-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background: radial-gradient(circle, {{ section.settings.image_glow_color }}80 0%, transparent 60%);
+    filter: blur(40px);
+    z-index: 0;
+  }
+
+  .custom-product-spotlight-image-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    z-index: 1;
+  }
+
+  .custom-product-spotlight-image-placeholder-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: {{ section.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .custom-product-spotlight-image-placeholder-{{ section_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .custom-product-spotlight-image-overlay-{{ section_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+  }
+
+  .custom-product-spotlight-overlay-left-{{ section_id }} {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: {{ section.settings.overlay_text_color }};
+    opacity: 0.8;
+  }
+
+  .custom-product-spotlight-overlay-right-{{ section_id }} {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: {{ section.settings.overlay_text_color }};
+    font-weight: 600;
+  }
+
+  .gradient-line-text {
+    display: block;
+    background: linear-gradient(135deg, #2e5bff 0%, #a855f7 40%, #22c55e 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 0.25rem;
+  }
+{% endstyle %}
+
+<product-spotlight-{{ section_id }} class="custom-product-spotlight-{{ section_id }}" {{ section.shopify_attributes }}>
+  <div class="custom-product-spotlight-gradient-{{ section_id }}"></div>
+
+  <div class="custom-product-spotlight-container-{{ section_id }}">
+    <div class="custom-product-spotlight-grid-{{ section_id }}">
+      <div class="custom-product-spotlight-content-{{ section_id }}">
+        {% if section.settings.top_tag != blank %}
+          <div class="custom-product-spotlight-tag-{{ section_id }}">
+            <span class="custom-product-spotlight-tag-dot-{{ section_id }}"></span>
+            <span>{{ section.settings.top_tag }}</span>
+          </div>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="custom-product-spotlight-heading-{{ section_id }}">
+            {%- if section.settings.heading_highlight != blank
+              and section.settings.heading contains section.settings.heading_highlight
+            -%}
+              {%- assign heading_parts = section.settings.heading | split: section.settings.heading_highlight -%}
+              {{ heading_parts[0] -}}
+              <span class="gradient-line-text">
+                {{- section.settings.heading_highlight -}}
+              </span>
+              {{- heading_parts[1] }}
+            {%- else -%}
+              {{ section.settings.heading }}
+            {%- endif -%}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="custom-product-spotlight-description-{{ section_id }}">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+
+        <div class="custom-product-spotlight-features-{{ section_id }}">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'feature' %}
+                <div class="custom-product-spotlight-feature-{{ section_id }}" {{ block.shopify_attributes }}>
+                  {% if block.settings.icon != 'none' and block.settings.icon != blank %}
+                    <div class="custom-product-spotlight-feature-icon-{{ section_id }}">
+                      {% if block.settings.icon == 'feather' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line>
+                        </svg>
+                      {% elsif block.settings.icon == 'droplet' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                        </svg>
+                      {% elsif block.settings.icon == 'battery' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect><line x1="23" y1="13" x2="23" y2="11"></line>
+                        </svg>
+                      {% elsif block.settings.icon == 'shield' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline>
+                        </svg>
+                      {% elsif block.settings.icon == 'zap' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                      {% elsif block.settings.icon == 'check' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      {% elsif block.settings.icon == 'star' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                      {% elsif block.settings.icon == 'heart' %}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  <div class="custom-product-spotlight-feature-content-{{ section_id }}">
+                    {% if block.settings.title != blank %}
+                      <span class="custom-product-spotlight-feature-title-{{ section_id }}">
+                        {{- block.settings.title -}}
+                      </span>
+                    {% endif %}
+                    {% if block.settings.description != blank %}
+                      <span class="custom-product-spotlight-feature-desc-{{ section_id }}">
+                        {{- block.settings.description -}}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+
+        {% if section.settings.cta_text != blank %}
+          <a href="{{ section.settings.cta_link }}" class="custom-product-spotlight-cta-{{ section_id }}">
+            {{ section.settings.cta_text }}
+            <svg
+              class="custom-product-spotlight-cta-arrow-{{ section_id }}"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="custom-product-spotlight-image-wrapper-{{ section_id }}">
+        <div class="custom-product-spotlight-image-container-{{ section_id }}">
+          <div class="custom-product-spotlight-image-glow-{{ section_id }}"></div>
+
+          {% if section.settings.product_image %}
+            <img
+              src="{{ section.settings.product_image | image_url: width: 1200 }}"
+              alt="{{ section.settings.product_image.alt | escape }}"
+              loading="lazy"
+              width="{{ section.settings.product_image.width }}"
+              height="{{ section.settings.product_image.height }}"
+              class="custom-product-spotlight-image-{{ section_id }}"
+            >
+          {% else %}
+            <div class="custom-product-spotlight-image-placeholder-{{ section_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.overlay_left_text != blank or section.settings.overlay_right_text != blank %}
+            <div class="custom-product-spotlight-image-overlay-{{ section_id }}">
+              {% if section.settings.overlay_left_text != blank %}
+                <div class="custom-product-spotlight-overlay-left-{{ section_id }}">
+                  {{ section.settings.overlay_left_text }}
+                </div>
+              {% endif %}
+              {% if section.settings.overlay_right_text != blank %}
+                <div class="custom-product-spotlight-overlay-right-{{ section_id }}">
+                  {{ section.settings.overlay_right_text }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</product-spotlight-{{ section_id }}>
+
+<script>
+  (function() {
+    class ProductSpotlight{{ section_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    if (!customElements.get('product-spotlight-{{ section_id }}')) {
+      customElements.define('product-spotlight-{{ section_id }}', ProductSpotlight{{ section_id }});
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product spotlight",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Mobile padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "label": "Desktop padding",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Radial glow color",
+      "default": "#7033ff"
+    },
+    {
+      "type": "header",
+      "content": "Top tag"
+    },
+    {
+      "type": "text",
+      "id": "top_tag",
+      "label": "Tag text",
+      "default": "THE PETRIX DEVICE"
+    },
+    {
+      "type": "color",
+      "id": "tag_color",
+      "label": "Tag text color",
+      "default": "#a78bfa"
+    },
+    {
+      "type": "color",
+      "id": "tag_dot_color",
+      "label": "Dot color",
+      "default": "#8b5cf6"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "Premium design. Made for every adventure."
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Highlighted part of heading",
+      "info": "Type the exact word(s) from the heading above that should get the gradient color (case-sensitive)."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size (desktop)",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description text",
+      "default": "A featherlight module engineered from matte polymers and brushed metal. Built to live on your dog, whatever the weather."
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size (desktop)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#c4b5fd"
+    },
+    {
+      "type": "header",
+      "content": "Feature pills style"
+    },
+    {
+      "type": "color",
+      "id": "feature_pill_bg",
+      "label": "Background",
+      "default": "rgba(255, 255, 255, 0.05)"
+    },
+    {
+      "type": "color",
+      "id": "feature_pill_hover_bg",
+      "label": "Hover background",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "feature_pill_border",
+      "label": "Border color",
+      "default": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "type": "color",
+      "id": "feature_pill_hover_border",
+      "label": "Hover border color",
+      "default": "rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "range",
+      "id": "feature_pill_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "feature_icon_color",
+      "label": "Icon color",
+      "default": "#a78bfa"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "feature_desc_color",
+      "label": "Description color",
+      "default": "#c4b5fd"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "EXPLORE THE DEVICE"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "color",
+      "id": "cta_color",
+      "label": "CTA color",
+      "default": "#a78bfa"
+    },
+    {
+      "type": "color",
+      "id": "cta_hover_color",
+      "label": "CTA hover color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "image_glow_color",
+      "label": "Ambient glow color",
+      "default": "#7033ff"
+    },
+    {
+      "type": "header",
+      "content": "Image overlay"
+    },
+    {
+      "type": "text",
+      "id": "overlay_left_text",
+      "label": "Left text",
+      "default": "IP-RATED • WATER RESISTANT"
+    },
+    {
+      "type": "text",
+      "id": "overlay_right_text",
+      "label": "Right text",
+      "default": "PETRIX™"
+    },
+    {
+      "type": "color",
+      "id": "overlay_text_color",
+      "label": "Overlay text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "feather",
+              "label": "Feather (Lightweight)"
+            },
+            {
+              "value": "droplet",
+              "label": "Droplet (Water resistant)"
+            },
+            {
+              "value": "battery",
+              "label": "Battery"
+            },
+            {
+              "value": "shield",
+              "label": "Shield (Protection)"
+            },
+            {
+              "value": "zap",
+              "label": "Zap (Power / Fast)"
+            },
+            {
+              "value": "check",
+              "label": "Checkmark"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            }
+          ],
+          "default": "feather"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Lightweight & durable"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Short description",
+          "default": "Engineered for maximum comfort and durability."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product spotlight",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "feather",
+            "title": "Lightweight & durable",
+            "description": "Engineered for maximum comfort and durability."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "droplet",
+            "title": "Water resistant",
+            "description": "Ready for splashes, heavy rain, and puddles."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "battery",
+            "title": "Long battery life",
+            "description": "Up to 14 days of power on a single charge."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "All-day comfort",
+            "description": "Ergonomic fit designed for continuous wear."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

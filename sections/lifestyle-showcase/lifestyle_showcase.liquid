@@ -1,0 +1,1100 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color }};
+    --heading-color: {{ section.settings.heading_color }};
+    --subheading-color: {{ section.settings.subheading_color }};
+    --gradient-start: {{ section.settings.gradient_start }};
+    --gradient-end: {{ section.settings.gradient_end }};
+    --card-radius: {{ section.settings.card_radius }}px;
+    --rim-glow-color: {{ section.settings.rim_glow_color }};
+    --container-width: {{ section.settings.container_max_width }}px;
+    --padding-top-desktop: {{ section.settings.padding_top_desktop }}px;
+    --padding-bottom-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --padding-top-mobile: {{ section.settings.padding_top_mobile }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+    --grid-gap: {{ section.settings.grid_gap }}px;
+
+    background-color: var(--bg-color);
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: var(--padding-top-desktop);
+      padding-bottom: var(--padding-bottom-desktop);
+    }
+  }
+
+  /* Ambient Glow Background Effect */
+  .lifestyle-glow-{{ section_id }} {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur({{ section.settings.glow_blur }}px);
+    background: radial-gradient(circle, var(--gradient-start) 0%, var(--gradient-end) 70%, transparent 100%);
+    width: {{ section.settings.glow_size }}px;
+    height: {{ section.settings.glow_size }}px;
+    right: {{ section.settings.glow_right }}%;
+    top: {{ section.settings.glow_top }}%;
+    opacity: {{ section.settings.glow_opacity | divided_by: 100.0 }};
+    z-index: 0;
+  }
+
+  .lifestyle-container-{{ section_id }} {
+    position: relative;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    z-index: 1;
+  }
+
+  @media (min-width: 640px) {
+    .lifestyle-container-{{ section_id }} {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* Header */
+  .lifestyle-header-{{ section_id }} {
+    max-width: {{ section.settings.header_max_width }}px;
+    text-align: {{ section.settings.heading_align }};
+    {% if section.settings.heading_align == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .lifestyle-tag-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: {{ section.settings.tagline_size }}px;
+    text-transform: uppercase;
+    letter-spacing: {{ section.settings.tagline_spacing }}px;
+    color: var(--subheading-color);
+  }
+
+  .lifestyle-dot-{{ section_id }} {
+    display: inline-block;
+    height: 7px;
+    width: 7px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    box-shadow: 0 0 12px 2px var(--gradient-start);
+  }
+
+  .lifestyle-heading-{{ section_id }} {
+    margin-top: 1.25rem;
+    font-size: {{ section.settings.heading_size_mobile }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: {{ section.settings.heading_line_height }};
+    letter-spacing: -0.03em;
+    color: var(--heading-color);
+    margin-bottom: 0;
+    word-break: break-word;
+  }
+
+  @media (min-width: 768px) {
+    .lifestyle-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+    }
+  }
+
+  .lifestyle-gradient-text-{{ section_id }} {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    {% if section.settings.highlight_new_line %}
+      display: block;
+      margin-top: 0.25rem;
+    {% else %}
+      display: inline;
+    {% endif %}
+  }
+
+  /* Header Description */
+  .lifestyle-description-{{ section_id }} {
+    margin-top: 1.25rem;
+    font-size: {{ section.settings.description_size_mobile }}px;
+    line-height: 1.6;
+    color: {{ section.settings.description_color }};
+    max-width: {{ section.settings.description_max_width }}px;
+    {% if section.settings.heading_align == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .lifestyle-description-{{ section_id }} {
+      font-size: {{ section.settings.description_size_desktop }}px;
+    }
+  }
+
+  /* Grid Layout */
+  .lifestyle-grid-{{ section_id }} {
+    margin-top: {{ section.settings.grid_margin_top }}px;
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  @media (min-width: 640px) {
+    .lifestyle-grid-{{ section_id }} {
+      grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    }
+  }
+
+  /* Figure & Card */
+  .lifestyle-card-{{ section_id }} {
+    position: relative;
+    margin: 0;
+    aspect-ratio: {{ section.settings.img_aspect_ratio }};
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    background-color: #0b0c10;
+    border: 1px solid {{ section.settings.card_border_color }};
+    {% if section.settings.enable_rim_glow %}
+      box-shadow: 0 0 28px -4px var(--rim-glow-color);
+    {% endif %}
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+
+  .lifestyle-card-{{ section_id }}:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    {% if section.settings.enable_rim_glow %}
+      box-shadow: 0 0 35px 2px var(--rim-glow-color);
+    {% endif %}
+    transform: translateY(-4px);
+  }
+
+  .lifestyle-img-link-{{ section_id }} {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .lifestyle-card-{{ section_id }} img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lifestyle-card-{{ section_id }}:hover img {
+    transform: scale(1.06);
+  }
+
+  /* Gradient Overlay */
+  .lifestyle-overlay-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.94) 0%,
+      rgba(0, 0, 0, 0.65) 40%,
+      rgba(0, 0, 0, 0.15) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Card Content Block */
+  .lifestyle-card-content-{{ section_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .lifestyle-card-content-{{ section_id }} {
+      padding: 1.75rem;
+      gap: 0.625rem;
+    }
+  }
+
+  .lifestyle-card-title-{{ section_id }} {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: {{ section.settings.card_title_size }}px;
+    text-transform: uppercase;
+    letter-spacing: {{ section.settings.card_title_spacing }}px;
+    font-weight: 700;
+    color: {{ section.settings.card_title_color }};
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .lifestyle-card-desc-{{ section_id }} {
+    font-size: {{ section.settings.card_desc_size }}px;
+    line-height: 1.5;
+    color: {{ section.settings.card_desc_color }};
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* Bottom Banner / Action Section */
+  .lifestyle-bottom-cta-{{ section_id }} {
+    margin-top: {{ section.settings.btn_margin_top }}px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .lifestyle-bottom-tagline-{{ section_id }} {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--subheading-color);
+    font-weight: 500;
+  }
+
+  .lifestyle-bottom-heading-{{ section_id }} {
+    font-size: {{ section.settings.bottom_heading_size_mobile }}px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--heading-color);
+    max-width: 700px;
+  }
+
+  @media (min-width: 768px) {
+    .lifestyle-bottom-heading-{{ section_id }} {
+      font-size: {{ section.settings.bottom_heading_size_desktop }}px;
+    }
+  }
+
+  /* Arrow CTA Button Style */
+  .lifestyle-cta-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    text-decoration: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    transition: all 0.35s ease;
+    margin-top: 0.5rem;
+  }
+
+  .lifestyle-cta-btn-{{ section_id }}:hover {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    border-color: transparent;
+    box-shadow: 0 0 24px -2px var(--gradient-start);
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
+
+  .lifestyle-cta-arrow-{{ section_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .lifestyle-cta-btn-{{ section_id }}:hover .lifestyle-cta-arrow-{{ section_id }} {
+    transform: translateX(4px);
+  }
+
+  /* Play Button Style */
+  .lifestyle-play-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.875rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .lifestyle-play-btn-{{ section_id }}:hover {
+    color: #ffffff;
+  }
+
+  .lifestyle-play-circle-{{ section_id }} {
+    display: flex;
+    height: 3rem;
+    width: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.35s ease;
+  }
+
+  .lifestyle-play-btn-{{ section_id }}:hover .lifestyle-play-circle-{{ section_id }} {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    border-color: transparent;
+    box-shadow: 0 0 16px var(--gradient-start);
+    transform: scale(1.08);
+  }
+
+  .lifestyle-play-circle-{{ section_id }} svg {
+    width: 1rem;
+    height: 1rem;
+    fill: #ffffff;
+    stroke: none;
+    margin-left: 2px;
+  }
+
+  .lifestyle-play-text-{{ section_id }} {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-weight: 600;
+  }
+{%- endstyle -%}
+
+<section id="lifestyle-{{ section_id }}" class="lifestyle-section-root">
+  {%- if section.settings.show_glow -%}
+    <div aria-hidden="true" class="lifestyle-glow-{{ section_id }}"></div>
+  {%- endif -%}
+
+  <div class="lifestyle-container-{{ section_id }}">
+    <!-- Section Header -->
+    <div class="lifestyle-header-{{ section_id }}">
+      {%- if section.settings.tagline != blank -%}
+        <span class="lifestyle-tag-{{ section_id }}">
+          <span class="lifestyle-dot-{{ section_id }}"></span>
+          {{ section.settings.tagline }}
+        </span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank or section.settings.highlight_text != blank -%}
+        <h2 class="lifestyle-heading-{{ section_id }}">
+          {{ section.settings.heading }}
+          {%- if section.settings.highlight_text != blank -%}
+            <span class="lifestyle-gradient-text-{{ section_id }}">{{ section.settings.highlight_text }}</span>
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+
+      {%- assign header_desc = section.settings.description | default: section.settings.header_description -%}
+      {%- if header_desc != blank -%}
+        <div class="lifestyle-description-{{ section_id }}">
+          {{ header_desc }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="lifestyle-grid-{{ section_id }}">
+      {%- for block in section.blocks -%}
+        <div class="lifestyle-grid-col-{{ section_id }}" {{ block.shopify_attributes }}>
+          <figure class="lifestyle-card-{{ section_id }}">
+            <a
+              {% if block.settings.card_link != blank %}
+                href="{{ block.settings.card_link }}"
+              {% else %}
+                role="presentation"
+              {% endif %}
+              class="lifestyle-img-link-{{ section_id }}"
+            >
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 1x, {{ block.settings.image | image_url: width: 800 }} 2x, {{ block.settings.image | image_url: width: 1200 }} 3x"
+                  alt="{{ block.settings.title | default: block.settings.caption | escape }}"
+                  loading="lazy"
+                >
+              {%- elsif block.settings.image_url != blank -%}
+                <img
+                  src="{{ block.settings.image_url }}"
+                  alt="{{ block.settings.title | default: block.settings.caption | escape }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'w-full h-full opacity-30 bg-neutral-900' }}
+              {%- endif -%}
+
+              <div class="lifestyle-overlay-{{ section_id }}"></div>
+
+              {%- assign card_title_text = block.settings.title | default: block.settings.caption -%}
+              {%- assign card_desc_text = block.settings.description | default: block.settings.text -%}
+              {%- if card_title_text != blank or card_desc_text != blank -%}
+                <div class="lifestyle-card-content-{{ section_id }}">
+                  {%- if card_title_text != blank -%}
+                    <span class="lifestyle-card-title-{{ section_id }}">
+                      {{ card_title_text }}
+                    </span>
+                  {%- endif -%}
+
+                  {%- if card_desc_text != blank -%}
+                    <p class="lifestyle-card-desc-{{ section_id }}">
+                      {{ card_desc_text }}
+                    </p>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </a>
+          </figure>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Bottom CTA / Action Banner -->
+    {%- if section.settings.show_bottom_cta -%}
+      <div class="lifestyle-bottom-cta-{{ section_id }}">
+        {%- if section.settings.bottom_tagline != blank -%}
+          <div class="lifestyle-bottom-tagline-{{ section_id }}">
+            {{ section.settings.bottom_tagline }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.bottom_heading != blank -%}
+          <h3 class="lifestyle-bottom-heading-{{ section_id }}">
+            {%- if section.settings.bottom_heading_highlight != blank and section.settings.bottom_heading contains section.settings.bottom_heading_highlight -%}
+              {%- assign bottom_parts = section.settings.bottom_heading | split: section.settings.bottom_heading_highlight -%}
+              {{ bottom_parts[0] }}<span class="lifestyle-gradient-text-{{ section_id }}">{{ section.settings.bottom_heading_highlight }}</span>{{ bottom_parts[1] }}
+            {%- else -%}
+              <span class="lifestyle-gradient-text-{{ section_id }}">{{ section.settings.bottom_heading }}</span>
+            {%- endif -%}
+          </h3>
+        {%- endif -%}
+
+        {%- if section.settings.button_text != blank -%}
+          {%- if section.settings.bottom_btn_style == 'play' -%}
+            <a href="{{ section.settings.button_link | default: '#' }}" class="lifestyle-play-btn-{{ section_id }}">
+              <span class="lifestyle-play-circle-{{ section_id }}" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              </span>
+              <span class="lifestyle-play-text-{{ section_id }}">{{ section.settings.button_text }}</span>
+            </a>
+          {%- else -%}
+            <a href="{{ section.settings.button_link | default: '#' }}" class="lifestyle-cta-btn-{{ section_id }}">
+              <span>{{ section.settings.button_text }}</span>
+              <svg class="lifestyle-cta-arrow-{{ section_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lifestyle Showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header Text Settings"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Subheading / Tagline",
+      "default": "THE BOND"
+    },
+    {
+      "type": "range",
+      "id": "tagline_size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline Font Size",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "tagline_spacing",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline Letter Spacing (px)",
+      "default": 3
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Main Heading Text",
+      "default": "It was always there."
+    },
+    {
+      "type": "text",
+      "id": "highlight_text",
+      "label": "Gradient Highlight Text",
+      "default": "Now, you can hear it."
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_new_line",
+      "label": "Display gradient text on new line",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Header Description Text",
+      "default": "Every glance, every tail wag and every quiet moment carries meaning. Petrix brings your dog's unique personality to life-creating a new way for your family to talk, listen, laugh and feel closer than ever before."
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#a0a5b5"
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "min": 300,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "label": "Description Max Width",
+      "default": 680
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "header_max_width",
+      "min": 300,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "label": "Header Max Width",
+      "default": 860
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size (Desktop)",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size (Mobile)",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" },
+        { "value": "900", "label": "Black (900)" }
+      ],
+      "default": "800"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_height",
+      "label": "Heading Line Height",
+      "default": "1.08"
+    },
+    {
+      "type": "header",
+      "content": "Color & Gradient Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "gradient_start",
+      "label": "Gradient Color 1 (Cyan / Blue)",
+      "default": "#2e5bff"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end",
+      "label": "Gradient Color 2 (Purple / Magenta)",
+      "default": "#a855f7"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Tagline Color",
+      "default": "#8a8f98"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "header",
+      "content": "Ambient Glow Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_glow",
+      "label": "Enable Ambient Background Glow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Opacity",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "glow_size",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Glow Blur Size",
+      "default": 650
+    },
+    {
+      "type": "range",
+      "id": "glow_blur",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Glow Blur Filter (px)",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "glow_right",
+      "min": -50,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Position X (Right %)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "glow_top",
+      "min": -20,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow Position Y (Top %)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Card Style & Rim Glow"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rim_glow",
+      "label": "Enable Rim Glow on Cards",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "rim_glow_color",
+      "label": "Rim Glow Color",
+      "default": "rgba(46, 91, 255, 0.2)"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "img_aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "4 / 5", "label": "4:5 (Portrait - Recommended)" },
+        { "value": "9 / 16", "label": "9:16 (Tall Portrait)" },
+        { "value": "1 / 1", "label": "1:1 (Square)" },
+        { "value": "3 / 4", "label": "3:4 (Standard)" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Title Font Size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "card_title_spacing",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Title Letter Spacing (px)",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "card_desc_color",
+      "label": "Card Description Color",
+      "default": "rgba(255, 255, 255, 0.78)"
+    },
+    {
+      "type": "range",
+      "id": "card_desc_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Description Font Size",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Bottom CTA / Banner Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_cta",
+      "label": "Show Bottom CTA / Banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "bottom_tagline",
+      "label": "Bottom Tagline",
+      "default": "A NEW WAY TO EXPERIENCE"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_heading",
+      "label": "Bottom Heading",
+      "default": "THE BOND YOU ALREADY SHARE."
+    },
+    {
+      "type": "text",
+      "id": "bottom_heading_highlight",
+      "label": "Bottom Heading Gradient Part",
+      "info": "Word(s) that should have gradient text effect",
+      "default": "THE BOND YOU ALREADY SHARE."
+    },
+    {
+      "type": "range",
+      "id": "bottom_heading_size_desktop",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom Heading Size (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "bottom_heading_size_mobile",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom Heading Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "bottom_btn_style",
+      "label": "Button Style",
+      "options": [
+        { "value": "arrow", "label": "Pill Button with Arrow (e.g. Discover Petrix →)" },
+        { "value": "play", "label": "Circular Play Icon Button" }
+      ],
+      "default": "arrow"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "DISCOVER PETRIX"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "btn_margin_top",
+      "min": 20,
+      "max": 140,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom CTA Spacing from Grid",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Layout & Grid Settings"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1280
+    },
+    {
+      "type": "select",
+      "id": "cols_desktop",
+      "label": "Columns on Desktop",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "cols_mobile",
+      "label": "Columns on Mobile",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid Gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "grid_margin_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Grid Spacing from Heading",
+      "default": 55
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 70
+    }
+  ],
+  "blocks": [
+    {
+      "type": "lifestyle_card",
+      "name": "Lifestyle Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Image (Upload from Theme)"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "External Image URL (Fallback)",
+          "info": "Upload an image above OR paste direct image link here"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title / Tag",
+          "default": "FAMILY, REIMAGINED"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description Text",
+          "default": "More than a pet. A much-loved personality, a constant companion and an irreplaceable part of the family."
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Optional Card Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lifestyle Showcase (The Bond)",
+      "blocks": [
+        {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "FAMILY, REIMAGINED",
+            "description": "More than a pet. A much-loved personality, a constant companion and an irreplaceable part of the family.",
+            "image_url": "https://media.base44.com/images/public/6a853358db79055e61e54d06/d0c412563_generated_05648ee5.png/v1/fill/w_774,h_969,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/d0c412563_generated_05648ee5.webp"
+          }
+        },
+        {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "FIRST FRIENDS",
+            "description": "A friendship shaped through stories, learning, laughter and play-creating memories that stay with them for a lifetime.",
+            "image_url": "https://media.base44.com/images/public/6a853358db79055e61e54d06/aa3c86ac4_generated_57c879e1.png/v1/fill/w_774,h_969,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/aa3c86ac4_generated_57c879e1.webp"
+          }
+        },
+        {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "ALWAYS THERE",
+            "description": "A familiar presence through every high and every difficult moment-offering comfort, encouragement and companionship when it matters most.",
+            "image_url": "https://media.base44.com/images/public/6a853358db79055e61e54d06/bafb666a1_generated_45b12b32.png/v1/fill/w_774,h_969,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/bafb666a1_generated_45b12b32.webp"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
