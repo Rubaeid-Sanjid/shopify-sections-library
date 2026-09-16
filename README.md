@@ -28,6 +28,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/lifestyle-showcase/lifestyle-showcase-the-bond.png) | **Lifestyle Showcase** | Full-width image showcase with flexible card overlays, captions, and responsive layout options | [View](sections/lifestyle-showcase) |
 | ![preview](sections/image_with_text_gradient_BG/image_with_text_gradient_BG.png) | **Image with Text (Gradient BG)** | Image and text split layout with gradient background options and responsive stacking for mobile | [View](sections/image_with_text_gradient_BG) |
 | ![preview](sections/why-choose-us-features/preview.png) | **Why Choose Us (Center Features)** | 3-column feature section with a central hero subject (pet/product) flanked by 6 customizable benefit cards with built-in SVG icons | [View](sections/why-choose-us-features) |
+| ![preview](sections/laser-features-grid/preview.png) | **Laser Features Grid** | Cyberpunk-style dark feature grid with glowing laser line divider, customizable icon cards with neon glow hover effects, and responsive grid layout | [View](sections/laser-features-grid) |
 
 <!-- Add new rows above this line as you build new sections -->
 
