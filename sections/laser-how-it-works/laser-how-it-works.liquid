@@ -1,0 +1,715 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --section-bg: {{ section.settings.section_bg }};
+    --container-max-width: {{ section.settings.container_max_width }}px;
+    --padding-top-desktop: {{ section.settings.padding_top_desktop }}px;
+    --padding-bottom-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --padding-top-mobile: {{ section.settings.padding_top_mobile }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+
+    /* Laser Header */
+    --laser-color: {{ section.settings.laser_color }};
+    --laser-glow-color: {{ section.settings.laser_glow_color }};
+    --laser-thickness: {{ section.settings.laser_thickness }}px;
+    --tag-color: {{ section.settings.tag_color }};
+    --tag-font-size: {{ section.settings.tag_font_size }}px;
+    --tag-letter-spacing: {{ section.settings.tag_letter_spacing }}px;
+    --header-margin-bottom: {{ section.settings.header_margin_bottom }}px;
+
+    /* Grid & Steps */
+    --grid-columns-desktop: {{ section.settings.columns_desktop }};
+    --grid-columns-mobile: {{ section.settings.columns_mobile }};
+    --grid-gap: {{ section.settings.grid_gap }}px;
+
+    /* Numbers */
+    --accent-color: {{ section.settings.accent_color }};
+    --number-size-desktop: {{ section.settings.number_size_desktop }}px;
+    --number-size-mobile: {{ section.settings.number_size_mobile }}px;
+    --number-stroke-width: {{ section.settings.number_stroke_width }}px;
+    --number-glow-color: {{ section.settings.number_glow_color }};
+
+    /* Connector Lines */
+    --connector-line-color: {{ section.settings.connector_line_color }};
+
+    /* Typography */
+    --title-color: {{ section.settings.title_color }};
+    --title-font-size: {{ section.settings.title_font_size }}px;
+    --desc-color: {{ section.settings.desc_color }};
+    --desc-font-size: {{ section.settings.desc_font_size }}px;
+
+    background-color: var(--section-bg);
+    position: relative;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+
+  .laser-hiw-section-{{ section_id }} {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .laser-hiw-section-{{ section_id }} {
+      padding-top: var(--padding-top-desktop);
+      padding-bottom: var(--padding-bottom-desktop);
+    }
+  }
+
+  .laser-hiw-container-{{ section_id }} {
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  /* Laser Divider Header */
+  .laser-hiw-divider-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: var(--header-margin-bottom);
+    position: relative;
+  }
+
+  .laser-hiw-line-left-{{ section_id }} {
+    flex: 1;
+    height: var(--laser-thickness);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 20%, var(--laser-color) 100%);
+    box-shadow: 0 0 10px var(--laser-glow-color);
+    opacity: 0.85;
+  }
+
+  .laser-hiw-line-right-{{ section_id }} {
+    flex: 1;
+    height: var(--laser-thickness);
+    background: linear-gradient(90deg, var(--laser-color) 0%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+    box-shadow: 0 0 10px var(--laser-glow-color);
+    opacity: 0.85;
+  }
+
+  .laser-hiw-tag-{{ section_id }} {
+    flex-shrink: 0;
+    {% if section.settings.tag_font_family == 'monospace' %}
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    {% elsif section.settings.tag_font_family == 'heading' %}
+      font-family: var(--font-heading-family, inherit);
+    {% elsif section.settings.tag_font_family == 'body' %}
+      font-family: var(--font-body-family, inherit);
+    {% else %}
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    {% endif %}
+    font-size: var(--tag-font-size);
+    text-transform: uppercase;
+    letter-spacing: var(--tag-letter-spacing);
+    color: var(--tag-color);
+    line-height: 1;
+    font-weight: 600;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  /* Steps Grid */
+  .laser-hiw-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns-desktop), minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    row-gap: 2.5rem;
+    width: 100%;
+    position: relative;
+  }
+
+  @media (max-width: 1024px) and (min-width: 641px) {
+    .laser-hiw-grid-{{ section_id }} {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .laser-hiw-grid-{{ section_id }} {
+      grid-template-columns: repeat(var(--grid-columns-mobile), minmax(0, 1fr));
+    }
+  }
+
+  /* Step Card */
+  .laser-hiw-card-{{ section_id }} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    text-decoration: none;
+  }
+
+  /* Indicator Wrapper (Number + Connectors) */
+  .laser-hiw-indicator-wrap-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+  }
+
+  .laser-hiw-line-before-{{ section_id }} {
+    flex: 0 0 16px;
+    height: 1px;
+    background-color: var(--connector-line-color);
+    margin-right: 14px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @media (min-width: 1024px) {
+    .laser-hiw-line-before-{{ section_id }} {
+      flex: 0 0 24px;
+      margin-right: 18px;
+    }
+  }
+
+  .laser-hiw-number-{{ section_id }} {
+    flex-shrink: 0;
+    {% if section.settings.number_font_family == 'monospace' %}
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    {% elsif section.settings.number_font_family == 'heading' %}
+      font-family: var(--font-heading-family, inherit);
+    {% elsif section.settings.number_font_family == 'body' %}
+      font-family: var(--font-body-family, inherit);
+    {% else %}
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    {% endif %}
+    font-size: var(--number-size-mobile);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    user-select: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    {% if section.settings.number_style == 'outline' %}
+      color: transparent;
+      -webkit-text-stroke: var(--number-stroke-width) var(--accent-color);
+    {% else %}
+      color: var(--accent-color);
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .laser-hiw-number-{{ section_id }} {
+      font-size: var(--number-size-desktop);
+    }
+  }
+
+  .laser-hiw-line-after-{{ section_id }} {
+    flex: 1;
+    height: 1px;
+    background-color: var(--connector-line-color);
+    margin-left: 18px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Hover Effects */
+  .laser-hiw-card-{{ section_id }}:hover .laser-hiw-number-{{ section_id }} {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 12px var(--number-glow-color));
+    {% if section.settings.number_style == 'outline' %}
+      -webkit-text-stroke-color: #ffffff;
+      text-shadow: 0 0 14px var(--number-glow-color);
+    {% endif %}
+  }
+
+  {% if section.settings.connector_hover_glow %}
+    .laser-hiw-card-{{ section_id }}:hover .laser-hiw-line-before-{{ section_id }},
+    .laser-hiw-card-{{ section_id }}:hover .laser-hiw-line-after-{{ section_id }} {
+      background-color: var(--accent-color);
+      box-shadow: 0 0 8px var(--laser-glow-color);
+    }
+  {% endif %}
+
+  /* Step Content */
+  .laser-hiw-title-{{ section_id }} {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    font-size: var(--title-font-size);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--title-color);
+    {% if section.settings.title_font_family == 'heading' %}
+      font-family: var(--font-heading-family, inherit);
+    {% elsif section.settings.title_font_family == 'body' %}
+      font-family: var(--font-body-family, inherit);
+    {% endif %}
+  }
+
+  .laser-hiw-desc-{{ section_id }} {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-size: var(--desc-font-size);
+    line-height: 1.6;
+    color: var(--desc-color);
+    {% if section.settings.desc_font_family == 'body' %}
+      font-family: var(--font-body-family, inherit);
+    {% endif %}
+  }
+
+  .laser-hiw-card-link-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
+  }
+{%- endstyle -%}
+
+<section class="laser-hiw-section-{{ section_id }}" aria-label="{{ section.settings.tag_text | escape }}">
+  <div class="laser-hiw-container-{{ section_id }}">
+    {%- if section.settings.show_header and section.settings.tag_text != blank -%}
+      <div class="laser-hiw-divider-{{ section_id }}">
+        <div class="laser-hiw-line-left-{{ section_id }}" aria-hidden="true"></div>
+        <span class="laser-hiw-tag-{{ section_id }}">{{ section.settings.tag_text | escape }}</span>
+        <div class="laser-hiw-line-right-{{ section_id }}" aria-hidden="true"></div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="laser-hiw-grid-{{ section_id }}">
+        {%- for block in section.blocks -%}
+          <div class="laser-hiw-card-{{ section_id }} group" {{ block.shopify_attributes }}>
+            {%- if block.settings.card_link != blank -%}
+              <a href="{{ block.settings.card_link }}" class="laser-hiw-card-link-{{ section_id }}" aria-label="{{ block.settings.title | escape }}"></a>
+            {%- endif -%}
+
+            <div class="laser-hiw-indicator-wrap-{{ section_id }}">
+              {%- if section.settings.show_connector_lines and forloop.first == false -%}
+                <div class="laser-hiw-line-before-{{ section_id }}" aria-hidden="true"></div>
+              {%- endif -%}
+
+              <span class="laser-hiw-number-{{ section_id }}">
+                {%- if block.settings.step_number != blank -%}
+                  {{ block.settings.step_number | escape }}
+                {%- else -%}
+                  {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                {%- endif -%}
+              </span>
+
+              {%- if section.settings.show_connector_lines -%}
+                <div class="laser-hiw-line-after-{{ section_id }}" aria-hidden="true"></div>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="laser-hiw-title-{{ section_id }}">{{ block.settings.title | escape }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.description != blank -%}
+              <p class="laser-hiw-desc-{{ section_id }}">{{ block.settings.description | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Laser How It Works",
+  "tag": "section",
+  "class": "section-laser-how-it-works",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1280
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Laser Divider Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Tag Text",
+      "default": "04 — HOW IT WORKS"
+    },
+    {
+      "type": "color",
+      "id": "tag_color",
+      "label": "Tag Color",
+      "default": "rgba(239, 68, 68, 0.75)"
+    },
+    {
+      "type": "range",
+      "id": "tag_font_size",
+      "min": 9,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Tag Font Size",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "tag_letter_spacing",
+      "min": 1,
+      "max": 8,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Tag Letter Spacing",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "tag_font_family",
+      "label": "Tag Font Family",
+      "options": [
+        { "value": "monospace", "label": "Monospace" },
+        { "value": "sans", "label": "Sans-serif" },
+        { "value": "heading", "label": "Theme Heading Font" },
+        { "value": "body", "label": "Theme Body Font" }
+      ],
+      "default": "monospace"
+    },
+    {
+      "type": "color",
+      "id": "laser_color",
+      "label": "Laser Line Color",
+      "default": "#ef4444"
+    },
+    {
+      "type": "color",
+      "id": "laser_glow_color",
+      "label": "Laser Glow Color",
+      "default": "rgba(239, 68, 68, 0.45)"
+    },
+    {
+      "type": "range",
+      "id": "laser_thickness",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Laser Thickness",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Header Bottom Margin",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Steps Grid Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Desktop Columns",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile Columns",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Column Gap",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Number Styles"
+    },
+    {
+      "type": "select",
+      "id": "number_style",
+      "label": "Number Style",
+      "options": [
+        { "value": "outline", "label": "Outlined Neon Stroke" },
+        { "value": "solid", "label": "Solid Color" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Number & Accent Color",
+      "default": "#ef4444"
+    },
+    {
+      "type": "range",
+      "id": "number_stroke_width",
+      "min": 1,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Stroke Width (Outline Mode)",
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "number_size_desktop",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Number Size (Desktop)",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "number_size_mobile",
+      "min": 32,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Number Size (Mobile)",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "number_font_family",
+      "label": "Number Font Family",
+      "options": [
+        { "value": "monospace", "label": "Monospace" },
+        { "value": "sans", "label": "Sans-serif" },
+        { "value": "heading", "label": "Theme Heading Font" },
+        { "value": "body", "label": "Theme Body Font" }
+      ],
+      "default": "monospace"
+    },
+    {
+      "type": "color",
+      "id": "number_glow_color",
+      "label": "Number Glow Color",
+      "default": "rgba(239, 68, 68, 0.5)"
+    },
+    {
+      "type": "header",
+      "content": "Connector Lines"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_connector_lines",
+      "label": "Show Connector Lines",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "connector_line_color",
+      "label": "Connector Line Color",
+      "default": "rgba(255, 255, 255, 0.12)"
+    },
+    {
+      "type": "checkbox",
+      "id": "connector_hover_glow",
+      "label": "Glow Lines on Card Hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "title_font_family",
+      "label": "Title Font Family",
+      "options": [
+        { "value": "default", "label": "Default Sans" },
+        { "value": "heading", "label": "Theme Heading Font" },
+        { "value": "body", "label": "Theme Body Font" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Description Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "range",
+      "id": "desc_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "desc_font_family",
+      "label": "Description Font Family",
+      "options": [
+        { "value": "default", "label": "Default Sans" },
+        { "value": "body", "label": "Theme Body Font" }
+      ],
+      "default": "default"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_number",
+          "label": "Step Number (Optional)",
+          "info": "Leave blank to auto-number (01, 02, 03...)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Place it"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Set Ketodeck on any flat, non-reflective surface."
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Step Link (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Laser How It Works",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "01",
+            "title": "Place it",
+            "description": "Set Ketodeck on any flat, non-reflective surface."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "02",
+            "title": "Connect it",
+            "description": "Pair via Bluetooth in seconds."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "03",
+            "title": "Start typing",
+            "description": "Enjoy a full keyboard experience, anywhere."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
