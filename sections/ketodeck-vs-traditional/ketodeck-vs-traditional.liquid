@@ -1,0 +1,904 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --section-bg: {{ section.settings.section_bg }};
+    --container-max-width: {{ section.settings.container_max_width }}px;
+    --padding-top-desktop: {{ section.settings.padding_top_desktop }}px;
+    --padding-bottom-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --padding-top-mobile: {{ section.settings.padding_top_mobile }}px;
+    --padding-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+
+    /* Heading */
+    --heading-color: {{ section.settings.heading_color }};
+    --heading-size-desktop: {{ section.settings.heading_font_size_desktop }}px;
+    --heading-size-mobile: {{ section.settings.heading_font_size_mobile }}px;
+    --heading-margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+
+    /* Card & Table */
+    --card-bg: {{ section.settings.card_bg_color }};
+    --card-border: {{ section.settings.card_border_color }};
+    --card-radius: {{ section.settings.card_border_radius }}px;
+    --divider-color: {{ section.settings.divider_color }};
+    --row-hover-bg: {{ section.settings.row_hover_bg }};
+    --primary-col-bg: {{ section.settings.primary_col_bg }};
+
+    /* Padding */
+    --cell-pad-y-desktop: {{ section.settings.cell_padding_y_desktop }}px;
+    --cell-pad-x-desktop: {{ section.settings.cell_padding_x_desktop }}px;
+    --cell-pad-y-mobile: {{ section.settings.cell_padding_y_mobile }}px;
+    --cell-pad-x-mobile: {{ section.settings.cell_padding_x_mobile }}px;
+
+    /* Column Headers */
+    --col2-header-color: {{ section.settings.col_2_header_color }};
+    --col3-header-color: {{ section.settings.col_3_header_color }};
+    --header-font-size: {{ section.settings.header_font_size }}px;
+    --header-letter-spacing: {{ section.settings.header_letter_spacing }}px;
+
+    /* Cell Typography */
+    --feature-color: {{ section.settings.feature_color }};
+    --feature-font-size: {{ section.settings.feature_font_size }}px;
+    --primary-color: {{ section.settings.primary_value_color }};
+    --primary-font-size: {{ section.settings.primary_value_font_size }}px;
+    --secondary-color: {{ section.settings.secondary_value_color }};
+    --secondary-font-size: {{ section.settings.secondary_value_font_size }}px;
+
+    /* Laser Dot Indicator */
+    --dot-color: {{ section.settings.dot_color }};
+    --dot-glow-color: {{ section.settings.dot_glow_color }};
+    --dot-size: {{ section.settings.dot_size }}px;
+
+    background-color: var(--section-bg);
+    position: relative;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .kvt-section-{{ section_id }} {
+    padding-top: var(--padding-top-mobile);
+    padding-bottom: var(--padding-bottom-mobile);
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .kvt-section-{{ section_id }} {
+      padding-top: var(--padding-top-desktop);
+      padding-bottom: var(--padding-bottom-desktop);
+    }
+  }
+
+  .kvt-container-{{ section_id }} {
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    box-sizing: border-box;
+  }
+
+  /* Section Heading */
+  .kvt-heading-wrapper-{{ section_id }} {
+    text-align: {{ section.settings.heading_alignment }};
+    margin-bottom: var(--heading-margin-bottom);
+  }
+
+  .kvt-heading-{{ section_id }} {
+    color: var(--heading-color);
+    font-size: var(--heading-size-mobile);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.02em;
+    {% if section.settings.heading_font_family == 'heading' %}
+      font-family: var(--font-heading-family, inherit);
+    {% elsif section.settings.heading_font_family == 'body' %}
+      font-family: var(--font-body-family, inherit);
+    {% else %}
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .kvt-heading-{{ section_id }} {
+      font-size: var(--heading-size-desktop);
+    }
+  }
+
+  {% if section.settings.subheading != blank %}
+    .kvt-subheading-{{ section_id }} {
+      color: {{ section.settings.subheading_color }};
+      font-size: 15px;
+      line-height: 1.5;
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+    }
+  {% endif %}
+
+  /* Table Card Container */
+  .kvt-card-wrapper-{{ section_id }} {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Scrollable wrapper for mobile responsiveness */
+  .kvt-scroll-container-{{ section_id }} {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  }
+
+  .kvt-scroll-container-{{ section_id }}::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .kvt-scroll-container-{{ section_id }}::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .kvt-scroll-container-{{ section_id }}::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+
+  /* Comparison Table */
+  .kvt-table-{{ section_id }} {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    text-align: left;
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .kvt-table-{{ section_id }} {
+      min-width: 520px;
+    }
+  }
+
+  /* Column Sizing */
+  .kvt-col-feature-{{ section_id }} {
+    width: 28%;
+  }
+
+  .kvt-col-primary-{{ section_id }} {
+    width: 36%;
+  }
+
+  .kvt-col-secondary-{{ section_id }} {
+    width: 36%;
+  }
+
+  /* Header Cells */
+  .kvt-th-{{ section_id }} {
+    padding-top: calc(var(--cell-pad-y-desktop) * 0.9);
+    padding-bottom: calc(var(--cell-pad-y-desktop) * 0.9);
+    padding-left: var(--cell-pad-x-desktop);
+    padding-right: var(--cell-pad-x-desktop);
+    border-bottom: 1px solid var(--divider-color);
+    font-size: var(--header-font-size);
+    letter-spacing: var(--header-letter-spacing);
+    text-transform: uppercase;
+    font-weight: 700;
+    box-sizing: border-box;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 767px) {
+    .kvt-th-{{ section_id }} {
+      padding-top: var(--cell-pad-y-mobile);
+      padding-bottom: var(--cell-pad-y-mobile);
+      padding-left: var(--cell-pad-x-mobile);
+      padding-right: var(--cell-pad-x-mobile);
+    }
+  }
+
+  .kvt-th-feature-{{ section_id }} {
+    color: transparent;
+    user-select: none;
+  }
+
+  .kvt-th-primary-{{ section_id }} {
+    color: var(--col2-header-color);
+    text-align: {{ section.settings.header_alignment }};
+    border-left: 1px solid var(--divider-color);
+    border-right: 1px solid var(--divider-color);
+    {% if section.settings.highlight_primary_col %}
+      background-color: var(--primary-col-bg);
+    {% endif %}
+  }
+
+  .kvt-th-secondary-{{ section_id }} {
+    color: var(--col3-header-color);
+    text-align: {{ section.settings.header_alignment }};
+  }
+
+  /* Table Body & Rows */
+  .kvt-tr-{{ section_id }} {
+    transition: background-color 0.2s ease;
+  }
+
+  .kvt-tr-{{ section_id }}:hover {
+    background-color: var(--row-hover-bg);
+  }
+
+  .kvt-tr-{{ section_id }}:not(:last-child) .kvt-td-{{ section_id }} {
+    border-bottom: 1px solid var(--divider-color);
+  }
+
+  .kvt-td-{{ section_id }} {
+    padding-top: var(--cell-pad-y-desktop);
+    padding-bottom: var(--cell-pad-y-desktop);
+    padding-left: var(--cell-pad-x-desktop);
+    padding-right: var(--cell-pad-x-desktop);
+    vertical-align: middle;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 767px) {
+    .kvt-td-{{ section_id }} {
+      padding-top: var(--cell-pad-y-mobile);
+      padding-bottom: var(--cell-pad-y-mobile);
+      padding-left: var(--cell-pad-x-mobile);
+      padding-right: var(--cell-pad-x-mobile);
+    }
+  }
+
+  /* Feature Label Cell */
+  .kvt-td-feature-{{ section_id }} {
+    color: var(--feature-color);
+    font-size: var(--feature-font-size);
+    font-weight: {{ section.settings.feature_font_weight }};
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  /* Primary Product Cell */
+  .kvt-td-primary-{{ section_id }} {
+    color: var(--primary-color);
+    font-size: var(--primary-font-size);
+    font-weight: 500;
+    line-height: 1.4;
+    border-left: 1px solid var(--divider-color);
+    border-right: 1px solid var(--divider-color);
+    {% if section.settings.highlight_primary_col %}
+      background-color: var(--primary-col-bg);
+    {% endif %}
+  }
+
+  .kvt-primary-content-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+  }
+
+  /* Glowing Laser Dot */
+  .kvt-dot-{{ section_id }} {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background-color: var(--dot-color);
+    box-shadow: 0 0 8px var(--dot-glow-color), 0 0 2px var(--dot-color);
+    flex-shrink: 0;
+    display: inline-block;
+    {% if section.settings.pulse_animation %}
+      animation: kvt-pulse-{{ section_id }} 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    {% endif %}
+  }
+
+  @keyframes kvt-pulse-{{ section_id }} {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 0 8px var(--dot-glow-color), 0 0 2px var(--dot-color);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(0.92);
+      box-shadow: 0 0 4px var(--dot-glow-color), 0 0 1px var(--dot-color);
+    }
+  }
+
+  /* Secondary Cell */
+  .kvt-td-secondary-{{ section_id }} {
+    color: var(--secondary-color);
+    font-size: var(--secondary-font-size);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* Screen Reader helper */
+  .kvt-visually-hidden-{{ section_id }} {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+{%- endstyle -%}
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="section-ketodeck-vs-traditional kvt-section-{{ section_id }}"
+  aria-label="{{ section.settings.heading | default: 'Product Comparison' | escape }}"
+>
+  <div class="kvt-container-{{ section_id }}">
+    {%- if section.settings.heading != blank -%}
+      <div class="kvt-heading-wrapper-{{ section_id }}">
+        <{{ section.settings.heading_tag }} class="kvt-heading-{{ section_id }}">
+          {{ section.settings.heading | escape }}
+        </{{ section.settings.heading_tag }}>
+        {%- if section.settings.subheading != blank -%}
+          <p class="kvt-subheading-{{ section_id }}">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="kvt-card-wrapper-{{ section_id }}">
+      <div class="kvt-scroll-container-{{ section_id }}">
+        <table class="kvt-table-{{ section_id }}" role="table">
+          <caption class="kvt-visually-hidden-{{ section_id }}">
+            {{ section.settings.heading | default: 'Comparison Table' | escape }}
+          </caption>
+          <colgroup>
+            <col class="kvt-col-feature-{{ section_id }}">
+            <col class="kvt-col-primary-{{ section_id }}">
+            <col class="kvt-col-secondary-{{ section_id }}">
+          </colgroup>
+          <thead>
+            <tr class="kvt-tr-header-{{ section_id }}">
+              <th scope="col" class="kvt-th-{{ section_id }} kvt-th-feature-{{ section_id }}">
+                {%- if section.settings.col_1_header != blank -%}
+                  {{ section.settings.col_1_header | escape }}
+                {%- else -%}
+                  <span class="kvt-visually-hidden-{{ section_id }}">Features</span>
+                {%- endif -%}
+              </th>
+              <th scope="col" class="kvt-th-{{ section_id }} kvt-th-primary-{{ section_id }}">
+                {{ section.settings.col_2_header | escape }}
+              </th>
+              <th scope="col" class="kvt-th-{{ section_id }} kvt-th-secondary-{{ section_id }}">
+                {{ section.settings.col_3_header | escape }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for block in section.blocks -%}
+              {%- assign row_dot_color = block.settings.dot_color -%}
+              {%- if row_dot_color == blank or row_dot_color == 'rgba(0,0,0,0)' -%}
+                {%- assign row_dot_color = section.settings.dot_color -%}
+              {%- endif -%}
+
+              <tr class="kvt-tr-{{ section_id }}" {{ block.shopify_attributes }}>
+                <th scope="row" class="kvt-td-{{ section_id }} kvt-td-feature-{{ section_id }}">
+                  {{ block.settings.feature_name | escape }}
+                </th>
+                <td class="kvt-td-{{ section_id }} kvt-td-primary-{{ section_id }}">
+                  <div class="kvt-primary-content-{{ section_id }}">
+                    {%- if section.settings.show_dots and block.settings.show_dot -%}
+                      <span
+                        class="kvt-dot-{{ section_id }}"
+                        style="--dot-color: {{ row_dot_color }}; --dot-glow-color: {{ row_dot_color | color_modify: 'alpha', 0.6 }};"
+                        aria-hidden="true"
+                      ></span>
+                    {%- endif -%}
+                    <span>{{ block.settings.primary_value | escape }}</span>
+                  </div>
+                </td>
+                <td class="kvt-td-{{ section_id }} kvt-td-secondary-{{ section_id }}">
+                  {{ block.settings.secondary_value | escape }}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ketodeck vs Traditional",
+  "tag": "section",
+  "class": "section-ketodeck-vs-traditional",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 700,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1040
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ketodeck vs. Traditional"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "DIV" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "min": 20,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size (Mobile)",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_font_family",
+      "label": "Heading Font Family",
+      "options": [
+        { "value": "default", "label": "Default Sans" },
+        { "value": "heading", "label": "Theme Heading Font" },
+        { "value": "body", "label": "Theme Body Font" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Heading Bottom Margin",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading (Optional)",
+      "default": ""
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "header",
+      "content": "Column Headers"
+    },
+    {
+      "type": "text",
+      "id": "col_1_header",
+      "label": "Feature Column Header (Optional)",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "col_2_header",
+      "label": "Primary Column Header",
+      "default": "KETODECK"
+    },
+    {
+      "type": "color",
+      "id": "col_2_header_color",
+      "label": "Primary Header Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "col_3_header",
+      "label": "Secondary Column Header",
+      "default": "TRADITIONAL"
+    },
+    {
+      "type": "color",
+      "id": "col_3_header_color",
+      "label": "Secondary Header Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Headers Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Headers Font Size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "header_letter_spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Headers Letter Spacing",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Table & Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#0e0e11"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Grid Divider Color",
+      "default": "rgba(255, 255, 255, 0.08)"
+    },
+    {
+      "type": "color",
+      "id": "row_hover_bg",
+      "label": "Row Hover Background",
+      "default": "rgba(255, 255, 255, 0.02)"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_primary_col",
+      "label": "Subtle Highlight on Primary Column",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "primary_col_bg",
+      "label": "Primary Column Highlight Tint",
+      "default": "rgba(239, 68, 68, 0.02)"
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_y_desktop",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell Vertical Padding (Desktop)",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_x_desktop",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell Horizontal Padding (Desktop)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_y_mobile",
+      "min": 8,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell Vertical Padding (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_x_mobile",
+      "min": 8,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell Horizontal Padding (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Indicator Dot"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show Glowing Indicator Dots",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot Color",
+      "default": "#ef4444"
+    },
+    {
+      "type": "color",
+      "id": "dot_glow_color",
+      "label": "Dot Glow Color",
+      "default": "rgba(239, 68, 68, 0.7)"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 6,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "label": "Dot Size",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "pulse_animation",
+      "label": "Enable Subtle Pulse Animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "color",
+      "id": "feature_color",
+      "label": "Feature Label Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "feature_font_size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Font Size",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "feature_font_weight",
+      "label": "Feature Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "primary_value_color",
+      "label": "Primary Value Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "primary_value_font_size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Primary Value Font Size",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "secondary_value_color",
+      "label": "Secondary Value Color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "range",
+      "id": "secondary_value_font_size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Secondary Value Font Size",
+      "default": 15
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_row",
+      "name": "Comparison Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_name",
+          "label": "Feature / Attribute Name",
+          "default": "Feature"
+        },
+        {
+          "type": "text",
+          "id": "primary_value",
+          "label": "Primary Value (e.g. Ketodeck)",
+          "default": "Pocket-sized, anywhere"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_dot",
+          "label": "Show Glowing Dot for this Row",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "dot_color",
+          "label": "Custom Dot Color (Optional Override)",
+          "default": "rgba(0,0,0,0)"
+        },
+        {
+          "type": "text",
+          "id": "secondary_value",
+          "label": "Secondary Value (e.g. Traditional)",
+          "default": "Bulky, desk-bound"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ketodeck vs Traditional",
+      "blocks": [
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_name": "Portability",
+            "primary_value": "Pocket-sized, anywhere",
+            "show_dot": true,
+            "secondary_value": "Bulky, desk-bound"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_name": "Setup",
+            "primary_value": "Bluetooth in seconds",
+            "show_dot": true,
+            "secondary_value": "Cables & drivers"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_name": "Versatility",
+            "primary_value": "Phone, tablet & laptop",
+            "show_dot": true,
+            "secondary_value": "Single device"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

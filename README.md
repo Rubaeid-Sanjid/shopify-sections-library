@@ -31,6 +31,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/laser-features-grid/preview.png) | **Laser Features Grid** | Cyberpunk-style dark feature grid with glowing laser line divider, customizable icon cards with neon glow hover effects, and responsive grid layout | [View](sections/laser-features-grid) |
 | ![preview](sections/laser-line-divider/preview.png) | **Laser Line Divider** | Cyberpunk-style glowing laser beam divider with gradient fade lines, customizable uppercase monospace label, and optional pulse animation | [View](sections/laser-line-divider) |
 | ![preview](sections/laser-how-it-works/preview.png) | **Laser How It Works** | Cyberpunk-style 3-step process section with outlined neon numbers, continuous timeline connector lines, and glowing laser header | [View](sections/laser-how-it-works) |
+| ![preview](sections/ketodeck-vs-traditional/preview.png) | **Ketodeck vs. Traditional** | Sleek cyberpunk product comparison matrix with glowing neon laser dot indicators, customizable columns, and dark rounded card styling | [View](sections/ketodeck-vs-traditional) |
 
 <!-- Add new rows above this line as you build new sections -->
 
