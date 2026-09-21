@@ -1,0 +1,1401 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --vrs-section-bg: {{ section.settings.section_bg }};
+    --vrs-container-max-width: {{ section.settings.container_max_width }}px;
+    --vrs-padding-top-desktop: {{ section.settings.padding_top_desktop }}px;
+    --vrs-padding-bottom-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --vrs-padding-top-mobile: {{ section.settings.padding_top_mobile }}px;
+    --vrs-padding-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px;
+
+    /* Card Settings */
+    --vrs-card-bg: {{ section.settings.card_bg_color }};
+    --vrs-card-radius: {{ section.settings.card_border_radius }}px;
+    --vrs-card-border: {{ section.settings.card_border_color }};
+    --vrs-card-shadow: {{ section.settings.card_shadow }};
+    --vrs-card-padding-desktop: {{ section.settings.card_padding_desktop }}px;
+    --vrs-card-padding-mobile: {{ section.settings.card_padding_mobile }}px;
+    --vrs-image-radius: {{ section.settings.image_border_radius }}px;
+
+    /* Badge & Arrow Indicator */
+    --vrs-arrow-bg: {{ section.settings.arrow_badge_bg }};
+    --vrs-arrow-color: {{ section.settings.arrow_badge_icon_color }};
+    --vrs-arrow-size: {{ section.settings.arrow_badge_size }}px;
+
+    /* Eyebrow & Header Typography */
+    --vrs-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --vrs-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --vrs-eyebrow-spacing: {{ section.settings.eyebrow_letter_spacing }}px;
+    --vrs-heading-color: {{ section.settings.heading_color }};
+    --vrs-heading-size-desktop: {{ section.settings.heading_font_size_desktop }}px;
+    --vrs-heading-size-mobile: {{ section.settings.heading_font_size_mobile }}px;
+    --vrs-heading-margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+
+    /* Description Typography */
+    --vrs-desc-color: {{ section.settings.description_color }};
+    --vrs-desc-size: {{ section.settings.description_font_size }}px;
+    --vrs-desc-line-height: {{ section.settings.description_line_height }};
+    --vrs-desc-margin-bottom: {{ section.settings.description_margin_bottom }}px;
+
+    /* Benefit Pills */
+    --vrs-pill-bg: {{ section.settings.pill_bg_color }};
+    --vrs-pill-hover-bg: {{ section.settings.pill_hover_bg_color }};
+    --vrs-pill-radius: {{ section.settings.pill_border_radius }}px;
+    --vrs-pill-border: {{ section.settings.pill_border_color }};
+    --vrs-pill-icon-bg: {{ section.settings.pill_icon_bg }};
+    --vrs-pill-icon-color: {{ section.settings.pill_icon_color }};
+    --vrs-pill-title-color: {{ section.settings.pill_title_color }};
+    --vrs-pill-desc-color: {{ section.settings.pill_desc_color }};
+    --vrs-pill-gap: {{ section.settings.pill_spacing }}px;
+
+    /* Captions */
+    --vrs-caption-color: {{ section.settings.caption_color }};
+    --vrs-caption-size: {{ section.settings.caption_font_size }}px;
+
+    background-color: var(--vrs-section-bg);
+    position: relative;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .vrs-section-{{ section_id }} {
+    padding-top: var(--vrs-padding-top-mobile);
+    padding-bottom: var(--vrs-padding-bottom-mobile);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--vrs-heading-color);
+  }
+
+  @media (min-width: 768px) {
+    .vrs-section-{{ section_id }} {
+      padding-top: var(--vrs-padding-top-desktop);
+      padding-bottom: var(--vrs-padding-bottom-desktop);
+    }
+  }
+
+  .vrs-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--vrs-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .vrs-container-{{ section_id }} {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+
+  /* 2-Column Split Grid */
+  .vrs-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .vrs-grid-{{ section_id }} {
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+    }
+
+    {% if section.settings.desktop_layout == 'content_first' %}
+      .vrs-grid-{{ section_id }} .vrs-col-card {
+        order: 2;
+      }
+      .vrs-grid-{{ section_id }} .vrs-col-content {
+        order: 1;
+      }
+    {% else %}
+      .vrs-grid-{{ section_id }} .vrs-col-card {
+        order: 1;
+      }
+      .vrs-grid-{{ section_id }} .vrs-col-content {
+        order: 2;
+      }
+    {% endif %}
+  }
+
+  @media (max-width: 991px) {
+    {% if section.settings.mobile_card_order == 'second' %}
+      .vrs-grid-{{ section_id }} .vrs-col-card {
+        order: 2;
+      }
+      .vrs-grid-{{ section_id }} .vrs-col-content {
+        order: 1;
+      }
+    {% else %}
+      .vrs-grid-{{ section_id }} .vrs-col-card {
+        order: 1;
+      }
+      .vrs-grid-{{ section_id }} .vrs-col-content {
+        order: 2;
+      }
+    {% endif %}
+  }
+
+  /* Left Column: Elevated Comparison Card */
+  .vrs-card-{{ section_id }} {
+    background-color: var(--vrs-card-bg);
+    border-radius: var(--vrs-card-radius);
+    border: 1px solid var(--vrs-card-border);
+    box-shadow: var(--vrs-card-shadow);
+    padding: var(--vrs-card-padding-mobile);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .vrs-card-{{ section_id }} {
+      padding: var(--vrs-card-padding-desktop);
+    }
+  }
+
+  .vrs-card-{{ section_id }}:hover {
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.1), 0 0 1px 1px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Comparison Items Stack inside Card */
+  .vrs-comparison-list-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .vrs-comparison-item-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Side-by-side Images Container */
+  .vrs-images-wrapper-{{ section_id }} {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    user-select: none;
+  }
+
+  .vrs-image-box-{{ section_id }} {
+    flex: 1;
+    position: relative;
+    border-radius: var(--vrs-image-radius);
+    overflow: hidden;
+    background-color: #f1f5f9;
+    aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vrs-image-box-{{ section_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--vrs-image-radius);
+    transition: transform 0.4s ease;
+  }
+
+  .vrs-images-wrapper-{{ section_id }}:hover .vrs-image-box-{{ section_id }} img {
+    transform: scale(1.02);
+  }
+
+  /* Floating Tag Labels (Optional "Before" / "After") */
+  .vrs-image-tag-{{ section_id }} {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .vrs-image-tag-after-{{ section_id }} {
+    left: auto;
+    right: 10px;
+  }
+
+  /* Central Floating Circle Arrow Badge */
+  .vrs-arrow-badge-{{ section_id }} {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--vrs-arrow-size);
+    height: var(--vrs-arrow-size);
+    border-radius: 50%;
+    background: var(--vrs-arrow-bg);
+    color: var(--vrs-arrow-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ffffff;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    pointer-events: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .vrs-images-wrapper-{{ section_id }}:hover .vrs-arrow-badge-{{ section_id }} {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .vrs-arrow-badge-{{ section_id }} svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  /* Item Caption */
+  .vrs-caption-{{ section_id }} {
+    margin-top: 12px;
+    font-size: var(--vrs-caption-size);
+    color: var(--vrs-caption-color);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Interactive Slider Mode (Optional Enhancement) */
+  .vrs-slider-container-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    border-radius: var(--vrs-image-radius);
+    overflow: hidden;
+    user-select: none;
+    background-color: #f1f5f9;
+  }
+
+  .vrs-slider-before-{{ section_id }},
+  .vrs-slider-after-{{ section_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .vrs-slider-before-{{ section_id }} {
+    width: 50%;
+    z-index: 2;
+    border-right: 2px solid #ffffff;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .vrs-slider-before-{{ section_id }} img,
+  .vrs-slider-after-{{ section_id }} img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vrs-slider-handle-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ew-resize;
+  }
+
+  .vrs-slider-handle-{{ section_id }} svg {
+    width: 16px;
+    height: 16px;
+    fill: #0f172a;
+  }
+
+  /* Right Column: Text & Benefit Pills */
+  .vrs-content-wrap-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* Eyebrow / Tagline */
+  .vrs-eyebrow-{{ section_id }} {
+    font-size: var(--vrs-eyebrow-size);
+    font-weight: 700;
+    letter-spacing: var(--vrs-eyebrow-spacing);
+    text-transform: uppercase;
+    color: var(--vrs-eyebrow-color);
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+
+  /* Main Heading */
+  .vrs-heading-{{ section_id }} {
+    font-size: var(--vrs-heading-size-mobile);
+    font-weight: 800;
+    color: var(--vrs-heading-color);
+    line-height: 1.2;
+    margin: 0 0 var(--vrs-heading-margin-bottom) 0;
+    letter-spacing: -0.5px;
+  }
+
+  @media (min-width: 768px) {
+    .vrs-heading-{{ section_id }} {
+      font-size: var(--vrs-heading-size-desktop);
+      line-height: 1.15;
+    }
+  }
+
+  /* Body Description */
+  .vrs-description-{{ section_id }} {
+    font-size: var(--vrs-desc-size);
+    color: var(--vrs-desc-color);
+    line-height: var(--vrs-desc-line-height);
+    margin: 0 0 var(--vrs-desc-margin-bottom) 0;
+    max-width: 520px;
+  }
+
+  /* Benefit Pills List */
+  .vrs-pills-list-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vrs-pill-gap);
+    width: 100%;
+    max-width: 520px;
+  }
+
+  /* Individual Benefit Pill */
+  .vrs-pill-item-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    background-color: var(--vrs-pill-bg);
+    border: 1px solid var(--vrs-pill-border);
+    border-radius: var(--vrs-pill-radius);
+    padding: 12px 20px;
+    gap: 16px;
+    box-sizing: border-box;
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+  }
+
+  @media (min-width: 768px) {
+    .vrs-pill-item-{{ section_id }} {
+      padding: 14px 26px;
+    }
+  }
+
+  .vrs-pill-item-{{ section_id }}:hover {
+    background-color: var(--vrs-pill-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.08);
+  }
+
+  /* Circular Icon Inside Pill */
+  .vrs-pill-icon-{{ section_id }} {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--vrs-pill-icon-bg);
+    color: var(--vrs-pill-icon-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .vrs-pill-icon-{{ section_id }} svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* Text Content Inside Pill */
+  .vrs-pill-text-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .vrs-pill-title-{{ section_id }} {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--vrs-pill-title-color);
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .vrs-pill-title-{{ section_id }} {
+      font-size: 16px;
+    }
+  }
+
+  .vrs-pill-desc-{{ section_id }} {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--vrs-pill-desc-color);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* SVG Placeholders */
+  .vrs-placeholder-svg-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+  }
+{%- endstyle -%}
+
+<section class="vrs-section-{{ section_id }}" aria-label="{{ section.settings.heading | default: 'Visible Results Showcase' | escape }}">
+  <div class="vrs-container-{{ section_id }}">
+    <div class="vrs-grid-{{ section_id }}">
+      
+      <!-- Left Column: Visual Proof Card -->
+      <div class="vrs-col-card">
+        <div class="vrs-card-{{ section_id }}">
+          <div class="vrs-comparison-list-{{ section_id }}">
+            
+            {% assign comparison_count = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'comparison_item' %}
+                {% assign comparison_count = comparison_count | plus: 1 %}
+                <div class="vrs-comparison-item-{{ section_id }}" {{ block.shopify_attributes }}>
+                  
+                  {% if section.settings.comparison_mode == 'slider' %}
+                    <!-- Interactive Before/After Slider Mode -->
+                    <div class="vrs-slider-container-{{ section_id }}" data-vrs-slider>
+                      <div class="vrs-slider-after-{{ section_id }}">
+                        {% if block.settings.after_image != blank %}
+                          {{ block.settings.after_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: block.settings.caption | default: 'After treatment' }}
+                        {% else %}
+                          <div class="vrs-placeholder-svg-{{ section_id }}">
+                            <svg viewBox="0 0 300 300" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="300" height="300" fill="#f1f5f9"/>
+                              <circle cx="150" cy="110" r="45" fill="#e2e8f0"/>
+                              <path d="M90 230 C90 170, 210 170, 210 230" fill="#e2e8f0"/>
+                              <text x="150" y="270" font-size="13" font-family="sans-serif" fill="#64748b" text-anchor="middle" font-weight="600">AFTER (SMOOTH)</text>
+                            </svg>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="vrs-slider-before-{{ section_id }}" data-vrs-before>
+                        {% if block.settings.before_image != blank %}
+                          {{ block.settings.before_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: block.settings.caption | default: 'Before treatment' }}
+                        {% else %}
+                          <div class="vrs-placeholder-svg-{{ section_id }}">
+                            <svg viewBox="0 0 300 300" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="300" height="300" fill="#e2e8f0"/>
+                              <circle cx="150" cy="110" r="45" fill="#cbd5e1"/>
+                              <path d="M90 230 C90 170, 210 170, 210 230" fill="#cbd5e1"/>
+                              <line x1="120" y1="180" x2="180" y2="180" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                              <line x1="125" y1="195" x2="175" y2="195" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                              <text x="150" y="270" font-size="13" font-family="sans-serif" fill="#64748b" text-anchor="middle" font-weight="600">BEFORE (LINES)</text>
+                            </svg>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="vrs-slider-handle-{{ section_id }}" data-vrs-handle aria-label="Slide to compare before and after">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  {% else %}
+                    <!-- Side-by-Side Mode (Reference Replica) -->
+                    <div class="vrs-images-wrapper-{{ section_id }}">
+                      <!-- Before Image -->
+                      <div class="vrs-image-box-{{ section_id }}">
+                        {% if block.settings.before_image != blank %}
+                          {{ block.settings.before_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.caption | default: 'Before' }}
+                        {% else %}
+                          <div class="vrs-placeholder-svg-{{ section_id }}">
+                            <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="260" height="260" fill="#e9eff5"/>
+                              <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#d9e3ed"/>
+                              <path d="M95 125 Q130 135 165 125" stroke="#b0c0d0" stroke-width="4" stroke-linecap="round" fill="none"/>
+                              <path d="M98 145 Q130 155 162 145" stroke="#b0c0d0" stroke-width="4" stroke-linecap="round" fill="none"/>
+                              <path d="M105 165 Q130 172 155 165" stroke="#b0c0d0" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                            </svg>
+                          </div>
+                        {% endif %}
+
+                        {% if section.settings.show_before_after_tags %}
+                          <span class="vrs-image-tag-{{ section_id }}">{{ block.settings.before_label | default: 'Before' }}</span>
+                        {% endif %}
+                      </div>
+
+                      <!-- Center Arrow Badge -->
+                      {% if section.settings.show_arrow_badge %}
+                        <div class="vrs-arrow-badge-{{ section_id }}" aria-hidden="true">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                          </svg>
+                        </div>
+                      {% endif %}
+
+                      <!-- After Image -->
+                      <div class="vrs-image-box-{{ section_id }}">
+                        {% if block.settings.after_image != blank %}
+                          {{ block.settings.after_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.caption | default: 'After' }}
+                        {% else %}
+                          <div class="vrs-placeholder-svg-{{ section_id }}">
+                            <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="260" height="260" fill="#f3f7fa"/>
+                              <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#e6eff7"/>
+                              <circle cx="130" cy="140" r="28" fill="#ffffff" opacity="0.4"/>
+                            </svg>
+                          </div>
+                        {% endif %}
+
+                        {% if section.settings.show_before_after_tags %}
+                          <span class="vrs-image-tag-{{ section_id }} vrs-image-tag-after-{{ section_id }}">{{ block.settings.after_label | default: 'After' }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  <!-- Caption -->
+                  {% if block.settings.caption != blank %}
+                    <div class="vrs-caption-{{ section_id }}">
+                      {{ block.settings.caption | escape }}
+                    </div>
+                  {% endif %}
+
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            <!-- Default Fallback if no comparison blocks are added -->
+            {% if comparison_count == 0 %}
+              <div class="vrs-comparison-item-{{ section_id }}">
+                <div class="vrs-images-wrapper-{{ section_id }}">
+                  <div class="vrs-image-box-{{ section_id }}">
+                    <div class="vrs-placeholder-svg-{{ section_id }}">
+                      <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="260" height="260" fill="#e9eff5"/>
+                        <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#d9e3ed"/>
+                        <path d="M95 125 Q130 135 165 125" stroke="#b0c0d0" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        <path d="M98 145 Q130 155 162 145" stroke="#b0c0d0" stroke-width="4" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="vrs-arrow-badge-{{ section_id }}" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                  </div>
+                  <div class="vrs-image-box-{{ section_id }}">
+                    <div class="vrs-placeholder-svg-{{ section_id }}">
+                      <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="260" height="260" fill="#f3f7fa"/>
+                        <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#e6eff7"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="vrs-caption-{{ section_id }}">Lightens neck lines Skin becomes smooth</div>
+              </div>
+              <div class="vrs-comparison-item-{{ section_id }}">
+                <div class="vrs-images-wrapper-{{ section_id }}">
+                  <div class="vrs-image-box-{{ section_id }}">
+                    <div class="vrs-placeholder-svg-{{ section_id }}">
+                      <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="260" height="260" fill="#e9eff5"/>
+                        <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#d9e3ed"/>
+                        <path d="M100 135 Q130 148 160 135" stroke="#b0c0d0" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="vrs-arrow-badge-{{ section_id }}" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                  </div>
+                  <div class="vrs-image-box-{{ section_id }}">
+                    <div class="vrs-placeholder-svg-{{ section_id }}">
+                      <svg viewBox="0 0 260 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="260" height="260" fill="#f3f7fa"/>
+                        <path d="M50 40 Q90 100 80 220 L180 220 Q170 100 210 40 Z" fill="#e6eff7"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="vrs-caption-{{ section_id }}">Relieve sagging skin on face and jaw</div>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Text & Benefit Callout Pills -->
+      <div class="vrs-col-content">
+        <div class="vrs-content-wrap-{{ section_id }}">
+          
+          {% if section.settings.eyebrow != blank %}
+            <span class="vrs-eyebrow-{{ section_id }}">{{ section.settings.eyebrow | escape }}</span>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <{{ section.settings.heading_tag }} class="vrs-heading-{{ section_id }}">
+              {{ section.settings.heading | escape }}
+            </{{ section.settings.heading_tag }}>
+          {% endif %}
+
+          {% if section.settings.description != blank %}
+            <div class="vrs-description-{{ section_id }}">
+              {{ section.settings.description | escape }}
+            </div>
+          {% endif %}
+
+          <!-- Benefit Pills List -->
+          <div class="vrs-pills-list-{{ section_id }}">
+            {% assign pill_count = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'benefit_pill' %}
+                {% assign pill_count = pill_count | plus: 1 %}
+                <div class="vrs-pill-item-{{ section_id }}" {{ block.shopify_attributes }}>
+                  
+                  <!-- Icon Badge -->
+                  <div class="vrs-pill-icon-{{ section_id }}" aria-hidden="true">
+                    {% if block.settings.custom_icon_svg != blank %}
+                      {{ block.settings.custom_icon_svg }}
+                    {% else %}
+                      {% case block.settings.icon %}
+                        {% when 'sparkles' %}
+                          <!-- 4-point Sparkles Icon matching screenshot -->
+                          <svg viewBox="0 0 24 24">
+                            <path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z"/>
+                            <path d="M19 16L19.9 18.1L22 19L19.9 19.9L19 22L18.1 19.9L16 19L18.1 18.1L19 16Z"/>
+                          </svg>
+                        {% when 'check' %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                          </svg>
+                        {% when 'shield' %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                          </svg>
+                        {% when 'heart' %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                        {% when 'droplet' %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                          </svg>
+                        {% when 'sun' %}
+                          <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                          </svg>
+                        {% when 'feather' %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                            <line x1="16" y1="8" x2="2" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                        {% else %}
+                          <svg viewBox="0 0 24 24">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                          </svg>
+                      {% endcase %}
+                    {% endif %}
+                  </div>
+
+                  <!-- Text Inside Pill -->
+                  <div class="vrs-pill-text-{{ section_id }}">
+                    {% if block.settings.title != blank %}
+                      <h3 class="vrs-pill-title-{{ section_id }}">{{ block.settings.title | escape }}</h3>
+                    {% endif %}
+                    {% if block.settings.description != blank %}
+                      <p class="vrs-pill-desc-{{ section_id }}">{{ block.settings.description | escape }}</p>
+                    {% endif %}
+                  </div>
+
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            <!-- Default Fallback if no benefit pills are added -->
+            {% if pill_count == 0 %}
+              <div class="vrs-pill-item-{{ section_id }}">
+                <div class="vrs-pill-icon-{{ section_id }}" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z"/>
+                    <path d="M19 16L19.9 18.1L22 19L19.9 19.9L19 22L18.1 19.9L16 19L18.1 18.1L19 16Z"/>
+                  </svg>
+                </div>
+                <div class="vrs-pill-text-{{ section_id }}">
+                  <h3 class="vrs-pill-title-{{ section_id }}">Lightens neck lines</h3>
+                  <p class="vrs-pill-desc-{{ section_id }}">Skin becomes visibly smoother.</p>
+                </div>
+              </div>
+              <div class="vrs-pill-item-{{ section_id }}">
+                <div class="vrs-pill-icon-{{ section_id }}" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z"/>
+                    <path d="M19 16L19.9 18.1L22 19L19.9 19.9L19 22L18.1 19.9L16 19L18.1 18.1L19 16Z"/>
+                  </svg>
+                </div>
+                <div class="vrs-pill-text-{{ section_id }}">
+                  <h3 class="vrs-pill-title-{{ section_id }}">Relieves sagging skin</h3>
+                  <p class="vrs-pill-desc-{{ section_id }}">Face and jaw feel firmer and more lifted.</p>
+                </div>
+              </div>
+            {% endif %}
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% if section.settings.comparison_mode == 'slider' %}
+  <script>
+    (function() {
+      function initVrsSliders() {
+        var section = document.getElementById('shopify-section-{{ section.id }}');
+        if (!section) return;
+        var containers = section.querySelectorAll('[data-vrs-slider]');
+
+        containers.forEach(function(container) {
+          var beforeLayer = container.querySelector('[data-vrs-before]');
+          var handle = container.querySelector('[data-vrs-handle]');
+          if (!beforeLayer || !handle) return;
+
+          var isDragging = false;
+
+          function setPosition(xPos) {
+            var rect = container.getBoundingClientRect();
+            var offsetX = xPos - rect.left;
+            var percentage = Math.max(0, Math.min(100, (offsetX / rect.width) * 100));
+
+            beforeLayer.style.width = percentage + '%';
+            handle.style.left = percentage + '%';
+          }
+
+          function onMouseDown(e) {
+            isDragging = true;
+            setPosition(e.clientX);
+          }
+
+          function onMouseMove(e) {
+            if (!isDragging) return;
+            setPosition(e.clientX);
+          }
+
+          function onMouseUp() {
+            isDragging = false;
+          }
+
+          function onTouchStart(e) {
+            isDragging = true;
+            if (e.touches && e.touches[0]) {
+              setPosition(e.touches[0].clientX);
+            }
+          }
+
+          function onTouchMove(e) {
+            if (!isDragging) return;
+            if (e.touches && e.touches[0]) {
+              setPosition(e.touches[0].clientX);
+            }
+          }
+
+          container.addEventListener('mousedown', onMouseDown);
+          window.addEventListener('mousemove', onMouseMove);
+          window.addEventListener('mouseup', onMouseUp);
+
+          container.addEventListener('touchstart', onTouchStart, { passive: true });
+          window.addEventListener('touchmove', onTouchMove, { passive: true });
+          window.addEventListener('touchend', onMouseUp);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initVrsSliders);
+      } else {
+        initVrsSliders();
+      }
+
+      document.addEventListener('shopify:section:load', function(e) {
+        if (e.detail.sectionId === '{{ section.id }}') {
+          initVrsSliders();
+        }
+      });
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Visible Results Showcase",
+  "tag": "section",
+  "class": "shopify-section-visible-results",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 900,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1180
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop Column Order",
+      "options": [
+        { "value": "card_first", "label": "Card Left / Text Right" },
+        { "value": "content_first", "label": "Text Left / Card Right" }
+      ],
+      "default": "card_first"
+    },
+    {
+      "type": "select",
+      "id": "mobile_card_order",
+      "label": "Mobile Display Order",
+      "options": [
+        { "value": "first", "label": "Card First (Top)" },
+        { "value": "second", "label": "Text First (Top)" }
+      ],
+      "default": "first"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Comparison Card Settings"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Corner Radius",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "rgba(0, 0, 0, 0.04)"
+    },
+    {
+      "type": "text",
+      "id": "card_shadow",
+      "label": "Card Shadow (CSS)",
+      "default": "0 16px 36px -10px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.02)"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_desktop",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Card Inner Padding (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Inner Padding (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "comparison_mode",
+      "label": "Comparison Presentation Mode",
+      "options": [
+        { "value": "side_by_side", "label": "Side by Side with Arrow Badge (Exact Reference)" },
+        { "value": "slider", "label": "Interactive Drag Before/After Slider" }
+      ],
+      "default": "side_by_side"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Image Corner Radius",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow_badge",
+      "label": "Show Center Arrow Badge",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_badge_bg",
+      "label": "Arrow Badge Background",
+      "default": "rgba(30, 41, 59, 0.65)"
+    },
+    {
+      "type": "color",
+      "id": "arrow_badge_icon_color",
+      "label": "Arrow Badge Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "arrow_badge_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow Badge Size",
+      "default": 32
+    },
+    {
+      "type": "checkbox",
+      "id": "show_before_after_tags",
+      "label": "Show 'Before / After' Corner Tags",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "range",
+      "id": "caption_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Caption Font Size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Heading & Text Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "VISIBLE RESULTS"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#0f766e"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Font Size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Eyebrow Letter Spacing",
+      "default": 1.5
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "Lighten lines. Lift the jawline."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "div" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "min": 20,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Font Size (Mobile)",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Body Description",
+      "default": "Consistent use smooths horizontal neck lines and relieves sagging along the jaw — so your skin looks as rested as your muscles feel."
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#475569"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Font Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "description_line_height",
+      "label": "Description Line Height",
+      "options": [
+        { "value": "1.4", "label": "Tight (1.4)" },
+        { "value": "1.6", "label": "Normal (1.6)" },
+        { "value": "1.75", "label": "Relaxed (1.75)" }
+      ],
+      "default": "1.6"
+    },
+    {
+      "type": "range",
+      "id": "description_margin_bottom",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Description Margin Bottom",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Benefit Pills Styling"
+    },
+    {
+      "type": "color",
+      "id": "pill_bg_color",
+      "label": "Pill Background Color",
+      "default": "#eaf7f4"
+    },
+    {
+      "type": "color",
+      "id": "pill_hover_bg_color",
+      "label": "Pill Hover Background Color",
+      "default": "#e2f5f1"
+    },
+    {
+      "type": "color",
+      "id": "pill_border_color",
+      "label": "Pill Border Color",
+      "default": "transparent"
+    },
+    {
+      "type": "range",
+      "id": "pill_border_radius",
+      "min": 12,
+      "max": 9999,
+      "step": 1,
+      "unit": "px",
+      "label": "Pill Corner Radius",
+      "default": 9999
+    },
+    {
+      "type": "color",
+      "id": "pill_icon_bg",
+      "label": "Icon Circle Background Color",
+      "default": "#93e8c9"
+    },
+    {
+      "type": "color",
+      "id": "pill_icon_color",
+      "label": "Icon Color",
+      "default": "#065f46"
+    },
+    {
+      "type": "color",
+      "id": "pill_title_color",
+      "label": "Pill Title Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "color",
+      "id": "pill_desc_color",
+      "label": "Pill Description Color",
+      "default": "#475569"
+    },
+    {
+      "type": "range",
+      "id": "pill_spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing Between Pills",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_item",
+      "name": "Comparison Pair",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "before_image",
+          "label": "Before Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "after_image",
+          "label": "After Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Comparison Caption",
+          "default": "Lightens neck lines Skin becomes smooth"
+        },
+        {
+          "type": "text",
+          "id": "before_label",
+          "label": "Before Label Tag",
+          "default": "Before"
+        },
+        {
+          "type": "text",
+          "id": "after_label",
+          "label": "After Label Tag",
+          "default": "After"
+        }
+      ]
+    },
+    {
+      "type": "benefit_pill",
+      "name": "Benefit Pill",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "sparkles", "label": "Sparkles (Default)" },
+            { "value": "check", "label": "Checkmark" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "droplet", "label": "Droplet / Hydration" },
+            { "value": "sun", "label": "Sun / Glow" },
+            { "value": "feather", "label": "Feather / Gentle" },
+            { "value": "star", "label": "Star" }
+          ],
+          "default": "sparkles"
+        },
+        {
+          "type": "html",
+          "id": "custom_icon_svg",
+          "label": "Custom SVG Icon (Overrides preset icon)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Benefit Title",
+          "default": "Lightens neck lines"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Benefit Subtitle / Description",
+          "default": "Skin becomes visibly smoother."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Visible Results Showcase",
+      "blocks": [
+        {
+          "type": "comparison_item",
+          "settings": {
+            "caption": "Lightens neck lines Skin becomes smooth",
+            "before_label": "Before",
+            "after_label": "After"
+          }
+        },
+        {
+          "type": "comparison_item",
+          "settings": {
+            "caption": "Relieve sagging skin on face and jaw",
+            "before_label": "Before",
+            "after_label": "After"
+          }
+        },
+        {
+          "type": "benefit_pill",
+          "settings": {
+            "icon": "sparkles",
+            "title": "Lightens neck lines",
+            "description": "Skin becomes visibly smoother."
+          }
+        },
+        {
+          "type": "benefit_pill",
+          "settings": {
+            "icon": "sparkles",
+            "title": "Relieves sagging skin",
+            "description": "Face and jaw feel firmer and more lifted."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
