@@ -4,6 +4,8 @@ A high-converting, 3-column feature section designed for Shopify Online Store 2.
 
 Built with pure Vanilla CSS and semantic Liquid with zero external JavaScript dependencies, complete mobile responsiveness, and granular customization controls for both desktop and mobile views.
 
+![Why Choose Us Preview](Why-Choose-Us-Center-Image-Features.png)
+
 ---
 
 ## 🌟 Key Features
