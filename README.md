@@ -36,6 +36,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/dual-promo-cards/preview.png) | **Dual Promo Cards** | High-converting 2-column promotional banner cards with pill badges, rich imagery, smooth gradient overlays, and arrow CTA links | [View](sections/dual-promo-cards) |
 | ![preview](sections/custom_community_count/Community_count_section.png) | **Community Stats** | Animated statistics counter highlighting milestone numbers, community size, and customer trust with customizable labels and CTA | [View](sections/custom_community_count) |
 | ![preview](sections/title_with_divider/title_with_divider.png) | **Title with Divider** | Elegant heading section flanked by customizable divider lines (solid, dashed, dotted, gradient) and custom decorative icons | [View](sections/title_with_divider) |
+| ![preview](sections/featured-product/preview.png) | **Featured Product** | High-converting minimal DTC product showcase with vertical thumbnail rail, size swatches, quantity stepper, AJAX cart CTA, and trust badges | [View](sections/featured-product) |
 
 <!-- Add new rows above this line as you build new sections -->
 
