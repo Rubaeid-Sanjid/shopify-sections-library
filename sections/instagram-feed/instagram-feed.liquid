@@ -1,0 +1,1470 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --insta-bg: {{ section.settings.section_bg }};
+    --insta-max-width: {{ section.settings.container_max_width }}px;
+    --insta-pad-top-dt: {{ section.settings.padding_top_desktop }}px;
+    --insta-pad-bottom-dt: {{ section.settings.padding_bottom_desktop }}px;
+    --insta-pad-top-mb: {{ section.settings.padding_top_mobile }}px;
+    --insta-pad-bottom-mb: {{ section.settings.padding_bottom_mobile }}px;
+    
+    --insta-gap-dt: {{ section.settings.gap_desktop }}px;
+    --insta-gap-mb: {{ section.settings.gap_mobile }}px;
+    --insta-radius: {{ section.settings.card_border_radius }}px;
+
+    --insta-heading-color: {{ section.settings.heading_color }};
+    --insta-subheading-color: {{ section.settings.subheading_color }};
+    --insta-eyebrow-color: {{ section.settings.eyebrow_color }};
+
+    --insta-overlay-color: {{ section.settings.overlay_color }};
+    --insta-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --insta-icon-color: {{ section.settings.icon_color }};
+    --insta-icon-size: {{ section.settings.icon_size }}px;
+    --insta-icon-bg: {{ section.settings.icon_bg_color }};
+
+    --insta-arrow-bg: {{ section.settings.arrow_bg_color }};
+    --insta-arrow-color: {{ section.settings.arrow_color }};
+    --insta-arrow-border: {{ section.settings.arrow_border_color }};
+    --insta-arrow-hover-bg: {{ section.settings.arrow_hover_bg }};
+    --insta-arrow-hover-color: {{ section.settings.arrow_hover_color }};
+
+    --insta-dot-color: {{ section.settings.dot_color }};
+    --insta-dot-active-color: {{ section.settings.dot_active_color }};
+
+    background-color: var(--insta-bg);
+    width: 100%;
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .insta-feed-wrapper-{{ section_id }} {
+    width: 100%;
+    padding-top: var(--insta-pad-top-mb);
+    padding-bottom: var(--insta-pad-bottom-mb);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .insta-feed-wrapper-{{ section_id }} {
+      padding-top: var(--insta-pad-top-dt);
+      padding-bottom: var(--insta-pad-bottom-dt);
+    }
+  }
+
+  .insta-feed-container-{{ section_id }} {
+    width: 100%;
+    {% if section.settings.full_width %}
+      max-width: 100%;
+      padding-left: {{ section.settings.full_width_padding }}px;
+      padding-right: {{ section.settings.full_width_padding }}px;
+    {% else %}
+      max-width: var(--insta-max-width);
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .insta-feed-container-{{ section_id }} {
+      {% unless section.settings.full_width %}
+        padding-left: 32px;
+        padding-right: 32px;
+      {% endunless %}
+    }
+  }
+
+  /* Header Section */
+  .insta-feed-header-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: {{ section.settings.header_margin_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  {% if section.settings.header_alignment == 'center' %}
+    .insta-feed-header-{{ section_id }} {
+      text-align: center;
+      align-items: center;
+    }
+  {% elsif section.settings.header_alignment == 'right' %}
+    .insta-feed-header-{{ section_id }} {
+      text-align: right;
+      align-items: flex-end;
+    }
+  {% else %}
+    .insta-feed-header-{{ section_id }} {
+      text-align: left;
+      align-items: flex-start;
+    }
+  {% endif %}
+
+  .insta-feed-header-row-{{ section_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .insta-feed-header-content-{{ section_id }} {
+    flex: 1;
+  }
+
+  .insta-feed-eyebrow-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--insta-eyebrow-color);
+    margin-bottom: 8px;
+  }
+
+  .insta-feed-heading-{{ section_id }} {
+    font-size: {{ section.settings.heading_size_mobile }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.15;
+    letter-spacing: {{ section.settings.heading_letter_spacing }}px;
+    text-transform: {{ section.settings.heading_transform }};
+    color: var(--insta-heading-color);
+    margin: 0 0 8px 0;
+  }
+
+  @media (min-width: 768px) {
+    .insta-feed-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+    }
+  }
+
+  .insta-feed-subheading-{{ section_id }} {
+    font-size: {{ section.settings.subheading_size }}px;
+    line-height: 1.5;
+    color: var(--insta-subheading-color);
+    margin: 0;
+  }
+
+  .insta-feed-subheading-{{ section_id }} a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+  }
+
+  .insta-feed-subheading-{{ section_id }} a:hover {
+    opacity: 0.75;
+  }
+
+  /* Header Controls (Nav arrows next to header) */
+  .insta-feed-header-nav-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Gallery / Slider Track */
+  .insta-feed-main-{{ section_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .insta-feed-track-{{ section_id }} {
+    display: flex;
+    width: 100%;
+    gap: var(--insta-gap-mb);
+    box-sizing: border-box;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 768px) {
+    .insta-feed-track-{{ section_id }} {
+      gap: var(--insta-gap-dt);
+    }
+  }
+
+  /* Grid mode vs Slider mode */
+  .insta-feed-track-{{ section_id }}.is-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    overflow: visible;
+  }
+
+  @media (min-width: 640px) {
+    .insta-feed-track-{{ section_id }}.is-grid {
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .insta-feed-track-{{ section_id }}.is-grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    }
+  }
+
+  .insta-feed-track-{{ section_id }}.is-slider {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .insta-feed-track-{{ section_id }}.is-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Items / Cards */
+  .insta-card-{{ section_id }} {
+    position: relative;
+    flex: 0 0 calc((100% - (({{ section.settings.columns_mobile_slider }} - 1) * var(--insta-gap-mb))) / {{ section.settings.columns_mobile_slider }});
+    scroll-snap-align: start;
+    border-radius: var(--insta-radius);
+    overflow: hidden;
+    background-color: #f3f3f3;
+    display: block;
+    text-decoration: none;
+    box-sizing: border-box;
+    user-select: none;
+  }
+
+  @media (min-width: 640px) {
+    .insta-card-{{ section_id }} {
+      flex: 0 0 calc((100% - (({{ section.settings.columns_tablet }} - 1) * var(--insta-gap-dt))) / {{ section.settings.columns_tablet }});
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .insta-card-{{ section_id }} {
+      flex: 0 0 calc((100% - (({{ section.settings.columns_desktop }} - 1) * var(--insta-gap-dt))) / {{ section.settings.columns_desktop }});
+    }
+  }
+
+  .insta-feed-track-{{ section_id }}.is-grid .insta-card-{{ section_id }} {
+    flex: initial;
+    width: 100%;
+  }
+
+  /* Aspect Ratio */
+  .insta-card-inner-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--insta-radius);
+    {% if section.settings.aspect_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.aspect_ratio == 'portrait' %}
+      aspect-ratio: 4 / 5;
+    {% elsif section.settings.aspect_ratio == 'tall' %}
+      aspect-ratio: 9 / 16;
+    {% elsif section.settings.aspect_ratio == 'landscape' %}
+      aspect-ratio: 16 / 9;
+    {% else %}
+      aspect-ratio: 1 / 1;
+    {% endif %}
+  }
+
+  .insta-card-img-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform {{ section.settings.zoom_speed }}ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  {% if section.settings.enable_hover_zoom %}
+    .insta-card-{{ section_id }}:hover .insta-card-img-{{ section_id }} {
+      transform: scale({{ section.settings.zoom_scale }});
+    }
+  {% endif %}
+
+  /* Hover Overlay */
+  .insta-card-overlay-{{ section_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--insta-overlay-color);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .insta-card-{{ section_id }}:hover .insta-card-overlay-{{ section_id }} {
+    opacity: var(--insta-overlay-opacity);
+  }
+
+  /* Center Instagram Icon */
+  .insta-card-icon-wrap-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--insta-icon-color);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transition: transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+    {% if section.settings.icon_bg_style == 'circle_glass' %}
+      width: calc(var(--insta-icon-size) * 1.8);
+      height: calc(var(--insta-icon-size) * 1.8);
+      border-radius: 50%;
+      background: var(--insta-icon-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    {% elsif section.settings.icon_bg_style == 'circle_solid' %}
+      width: calc(var(--insta-icon-size) * 1.8);
+      height: calc(var(--insta-icon-size) * 1.8);
+      border-radius: 50%;
+      background: var(--insta-icon-bg);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    {% elsif section.settings.icon_bg_style == 'square_rounded' %}
+      width: calc(var(--insta-icon-size) * 1.8);
+      height: calc(var(--insta-icon-size) * 1.8);
+      border-radius: 12px;
+      background: var(--insta-icon-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    {% endif %}
+  }
+
+  .insta-card-{{ section_id }}:hover .insta-card-icon-wrap-{{ section_id }} {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .insta-card-icon-{{ section_id }} {
+    width: var(--insta-icon-size);
+    height: var(--insta-icon-size);
+    display: block;
+    fill: currentColor;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
+  }
+
+  /* Card Badge / Optional Account Tag */
+  .insta-card-tag-{{ section_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 3;
+    pointer-events: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .insta-card-{{ section_id }}:hover .insta-card-tag-{{ section_id }} {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Slider Navigation Arrows */
+  .insta-nav-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ section.settings.arrow_size }}px;
+    height: {{ section.settings.arrow_size }}px;
+    border-radius: {{ section.settings.arrow_border_radius }}%;
+    background-color: var(--insta-arrow-bg);
+    color: var(--insta-arrow-color);
+    border: 1px solid var(--insta-arrow-border);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .insta-nav-btn-{{ section_id }}:hover {
+    background-color: var(--insta-arrow-hover-bg);
+    color: var(--insta-arrow-hover-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .insta-nav-btn-{{ section_id }}:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .insta-nav-btn-{{ section_id }} svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Side Floating Arrows */
+  .insta-side-nav-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  .insta-side-nav-{{ section_id }}--prev {
+    left: -18px;
+  }
+
+  .insta-side-nav-{{ section_id }}--next {
+    right: -18px;
+  }
+
+  @media (min-width: 1024px) {
+    .insta-side-nav-{{ section_id }}--prev {
+      left: -22px;
+    }
+    .insta-side-nav-{{ section_id }}--next {
+      right: -22px;
+    }
+  }
+
+  /* Pagination Dots */
+  .insta-dots-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: {{ section.settings.dots_margin_top }}px;
+  }
+
+  .insta-dot-{{ section_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--insta-dot-color);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .insta-dot-{{ section_id }}.is-active {
+    width: 24px;
+    border-radius: 4px;
+    background-color: var(--insta-dot-active-color);
+  }
+
+  /* Bottom Controls Row */
+  .insta-bottom-controls-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  /* Responsive visibility for arrows */
+  {% if section.settings.hide_arrows_mobile %}
+    @media (max-width: 767px) {
+      .insta-nav-btn-{{ section_id }},
+      .insta-side-nav-{{ section_id }} {
+        display: none !important;
+      }
+    }
+  {% endif %}
+{%- endstyle -%}
+
+{%- liquid
+  assign slider_mode = section.settings.slider_mode
+  assign enable_slider_desktop = false
+  assign enable_slider_mobile = false
+
+  if slider_mode == 'all'
+    assign enable_slider_desktop = true
+    assign enable_slider_mobile = true
+  elsif slider_mode == 'mobile_only'
+    assign enable_slider_mobile = true
+  elsif slider_mode == 'desktop_only'
+    assign enable_slider_desktop = true
+  endif
+-%}
+
+<div 
+  class="insta-feed-wrapper-{{ section_id }}" 
+  id="InstagramFeed-{{ section_id }}"
+  data-instagram-feed="{{ section_id }}"
+  data-autoplay="{{ section.settings.enable_autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+  data-slider-desktop="{{ enable_slider_desktop }}"
+  data-slider-mobile="{{ enable_slider_mobile }}"
+>
+  <div class="insta-feed-container-{{ section_id }}">
+    
+    {%- if section.settings.show_header -%}
+      <div class="insta-feed-header-{{ section_id }}">
+        <div class="insta-feed-header-row-{{ section_id }}">
+          <div class="insta-feed-header-content-{{ section_id }}">
+            
+            {%- if section.settings.eyebrow != blank -%}
+              <div class="insta-feed-eyebrow-{{ section_id }}">
+                {%- if section.settings.show_eyebrow_icon -%}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                {%- endif -%}
+                <span>{{ section.settings.eyebrow | escape }}</span>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.heading != blank -%}
+              <h2 class="insta-feed-heading-{{ section_id }}">
+                {{ section.settings.heading | escape }}
+              </h2>
+            {%- endif -%}
+
+            {%- if section.settings.subheading != blank -%}
+              <div class="insta-feed-subheading-{{ section_id }}">
+                {{ section.settings.subheading }}
+              </div>
+            {%- endif -%}
+
+          </div>
+
+          {%- if section.settings.show_arrows and section.settings.arrow_position == 'header' and section.blocks.size > 1 -%}
+            <div class="insta-feed-header-nav-{{ section_id }}">
+              <button 
+                type="button" 
+                class="insta-nav-btn-{{ section_id }} insta-prev-btn-{{ section_id }}" 
+                aria-label="Previous image"
+              >
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button 
+                type="button" 
+                class="insta-nav-btn-{{ section_id }} insta-next-btn-{{ section_id }}" 
+                aria-label="Next image"
+              >
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="insta-feed-main-{{ section_id }}">
+      
+      {%- if section.settings.show_arrows and section.settings.arrow_position == 'sides' and section.blocks.size > 1 -%}
+        <div class="insta-side-nav-{{ section_id }} insta-side-nav-{{ section_id }}--prev">
+          <button 
+            type="button" 
+            class="insta-nav-btn-{{ section_id }} insta-prev-btn-{{ section_id }}" 
+            aria-label="Previous image"
+          >
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </div>
+        <div class="insta-side-nav-{{ section_id }} insta-side-nav-{{ section_id }}--next">
+          <button 
+            type="button" 
+            class="insta-nav-btn-{{ section_id }} insta-next-btn-{{ section_id }}" 
+            aria-label="Next image"
+          >
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      {%- endif -%}
+
+      <div 
+        class="insta-feed-track-{{ section_id }} {% if enable_slider_desktop or enable_slider_mobile %}is-slider{% else %}is-grid{% endif %}" 
+        id="InstaTrack-{{ section_id }}"
+      >
+        {%- for block in section.blocks -%}
+          {%- assign item_tag = 'div' -%}
+          {%- if block.settings.link != blank -%}
+            {%- assign item_tag = 'a' -%}
+          {%- endif -%}
+
+          <{{ item_tag }} 
+            class="insta-card-{{ section_id }}" 
+            {{ block.shopify_attributes }}
+            {% if block.settings.link != blank %}
+              href="{{ block.settings.link }}" 
+              {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+              aria-label="{{ block.settings.caption | default: 'Instagram post' | escape }}"
+            {% endif %}
+          >
+            <div class="insta-card-inner-{{ section_id }}">
+              
+              {%- if block.settings.image != blank -%}
+                <img 
+                  src="{{ block.settings.image | image_url: width: 900 }}" 
+                  alt="{{ block.settings.caption | default: 'Instagram photo' | escape }}" 
+                  loading="lazy" 
+                  class="insta-card-img-{{ section_id }}"
+                />
+              {%- elsif block.settings.image_url != blank -%}
+                <img 
+                  src="{{ block.settings.image_url }}" 
+                  alt="{{ block.settings.caption | default: 'Instagram photo' | escape }}" 
+                  loading="lazy" 
+                  class="insta-card-img-{{ section_id }}" 
+                />
+              {%- else -%}
+                {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                {{ 'collection-' | append: placeholder_index | placeholder_svg_tag: 'insta-card-img-' | append: section_id }}
+              {%- endif -%}
+
+              <!-- Hover Overlay -->
+              <div class="insta-card-overlay-{{ section_id }}"></div>
+
+              <!-- Center Instagram Icon -->
+              {%- if section.settings.show_center_instagram_icon -%}
+                <div class="insta-card-icon-wrap-{{ section_id }}">
+                  <svg class="insta-card-icon-{{ section_id }}" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+
+              <!-- Optional Username/Tag Label -->
+              {%- if block.settings.username != blank -%}
+                <div class="insta-card-tag-{{ section_id }}">
+                  {{ block.settings.username | escape }}
+                </div>
+              {%- endif -%}
+
+            </div>
+          </{{ item_tag }}>
+        {%- endfor -%}
+      </div>
+
+    </div>
+
+    {%- if section.settings.show_arrows and section.settings.arrow_position == 'bottom' and section.blocks.size > 1 -%}
+      <div class="insta-bottom-controls-{{ section_id }}">
+        <button 
+          type="button" 
+          class="insta-nav-btn-{{ section_id }} insta-prev-btn-{{ section_id }}" 
+          aria-label="Previous image"
+        >
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button 
+          type="button" 
+          class="insta-nav-btn-{{ section_id }} insta-next-btn-{{ section_id }}" 
+          aria-label="Next image"
+        >
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_dots and section.blocks.size > 1 -%}
+      <div class="insta-dots-{{ section_id }}" id="InstaDots-{{ section_id }}">
+        {%- for block in section.blocks -%}
+          <button 
+            type="button" 
+            class="insta-dot-{{ section_id }} {% if forloop.first %}is-active{% endif %}" 
+            data-index="{{ forloop.index0 }}"
+            aria-label="Go to slide {{ forloop.index }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initInstagramFeed(sectionId) {
+      const container = document.querySelector(`[data-instagram-feed="${sectionId}"]`);
+      if (!container) return;
+
+      const track = container.querySelector(`#InstaTrack-${sectionId}`);
+      if (!track) return;
+
+      const cards = track.querySelectorAll(`.insta-card-${sectionId}`);
+      if (!cards.length) return;
+
+      const prevBtns = container.querySelectorAll(`.insta-prev-btn-${sectionId}`);
+      const nextBtns = container.querySelectorAll(`.insta-next-btn-${sectionId}`);
+      const dots = container.querySelectorAll(`.insta-dot-${sectionId}`);
+
+      const isAutoplay = container.dataset.autoplay === 'true';
+      const autoplaySpeed = parseInt(container.dataset.autoplaySpeed, 10) || 4000;
+      let autoplayTimer = null;
+
+      function getStepSize() {
+        if (!cards.length) return track.clientWidth;
+        const cardRect = cards[0].getBoundingClientRect();
+        const style = window.getComputedStyle(track);
+        const gap = parseFloat(style.gap || style.columnGap || 0) || 16;
+        return cardRect.width + gap;
+      }
+
+      function scrollPrev() {
+        const step = getStepSize();
+        if (track.scrollLeft <= 10) {
+          track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+        } else {
+          track.scrollBy({ left: -step, behavior: 'smooth' });
+        }
+      }
+
+      function scrollNext() {
+        const step = getStepSize();
+        const maxScroll = track.scrollWidth - track.clientWidth - 10;
+        if (track.scrollLeft >= maxScroll) {
+          track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          track.scrollBy({ left: step, behavior: 'smooth' });
+        }
+      }
+
+      prevBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          scrollPrev();
+          resetAutoplay();
+        });
+      });
+
+      nextBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          scrollNext();
+          resetAutoplay();
+        });
+      });
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          const step = getStepSize();
+          track.scrollTo({ left: idx * step, behavior: 'smooth' });
+          resetAutoplay();
+        });
+      });
+
+      function updateActiveDot() {
+        if (!dots.length) return;
+        const step = getStepSize();
+        const currentIdx = Math.round(track.scrollLeft / step);
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('is-active', idx === currentIdx);
+        });
+      }
+
+      track.addEventListener('scroll', () => {
+        window.requestAnimationFrame(updateActiveDot);
+      }, { passive: true });
+
+      function startAutoplay() {
+        if (!isAutoplay) return;
+        stopAutoplay();
+        autoplayTimer = setInterval(() => {
+          scrollNext();
+        }, autoplaySpeed);
+      }
+
+      function stopAutoplay() {
+        if (autoplayTimer) {
+          clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      }
+
+      function resetAutoplay() {
+        if (isAutoplay) {
+          stopAutoplay();
+          startAutoplay();
+        }
+      }
+
+      container.addEventListener('mouseenter', stopAutoplay);
+      container.addEventListener('mouseleave', startAutoplay);
+      container.addEventListener('touchstart', stopAutoplay, { passive: true });
+      container.addEventListener('touchend', startAutoplay, { passive: true });
+
+      startAutoplay();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initInstagramFeed('{{ section_id }}');
+    });
+
+    if (window.Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:section:load', (e) => {
+        if (e.detail.sectionId === '{{ section.id }}') {
+          initInstagramFeed('{{ section_id }}');
+        }
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Instagram Feed",
+  "tag": "section",
+  "class": "section-instagram-feed",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Tag"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow_icon",
+      "label": "Show Mini Instagram Icon in Eyebrow",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow Font Size",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#767676"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FOLLOW THE ROUTE"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 20,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 18,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" },
+        { "value": "800", "label": "Extra Bold (800)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "heading_transform",
+      "label": "Heading Text Transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": -2,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Letter Spacing",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#111111"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading / Handle",
+      "default": "<p>Tag us @redlaneclub to be featured</p>"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading Font Size",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Header Bottom Margin",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Layout & Grid Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Layout",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "full_width_padding",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Full Width Edge Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1400
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "min": 4,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Column Gap (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Column Gap (Mobile)",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on Tablet",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on Mobile (Grid Mode)",
+      "options": [
+        { "value": "1", "label": "1 Column" },
+        { "value": "2", "label": "2 Columns" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile_slider",
+      "label": "Visible Slides on Mobile (Slider Mode)",
+      "options": [
+        { "value": "1.15", "label": "1 Card + Peek Next" },
+        { "value": "1.3", "label": "1.3 Cards" },
+        { "value": "1.5", "label": "1.5 Cards" },
+        { "value": "2", "label": "2 Cards" }
+      ],
+      "default": "1.3"
+    },
+    {
+      "type": "header",
+      "content": "Slider & Carousel Mode"
+    },
+    {
+      "type": "select",
+      "id": "slider_mode",
+      "label": "Slider Mode",
+      "options": [
+        { "value": "all", "label": "Slider on All Devices (Desktop & Mobile)" },
+        { "value": "mobile_only", "label": "Slider on Mobile Only (Grid on Desktop)" },
+        { "value": "desktop_only", "label": "Slider on Desktop Only" },
+        { "value": "none", "label": "No Slider (Static Grid Everywhere)" }
+      ],
+      "default": "all"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable Autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay Speed",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_arrows_mobile",
+      "label": "Hide Arrows on Mobile",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow Position",
+      "options": [
+        { "value": "header", "label": "Header Right (Beside Title)" },
+        { "value": "sides", "label": "Sides (Over Gallery)" },
+        { "value": "bottom", "label": "Bottom Center" }
+      ],
+      "default": "header"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 32,
+      "max": 54,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow Button Size",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "arrow_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Arrow Border Radius (50% = Round)",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow Icon Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "arrow_border_color",
+      "label": "Arrow Border Color",
+      "default": "#e2e2e2"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_bg",
+      "label": "Arrow Hover Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_color",
+      "label": "Arrow Hover Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show Pagination Dots",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "dots_margin_top",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Dots Top Margin",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot Default Color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Dot Active Color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Image & Card Styling"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Story / Tall (9:16)" },
+        { "value": "landscape", "label": "Landscape (16:9)" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 14
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_zoom",
+      "label": "Enable Image Zoom on Hover",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "zoom_scale",
+      "label": "Zoom Scale",
+      "options": [
+        { "value": "1.04", "label": "Subtle (1.04)" },
+        { "value": "1.08", "label": "Medium (1.08)" },
+        { "value": "1.12", "label": "Bold (1.12)" }
+      ],
+      "default": "1.08"
+    },
+    {
+      "type": "range",
+      "id": "zoom_speed",
+      "min": 200,
+      "max": 700,
+      "step": 50,
+      "unit": "ms",
+      "label": "Zoom Transition Duration",
+      "default": 450
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open Links in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Hover Overlay & Instagram Icon"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Hover Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Hover Overlay Opacity",
+      "default": 35
+    },
+    {
+      "type": "checkbox",
+      "id": "show_center_instagram_icon",
+      "label": "Show Center Instagram Icon on Hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Instagram Icon Size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Instagram Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "icon_bg_style",
+      "label": "Icon Background Badge Style",
+      "options": [
+        { "value": "none", "label": "None (Icon Only)" },
+        { "value": "circle_glass", "label": "Frosted Glass Circle" },
+        { "value": "circle_solid", "label": "Solid Circle" },
+        { "value": "square_rounded", "label": "Rounded Square Badge" }
+      ],
+      "default": "circle_glass"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Icon Badge Background Color",
+      "default": "rgba(255, 255, 255, 0.2)"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "instagram_post",
+      "name": "Instagram Post",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "External Image URL (Fallback)",
+          "info": "Useful for preview or CDN images if no Shopify image is selected"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Post / Profile Link",
+          "info": "Link destination when user clicks the image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Accessibility Alt / Caption",
+          "default": "Follow us on Instagram"
+        },
+        {
+          "type": "text",
+          "id": "username",
+          "label": "Hover Username / Tag",
+          "default": "@redlaneclub",
+          "info": "Optional username tag displayed on hover"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Feed",
+      "settings": {
+        "heading": "FOLLOW THE ROUTE",
+        "subheading": "<p>Tag us @redlaneclub to be featured</p>",
+        "columns_desktop": 5,
+        "slider_mode": "all",
+        "card_border_radius": 14,
+        "aspect_ratio": "square"
+      },
+      "blocks": [
+        {
+          "type": "instagram_post",
+          "settings": {
+            "image_url": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+            "caption": "Urban sunset route",
+            "username": "@redlaneclub"
+          }
+        },
+        {
+          "type": "instagram_post",
+          "settings": {
+            "image_url": "https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=800&q=80",
+            "caption": "Transit mechanic jacket",
+            "username": "@redlaneclub"
+          }
+        },
+        {
+          "type": "instagram_post",
+          "settings": {
+            "image_url": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+            "caption": "Subway platform hoodie",
+            "username": "@redlaneclub"
+          }
+        },
+        {
+          "type": "instagram_post",
+          "settings": {
+            "image_url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=800&q=80",
+            "caption": "Golden hour train tracks",
+            "username": "@redlaneclub"
+          }
+        },
+        {
+          "type": "instagram_post",
+          "settings": {
+            "image_url": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+            "caption": "Subway corridor walk",
+            "username": "@redlaneclub"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
