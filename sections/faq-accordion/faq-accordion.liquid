@@ -1,0 +1,1024 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: FAQ Accordion / Questions & Answers Grid
+  Description: Modern, responsive 2-column or multi-column FAQ accordion cards
+               section for Shopify Online Store 2.0. Features expandable card items,
+               smooth CSS grid transitions, rotating chevron indicators, customizable
+               typography & card styling, Google FAQPage JSON-LD Schema integration,
+               and complete mobile responsiveness.
+  File: sections/faq-accordion/faq-accordion.liquid
+  Author: Rubaeid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --faq-section-bg: {{ section.settings.section_bg | default: '#ffffff' }};
+    --faq-container-max-width: {{ section.settings.container_max_width | default: 1280 }}px;
+    --faq-pt-desktop: {{ section.settings.padding_top_desktop | default: 64 }}px;
+    --faq-pb-desktop: {{ section.settings.padding_bottom_desktop | default: 64 }}px;
+    --faq-pt-mobile: {{ section.settings.padding_top_mobile | default: 40 }}px;
+    --faq-pb-mobile: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
+
+    /* Grid & Columns */
+    --faq-columns-desktop: {{ section.settings.columns_desktop | default: 2 }};
+    --faq-gap-desktop: {{ section.settings.grid_gap_desktop | default: 20 }}px;
+    --faq-gap-mobile: {{ section.settings.grid_gap_mobile | default: 14 }}px;
+
+    /* Card Styling */
+    --faq-card-bg: {{ section.settings.card_bg_color | default: '#ffffff' }};
+    --faq-card-border-color: {{ section.settings.card_border_color | default: '#e2e8f0' }};
+    --faq-card-border-width: {{ section.settings.card_border_width | default: 1 }}px;
+    --faq-card-radius: {{ section.settings.card_border_radius | default: 16 }}px;
+    --faq-card-pad-desktop: {{ section.settings.card_padding_desktop | default: 22 }}px;
+    --faq-card-pad-mobile: {{ section.settings.card_padding_mobile | default: 18 }}px;
+
+    /* Typography & Colors */
+    --faq-heading-color: {{ section.settings.heading_color | default: '#0b1320' }};
+    --faq-subheading-color: {{ section.settings.subheading_color | default: '#64748b' }};
+    --faq-question-color: {{ section.settings.question_color | default: '#0b1320' }};
+    --faq-question-size-desktop: {{ section.settings.question_size_desktop | default: 16 }}px;
+    --faq-question-size-mobile: {{ section.settings.question_size_mobile | default: 15 }}px;
+    --faq-answer-color: {{ section.settings.answer_color | default: '#64748b' }};
+    --faq-answer-size: {{ section.settings.answer_size | default: 14 }}px;
+    --faq-answer-line-height: {{ section.settings.answer_line_height | default: 1.6 }};
+
+    /* Interactive Accents */
+    --faq-accent-color: {{ section.settings.accent_color | default: '#0284c7' }};
+    --faq-chevron-color: {{ section.settings.chevron_color | default: '#0b1320' }};
+
+    background-color: var(--faq-section-bg);
+    width: 100%;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .faq-wrapper-{{ section_id }} {
+    padding-top: var(--faq-pt-mobile);
+    padding-bottom: var(--faq-pb-mobile);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--faq-heading-color);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (min-width: 768px) {
+    .faq-wrapper-{{ section_id }} {
+      padding-top: var(--faq-pt-desktop);
+      padding-bottom: var(--faq-pb-desktop);
+    }
+  }
+
+  .faq-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--faq-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .faq-container-{{ section_id }} {
+      padding-left: 36px;
+      padding-right: 36px;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Section Header Layout
+     --------------------------------------------------------------------------- */
+  .faq-header-{{ section_id }} {
+    margin-bottom: 28px;
+    box-sizing: border-box;
+    {% if section.settings.header_alignment == 'center' %}
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    {% else %}
+      text-align: left;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .faq-header-{{ section_id }} {
+      margin-bottom: 38px;
+    }
+  }
+
+  .faq-header-content-{{ section_id }} {
+    max-width: 760px;
+    {% if section.settings.header_alignment == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .faq-eyebrow-{{ section_id }} {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: {{ section.settings.eyebrow_color | default: '#0284c7' }};
+    margin-bottom: 8px;
+  }
+
+  .faq-heading-{{ section_id }} {
+    font-size: {{ section.settings.heading_size_mobile | default: 26 }}px;
+    line-height: 1.15;
+    color: var(--faq-heading-color);
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+  }
+
+  @media (min-width: 768px) {
+    .faq-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size_desktop | default: 36 }}px;
+      letter-spacing: -0.6px;
+    }
+  }
+
+  .faq-subheading-{{ section_id }} {
+    font-size: {{ section.settings.subheading_size | default: 16 }}px;
+    line-height: 1.55;
+    color: var(--faq-subheading-color);
+    margin: 0;
+  }
+
+  /* ---------------------------------------------------------------------------
+     FAQ Cards Grid
+     --------------------------------------------------------------------------- */
+  .faq-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--faq-gap-mobile);
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .faq-grid-{{ section_id }} {
+      grid-template-columns: repeat(var(--faq-columns-desktop), 1fr);
+      gap: var(--faq-gap-desktop);
+      align-items: start;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Individual FAQ Card
+     --------------------------------------------------------------------------- */
+  .faq-card-{{ section_id }} {
+    background-color: var(--faq-card-bg);
+    border: var(--faq-card-border-width) solid var(--faq-card-border-color);
+    border-radius: var(--faq-card-radius);
+    padding: var(--faq-card-pad-mobile);
+    box-sizing: border-box;
+    position: relative;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  }
+
+  @media (min-width: 768px) {
+    .faq-card-{{ section_id }} {
+      padding: var(--faq-card-pad-desktop);
+    }
+  }
+
+  {% if section.settings.card_hover_shadow %}
+    .faq-card-{{ section_id }}:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.05);
+    }
+  {% endif %}
+
+  .faq-card-{{ section_id }}.is-open {
+    border-color: #cbd5e1;
+  }
+
+  /* Question Header & Button */
+  .faq-question-btn-{{ section_id }} {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    box-sizing: border-box;
+  }
+
+  .faq-question-btn-{{ section_id }}:focus-visible {
+    outline: 2px solid var(--faq-accent-color);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  .faq-question-text-{{ section_id }} {
+    font-size: var(--faq-question-size-mobile);
+    line-height: 1.35;
+    font-weight: 700;
+    color: var(--faq-question-color);
+    margin: 0;
+    flex: 1;
+    transition: color 0.2s ease;
+  }
+
+  @media (min-width: 768px) {
+    .faq-question-text-{{ section_id }} {
+      font-size: var(--faq-question-size-desktop);
+    }
+  }
+
+  .faq-card-{{ section_id }}:hover .faq-question-text-{{ section_id }} {
+    color: var(--faq-accent-color);
+  }
+
+  /* Chevron Arrow Icon */
+  .faq-chevron-wrap-{{ section_id }} {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--faq-chevron-color);
+    margin-top: 1px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+  }
+
+  .faq-card-{{ section_id }}.is-open .faq-chevron-wrap-{{ section_id }} {
+    transform: rotate(180deg);
+    color: var(--faq-accent-color);
+  }
+
+  .faq-chevron-icon-{{ section_id }} {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Answer Collapse / Expand (Smooth CSS Grid Rows)
+     --------------------------------------------------------------------------- */
+  .faq-answer-collapse-{{ section_id }} {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .faq-card-{{ section_id }}.is-open .faq-answer-collapse-{{ section_id }} {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-answer-inner-{{ section_id }} {
+    overflow: hidden;
+  }
+
+  .faq-answer-body-{{ section_id }} {
+    padding-top: 10px;
+    font-size: var(--faq-answer-size);
+    line-height: var(--faq-answer-line-height);
+    color: var(--faq-answer-color);
+    box-sizing: border-box;
+  }
+
+  .faq-answer-body-{{ section_id }} p {
+    margin: 0 0 8px 0;
+  }
+
+  .faq-answer-body-{{ section_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .faq-answer-body-{{ section_id }} a {
+    color: var(--faq-accent-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+  }
+
+  .faq-answer-body-{{ section_id }} a:hover {
+    opacity: 0.8;
+  }
+
+  .faq-answer-body-{{ section_id }} ul,
+  .faq-answer-body-{{ section_id }} ol {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+
+  .faq-answer-body-{{ section_id }} li {
+    margin-bottom: 4px;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Optional Bottom Contact Support Bar
+     --------------------------------------------------------------------------- */
+  .faq-contact-box-{{ section_id }} {
+    margin-top: 36px;
+    padding: 24px;
+    border-radius: 16px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .faq-contact-box-{{ section_id }} {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+      padding: 20px 28px;
+      margin-top: 48px;
+    }
+  }
+
+  .faq-contact-text-{{ section_id }} {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--faq-heading-color);
+    margin: 0;
+  }
+
+  .faq-contact-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: var(--faq-accent-color);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .faq-contact-btn-{{ section_id }}:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+{%- endstyle -%}
+
+<div class="faq-wrapper-{{ section_id }}">
+  <div class="faq-container-{{ section_id }}">
+
+    {%- comment -%} Section Header {%- endcomment -%}
+    {%- if section.settings.show_header -%}
+      <div class="faq-header-{{ section_id }}">
+        <div class="faq-header-content-{{ section_id }}">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="faq-eyebrow-{{ section_id }}">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <{{ section.settings.heading_tag }} class="faq-heading-{{ section_id }}">
+              {{ section.settings.heading }}
+            </{{ section.settings.heading_tag }}>
+          {%- endif -%}
+
+          {%- if section.settings.subheading != blank -%}
+            <p class="faq-subheading-{{ section_id }}">
+              {{ section.settings.subheading }}
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} FAQ Cards Grid {%- endcomment -%}
+    <div class="faq-grid-{{ section_id }}" id="faq-grid-{{ section_id }}">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign item_id = block.id | replace: '_', '' | downcase
+          assign is_open = false
+
+          if section.settings.initial_state == 'all_open'
+            assign is_open = true
+          elsif section.settings.initial_state == 'first_open' and forloop.first
+            assign is_open = true
+          endif
+
+          if block.settings.is_open_default
+            assign is_open = true
+          endif
+        -%}
+
+        <div
+          class="faq-card-{{ section_id }} {% if is_open %}is-open{% endif %}"
+          id="faq-card-{{ item_id }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- comment -%} Accordion Trigger Header {%- endcomment -%}
+          <button
+            type="button"
+            class="faq-question-btn-{{ section_id }}"
+            id="faq-btn-{{ item_id }}"
+            aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+            aria-controls="faq-answer-{{ item_id }}"
+          >
+            <{{ block.settings.question_tag | default: 'h3' }} class="faq-question-text-{{ section_id }}">
+              {{ block.settings.question }}
+            </{{ block.settings.question_tag | default: 'h3' }}>
+
+            <span class="faq-chevron-wrap-{{ section_id }}" aria-hidden="true">
+              <svg class="faq-chevron-icon-{{ section_id }}" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          {%- comment -%} Expandable Answer Content {%- endcomment -%}
+          <div
+            class="faq-answer-collapse-{{ section_id }}"
+            id="faq-answer-{{ item_id }}"
+            role="region"
+            aria-labelledby="faq-btn-{{ item_id }}"
+          >
+            <div class="faq-answer-inner-{{ section_id }}">
+              <div class="faq-answer-body-{{ section_id }}">
+                {{ block.settings.answer }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Optional Bottom Contact CTA {%- endcomment -%}
+    {%- if section.settings.show_contact_footer and section.settings.contact_text != blank -%}
+      <div class="faq-contact-box-{{ section_id }}">
+        <p class="faq-contact-text-{{ section_id }}">
+          {{ section.settings.contact_text }}
+        </p>
+        {%- if section.settings.contact_btn_label != blank and section.settings.contact_btn_url != blank -%}
+          <a href="{{ section.settings.contact_btn_url }}" class="faq-contact-btn-{{ section_id }}">
+            <span>{{ section.settings.contact_btn_label }}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- comment -%} Interactive Accordion Script {%- endcomment -%}
+<script>
+  (function() {
+    var sectionId = {{ section_id | json }};
+    var root = document.getElementById('shopify-section-' + {{ section.id | json }});
+    if (!root) return;
+
+    var allowMultiple = {{ section.settings.allow_multiple_open | json }};
+    var buttons = root.querySelectorAll('.faq-question-btn-' + sectionId);
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var card = btn.closest('.faq-card-' + sectionId);
+        if (!card) return;
+
+        var isOpen = card.classList.contains('is-open');
+
+        // If single accordion mode is enabled, close other cards first
+        if (!allowMultiple && !isOpen) {
+          var allCards = root.querySelectorAll('.faq-card-' + sectionId);
+          allCards.forEach(function(c) {
+            c.classList.remove('is-open');
+            var otherBtn = c.querySelector('.faq-question-btn-' + sectionId);
+            if (otherBtn) {
+              otherBtn.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+
+        // Toggle clicked card
+        if (isOpen) {
+          card.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          card.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  })();
+</script>
+
+{%- comment -%} Google FAQPage Structured Data (JSON-LD) for SEO Rich Snippets {%- endcomment -%}
+{%- if section.settings.enable_faq_schema and section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | strip_html | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "tag": "section",
+  "class": "shopify-section-faq-accordion",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Section Header",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        { "value": "left", "label": "Left Aligned" },
+        { "value": "center", "label": "Centered" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Optional Eyebrow Label"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Text Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "DIV" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Heading Font Size (Desktop)",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Font Size (Mobile)",
+      "min": 20,
+      "max": 36,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading Copy",
+      "default": "Find quick answers to the most common questions about our custom sweatbands."
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading Font Size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout & Sizing"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "default": 1280,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Desktop Columns",
+      "options": [
+        { "value": "1", "label": "1 Column (Centered Stack)" },
+        { "value": "2", "label": "2 Columns (Grid as shown)" },
+        { "value": "3", "label": "3 Columns" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_desktop",
+      "label": "Grid Gap (Desktop)",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "label": "Grid Gap (Mobile)",
+      "min": 10,
+      "max": 24,
+      "step": 2,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Card Container Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "label": "Card Border Width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "default": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card Corner Radius",
+      "min": 6,
+      "max": 32,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_desktop",
+      "label": "Card Internal Padding (Desktop)",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "default": 22,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "label": "Card Internal Padding (Mobile)",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_hover_shadow",
+      "label": "Enable Subtle Card Hover Shadow",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Accordion Behavior"
+    },
+    {
+      "type": "select",
+      "id": "initial_state",
+      "label": "Default Initial State",
+      "options": [
+        { "value": "all_open", "label": "All Items Open (As in screenshot)" },
+        { "value": "all_closed", "label": "All Items Collapsed" },
+        { "value": "first_open", "label": "First Item Open Only" }
+      ],
+      "default": "all_open"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple_open",
+      "label": "Allow Multiple Cards Open Simultaneously",
+      "default": true,
+      "info": "When unchecked, clicking one question automatically closes other open questions."
+    },
+    {
+      "type": "color",
+      "id": "chevron_color",
+      "label": "Chevron Arrow Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Hover / Active Accent Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "header",
+      "content": "Question & Answer Typography"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question Text Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "range",
+      "id": "question_size_desktop",
+      "label": "Question Font Size (Desktop)",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "question_size_mobile",
+      "label": "Question Font Size (Mobile)",
+      "min": 13,
+      "max": 18,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer Text Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer Font Size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "answer_line_height",
+      "label": "Answer Line Height",
+      "min": 1.3,
+      "max": 2.0,
+      "step": 0.1,
+      "default": 1.6
+    },
+    {
+      "type": "header",
+      "content": "SEO & Rich Snippets"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_faq_schema",
+      "label": "Enable Google FAQPage Schema (JSON-LD)",
+      "default": true,
+      "info": "Automatically generates structured data for Google search rich snippets."
+    },
+    {
+      "type": "header",
+      "content": "Optional Bottom Contact Support Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_footer",
+      "label": "Show Bottom Contact Support Bar",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact Bar Prompt",
+      "default": "Still have questions? Our custom branding specialists are here to help."
+    },
+    {
+      "type": "text",
+      "id": "contact_btn_label",
+      "label": "Contact Button Label",
+      "default": "Contact Support"
+    },
+    {
+      "type": "url",
+      "id": "contact_btn_url",
+      "label": "Contact Button Destination URL"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Can I upload my own logo?"
+        },
+        {
+          "type": "select",
+          "id": "question_tag",
+          "label": "Question HTML Tag",
+          "options": [
+            { "value": "h2", "label": "H2" },
+            { "value": "h3", "label": "H3" },
+            { "value": "h4", "label": "H4" },
+            { "value": "h5", "label": "H5" },
+            { "value": "div", "label": "DIV" }
+          ],
+          "default": "h3"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer Content",
+          "default": "<p>Yes! You can easily upload your logo or artwork on the product page. We'll make sure it's perfectly embroidered.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_open_default",
+          "label": "Always Open on Page Load",
+          "default": false,
+          "info": "Overrides the global initial state setting for this specific question."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "subheading": "Find quick answers to the most common questions about our custom sweatbands.",
+        "header_alignment": "left",
+        "columns_desktop": "2",
+        "initial_state": "all_open",
+        "allow_multiple_open": true
+      },
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I upload my own logo?",
+            "answer": "<p>Yes! You can easily upload your logo or artwork on the product page. We'll make sure it's perfectly embroidered.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Which colours are available?",
+            "answer": "<p>We offer a wide range of colours for both wristbands and headbands. You can see all available options on the product pages.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does delivery take?",
+            "answer": "<p>For customized orders, the approximate delivery time is 4–5 weeks across Europe.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you offer custom orders for companies or teams?",
+            "answer": "<p>Yes! We specialize in custom orders for sports clubs, companies, events and promotional use. Contact us for larger quantities.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
