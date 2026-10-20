@@ -38,6 +38,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/title_with_divider/title_with_divider.png) | **Title with Divider** | Elegant heading section flanked by customizable divider lines (solid, dashed, dotted, gradient) and custom decorative icons | [View](sections/title_with_divider) |
 | ![preview](sections/featured-product/preview.png) | **Featured Product** | High-converting minimal DTC product showcase with vertical thumbnail rail, size swatches, quantity stepper, AJAX cart CTA, and trust badges | [View](sections/featured-product) |
 | ![preview](sections/instagram-feed/preview.png) | **Instagram Feed & Slider** | Responsive Instagram showcase with centered icon hover micro-animation, interactive carousel/slider modes, custom links, and full schema styling | [View](sections/instagram-feed) |
+| ![preview](sections/custom-product-cards/preview.png) | **Custom Product Cards** | Dynamic 2-column merch showcase with interactive color swatches, fallback realistic vector SVGs, volume pricing notes, and live logo upload customizer modal | [View](sections/custom-product-cards) |
 
 <!-- Add new rows above this line as you build new sections -->
 

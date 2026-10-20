@@ -1,0 +1,1334 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: How It Works / 4-Step Process Guide
+  Description: High-converting step-by-step process showcase section for custom
+               merchandise, DTC brands, made-to-order collections, and services.
+               Features athletic italic typography, customizable number badges,
+               responsive desktop grid, touch swipeable mobile slider option,
+               high-fidelity fallback illustrations, and footer delivery notes.
+  File: sections/how-it-works-steps/how-it-works-steps.liquid
+  Author: Rubaeid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --hiw-section-bg: {{ section.settings.section_bg | default: '#ffffff' }};
+    --hiw-container-max-width: {{ section.settings.container_max_width | default: 1280 }}px;
+    --hiw-pt-desktop: {{ section.settings.padding_top_desktop | default: 64 }}px;
+    --hiw-pb-desktop: {{ section.settings.padding_bottom_desktop | default: 64 }}px;
+    --hiw-pt-mobile: {{ section.settings.padding_top_mobile | default: 40 }}px;
+    --hiw-pb-mobile: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
+
+    /* Grid & Cards */
+    --hiw-columns-desktop: {{ section.settings.columns_desktop | default: 4 }};
+    --hiw-card-gap-desktop: {{ section.settings.card_gap_desktop | default: 24 }}px;
+    --hiw-card-gap-mobile: {{ section.settings.card_gap_mobile | default: 16 }}px;
+    --hiw-card-bg: {{ section.settings.card_bg | default: 'transparent' }};
+    --hiw-image-radius: {{ section.settings.image_border_radius | default: 20 }}px;
+
+    /* Global Colors */
+    --hiw-accent-color: {{ section.settings.accent_color | default: '#0284c7' }};
+    --hiw-heading-color: {{ section.settings.heading_color | default: '#0b1320' }};
+    --hiw-text-muted: {{ section.settings.text_muted_color | default: '#64748b' }};
+
+    /* Badge */
+    --hiw-badge-bg: {{ section.settings.badge_bg_color | default: '#0284c7' }};
+    --hiw-badge-text-color: {{ section.settings.badge_text_color | default: '#ffffff' }};
+    --hiw-badge-size: {{ section.settings.badge_size | default: 34 }}px;
+    --hiw-badge-font-size: {{ section.settings.badge_font_size | default: 13 }}px;
+
+    /* Step Titles & Description */
+    --hiw-step-title-color: {{ section.settings.step_title_color | default: '#0b1320' }};
+    --hiw-step-title-size-desktop: {{ section.settings.step_title_size_desktop | default: 19 }}px;
+    --hiw-step-title-size-mobile: {{ section.settings.step_title_size_mobile | default: 17 }}px;
+    --hiw-step-desc-color: {{ section.settings.step_desc_color | default: '#64748b' }};
+    --hiw-step-desc-size: {{ section.settings.step_desc_size | default: 14 }}px;
+
+    background-color: var(--hiw-section-bg);
+    width: 100%;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .hiw-wrapper-{{ section_id }} {
+    padding-top: var(--hiw-pt-mobile);
+    padding-bottom: var(--hiw-pb-mobile);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--hiw-heading-color);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-wrapper-{{ section_id }} {
+      padding-top: var(--hiw-pt-desktop);
+      padding-bottom: var(--hiw-pb-desktop);
+    }
+  }
+
+  .hiw-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--hiw-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .hiw-container-{{ section_id }} {
+      padding-left: 36px;
+      padding-right: 36px;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Section Header Layout
+     --------------------------------------------------------------------------- */
+  .hiw-header-{{ section_id }} {
+    margin-bottom: 32px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-header-{{ section_id }} {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 44px;
+    }
+  }
+
+  .hiw-header-content-{{ section_id }} {
+    max-width: 780px;
+  }
+
+  .hiw-eyebrow-{{ section_id }} {
+    display: inline-block;
+    font-size: {{ section.settings.eyebrow_size | default: 13 }}px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: {{ section.settings.eyebrow_color | default: '#0284c7' }};
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .hiw-heading-{{ section_id }} {
+    font-size: {{ section.settings.heading_size_mobile | default: 28 }}px;
+    line-height: 1.08;
+    color: {{ section.settings.heading_color | default: '#0b1320' }};
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    font-weight: 900;
+    {% if section.settings.heading_italic %}
+      font-style: italic;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .hiw-heading-{{ section_id }} {
+      font-size: {{ section.settings.heading_size_desktop | default: 42 }}px;
+      letter-spacing: -0.8px;
+    }
+  }
+
+  .hiw-description-{{ section_id }} {
+    font-size: {{ section.settings.description_size | default: 16 }}px;
+    line-height: 1.55;
+    color: {{ section.settings.description_color | default: '#64748b' }};
+    margin: 0;
+    max-width: 620px;
+  }
+
+  .hiw-header-link-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-style: italic;
+    color: {{ section.settings.header_link_color | default: '#0284c7' }};
+    text-decoration: none;
+    margin-top: 16px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-header-link-{{ section_id }} {
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
+  }
+
+  .hiw-header-link-{{ section_id }}:hover {
+    opacity: 0.85;
+    transform: translateX(4px);
+  }
+
+  .hiw-header-link-{{ section_id }} svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    transition: transform 0.2s ease;
+  }
+
+  .hiw-header-link-{{ section_id }}:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Steps Grid & Slider
+     --------------------------------------------------------------------------- */
+  .hiw-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--hiw-card-gap-mobile);
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .hiw-grid-{{ section_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--hiw-card-gap-desktop);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hiw-grid-{{ section_id }} {
+      grid-template-columns: repeat(var(--hiw-columns-desktop), 1fr);
+      gap: var(--hiw-card-gap-desktop);
+    }
+  }
+
+  /* Mobile Slider Mode */
+  {% if section.settings.mobile_layout == 'slider' %}
+    @media (max-width: 639px) {
+      .hiw-grid-{{ section_id }} {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+        gap: var(--hiw-card-gap-mobile);
+        padding-bottom: 8px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .hiw-grid-{{ section_id }}::-webkit-scrollbar {
+        display: none;
+      }
+
+      .hiw-card-{{ section_id }} {
+        flex: 0 0 82%;
+        scroll-snap-align: start;
+      }
+    }
+  {% endif %}
+
+  /* ---------------------------------------------------------------------------
+     Step Card Component
+     --------------------------------------------------------------------------- */
+  .hiw-card-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--hiw-card-bg);
+    box-sizing: border-box;
+    position: relative;
+    {% if section.settings.card_hover_lift %}
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    {% endif %}
+  }
+
+  {% if section.settings.card_hover_lift %}
+    .hiw-card-{{ section_id }}:hover {
+      transform: translateY(-4px);
+    }
+  {% endif %}
+
+  /* Media Container with Floating Badge */
+  .hiw-media-wrap-{{ section_id }} {
+    width: 100%;
+    border-radius: var(--hiw-image-radius);
+    overflow: hidden;
+    position: relative;
+    background-color: #f1f5f9;
+    box-sizing: border-box;
+    aspect-ratio: {{ section.settings.image_aspect_ratio | default: '4/3' }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hiw-card-img-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    {% if section.settings.enable_image_zoom %}
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    {% endif %}
+  }
+
+  {% if section.settings.enable_image_zoom %}
+    .hiw-card-{{ section_id }}:hover .hiw-card-img-{{ section_id }} {
+      transform: scale(1.05);
+    }
+  {% endif %}
+
+  /* Floating Step Number Badge */
+  .hiw-badge-{{ section_id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    width: var(--hiw-badge-size);
+    height: var(--hiw-badge-size);
+    background-color: var(--hiw-badge-bg);
+    color: var(--hiw-badge-text-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--hiw-badge-font-size);
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.3px;
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  /* SVG Fallback Illustration Styling */
+  .hiw-fallback-svg-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #f8fafc;
+    {% if section.settings.enable_image_zoom %}
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    {% endif %}
+  }
+
+  {% if section.settings.enable_image_zoom %}
+    .hiw-card-{{ section_id }}:hover .hiw-fallback-svg-{{ section_id }} {
+      transform: scale(1.03);
+    }
+  {% endif %}
+
+  /* Step Content Body */
+  .hiw-content-{{ section_id }} {
+    padding-top: 18px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .hiw-step-title-{{ section_id }} {
+    font-size: var(--hiw-step-title-size-mobile);
+    line-height: 1.25;
+    color: var(--hiw-step-title-color);
+    margin: 0 0 8px 0;
+    font-weight: 800;
+    {% if section.settings.step_title_italic %}
+      font-style: italic;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .hiw-step-title-{{ section_id }} {
+      font-size: var(--hiw-step-title-size-desktop);
+    }
+  }
+
+  .hiw-step-title-{{ section_id }} a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .hiw-step-title-{{ section_id }} a:hover {
+    color: var(--hiw-accent-color);
+  }
+
+  .hiw-step-desc-{{ section_id }} {
+    font-size: var(--hiw-step-desc-size);
+    line-height: 1.55;
+    color: var(--hiw-step-desc-color);
+    margin: 0;
+  }
+
+  .hiw-step-link-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--hiw-accent-color);
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .hiw-step-link-{{ section_id }}:hover {
+    transform: translateX(3px);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Mobile Dots Indicator (For Slider Layout)
+     --------------------------------------------------------------------------- */
+  .hiw-dots-{{ section_id }} {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  {% if section.settings.mobile_layout == 'slider' %}
+    @media (max-width: 639px) {
+      .hiw-dots-{{ section_id }} {
+        display: flex;
+      }
+    }
+  {% endif %}
+
+  .hiw-dot-{{ section_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: #cbd5e1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .hiw-dot-{{ section_id }}.is-active {
+    background-color: var(--hiw-accent-color);
+    width: 22px;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Footer Subtext Delivery Note
+     --------------------------------------------------------------------------- */
+  .hiw-footer-note-{{ section_id }} {
+    text-align: center;
+    margin-top: 36px;
+    padding: 10px 16px;
+    font-size: {{ section.settings.footer_note_size | default: 13 }}px;
+    color: {{ section.settings.footer_note_color | default: '#64748b' }};
+    background-color: {{ section.settings.footer_note_bg | default: 'transparent' }};
+    border-radius: 9999px;
+    box-sizing: border-box;
+    display: block;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-footer-note-{{ section_id }} {
+      margin-top: 48px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="hiw-wrapper-{{ section_id }}">
+  <div class="hiw-container-{{ section_id }}">
+
+    {%- comment -%} Section Header {%- endcomment -%}
+    {%- if section.settings.show_header -%}
+      <div class="hiw-header-{{ section_id }}">
+        <div class="hiw-header-content-{{ section_id }}">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="hiw-eyebrow-{{ section_id }}">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <{{ section.settings.heading_tag }} class="hiw-heading-{{ section_id }}">
+              {{ section.settings.heading }}
+            </{{ section.settings.heading_tag }}>
+          {%- endif -%}
+
+          {%- if section.settings.description != blank -%}
+            <p class="hiw-description-{{ section_id }}">
+              {{ section.settings.description }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.show_header_link and section.settings.header_link_text != blank -%}
+          <a href="{{ section.settings.header_link_url | default: '#' }}" class="hiw-header-link-{{ section_id }}">
+            <span>{{ section.settings.header_link_text }}</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Steps Grid / Slider Track {%- endcomment -%}
+    <div class="hiw-grid-{{ section_id }}" id="hiw-track-{{ section_id }}" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign card_index = forloop.index
+          if card_index < 10
+            assign default_badge = '0' | append: card_index
+          else
+            assign default_badge = card_index
+          endif
+          assign badge_label = block.settings.step_number | default: default_badge
+        -%}
+
+        <div class="hiw-card-{{ section_id }}" data-step-index="{{ forloop.index0 }}" role="listitem" {{ block.shopify_attributes }}>
+          
+          {%- comment -%} Image Container with Floating Number Badge {%- endcomment -%}
+          <div class="hiw-media-wrap-{{ section_id }}">
+            
+            {%- if section.settings.show_step_badge and badge_label != blank -%}
+              <div class="hiw-badge-{{ section_id }}" aria-label="Step {{ badge_label }}">
+                {{ badge_label }}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w"
+                sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 85vw"
+                alt="{{ block.settings.title | default: 'Step ' | append: badge_label | escape }}"
+                loading="lazy"
+                decoding="async"
+                class="hiw-card-img-{{ section_id }}"
+              >
+            {%- else -%}
+              {%- comment -%} Bespoke High-Fidelity Vector Illustrations {%- endcomment -%}
+              {%- assign art_style = block.settings.fallback_art_type | default: 'sweatband' -%}
+
+              {%- if art_style == 'sweatband' or forloop.index == 1 -%}
+                {%- comment -%} Step 1 Art: Athletic Terry Sweatbands {%- endcomment -%}
+                <svg class="hiw-fallback-svg-{{ section_id }}" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Choose your sweatband illustration">
+                  <defs>
+                    <linearGradient id="bg-grad-1-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#f8fafc" />
+                      <stop offset="100%" stop-color="#e2e8f0" />
+                    </linearGradient>
+                    <linearGradient id="band-navy-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0f172a" />
+                      <stop offset="30%" stop-color="#1e293b" />
+                      <stop offset="70%" stop-color="#1e3a8a" />
+                      <stop offset="100%" stop-color="#0f172a" />
+                    </linearGradient>
+                    <linearGradient id="band-blue-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0284c7" />
+                      <stop offset="40%" stop-color="#38bdf8" />
+                      <stop offset="80%" stop-color="#0ea5e9" />
+                      <stop offset="100%" stop-color="#0369a1" />
+                    </linearGradient>
+                    <pattern id="knit-pat-{{ section_id }}" width="6" height="6" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="0.8" fill="#ffffff" opacity="0.15" />
+                      <path d="M0 3 Q3 1 6 3" stroke="#000000" stroke-width="0.5" opacity="0.1" fill="none" />
+                    </pattern>
+                  </defs>
+                  <rect width="400" height="300" fill="url(#bg-grad-1-{{ section_id }})" />
+                  <!-- Studio Table Shadow -->
+                  <ellipse cx="200" cy="245" rx="150" ry="18" fill="#0f172a" opacity="0.08" />
+                  <!-- Navy Wristband -->
+                  <g transform="translate(100, 75)">
+                    <rect x="0" y="0" width="85" height="120" rx="14" fill="url(#band-navy-{{ section_id }})" />
+                    <rect x="0" y="0" width="85" height="120" rx="14" fill="url(#knit-pat-{{ section_id }})" />
+                    <!-- Terry Edge Rim Highlight -->
+                    <rect x="0" y="0" width="85" height="12" rx="6" fill="#334155" opacity="0.6" />
+                    <rect x="0" y="108" width="85" height="12" rx="6" fill="#090d16" opacity="0.8" />
+                    <!-- White Embroidered Chevron Logo -->
+                    <path d="M 22,64 L 42.5,42 L 63,64 L 56,71 L 42.5,56 L 29,71 Z" fill="#ffffff" />
+                  </g>
+                  <!-- Light Blue Terry Sweatband -->
+                  <g transform="translate(215, 85)">
+                    <rect x="0" y="0" width="85" height="110" rx="14" fill="url(#band-blue-{{ section_id }})" />
+                    <rect x="0" y="0" width="85" height="110" rx="14" fill="url(#knit-pat-{{ section_id }})" />
+                    <rect x="0" y="0" width="85" height="10" rx="5" fill="#7dd3fc" opacity="0.7" />
+                    <rect x="0" y="100" width="85" height="10" rx="5" fill="#0284c7" opacity="0.8" />
+                    <!-- White Embroidered Chevron Logo -->
+                    <path d="M 22,58 L 42.5,38 L 63,58 L 56,65 L 42.5,51 L 29,65 Z" fill="#ffffff" />
+                  </g>
+                  <!-- Subtle Hand Presentation Guides -->
+                  <path d="M 60,185 Q 85,150 95,140" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4" opacity="0.6" />
+                  <path d="M 340,185 Q 315,150 305,140" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4" opacity="0.6" />
+                </svg>
+
+              {%- elsif art_style == 'upload' or forloop.index == 2 -%}
+                {%- comment -%} Step 2 Art: Modern Laptop & Digital Logo Mockup Desk {%- endcomment -%}
+                <svg class="hiw-fallback-svg-{{ section_id }}" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Upload logo illustration">
+                  <defs>
+                    <linearGradient id="bg-grad-2-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#f8fafc" />
+                      <stop offset="100%" stop-color="#e0f2fe" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="400" height="300" fill="url(#bg-grad-2-{{ section_id }})" />
+                  <!-- Laptop Screen Base -->
+                  <rect x="110" y="60" width="180" height="115" rx="8" fill="#1e293b" />
+                  <rect x="116" y="66" width="168" height="103" rx="4" fill="#0f172a" />
+                  <!-- Laptop Display Artwork / Vector Canvas -->
+                  <rect x="126" y="76" width="148" height="83" rx="3" fill="#ffffff" />
+                  <!-- Logo Vectors on Screen -->
+                  <circle cx="165" cy="115" r="20" fill="#0284c7" />
+                  <path d="M 185,95 L 210,135 L 160,135 Z" fill="#38bdf8" opacity="0.8" />
+                  <rect x="175" y="105" width="22" height="22" rx="4" fill="#0369a1" />
+                  <!-- Laptop Keyboard Deck -->
+                  <path d="M 90,175 L 310,175 L 325,192 L 75,192 Z" fill="#94a3af" />
+                  <rect x="170" y="180" width="60" height="8" rx="2" fill="#cbd5e1" />
+                  <!-- Digital Proof Printout Sheet on Desk -->
+                  <rect x="60" y="180" width="90" height="85" rx="4" fill="#ffffff" transform="rotate(-6 60 180)" stroke="#e2e8f0" stroke-width="1.5" />
+                  <circle cx="85" cy="225" r="10" fill="#0284c7" opacity="0.4" />
+                  <rect x="105" y="215" width="30" height="4" rx="2" fill="#94a3af" />
+                  <rect x="105" y="225" width="20" height="4" rx="2" fill="#cbd5e1" />
+                  <!-- Stylus / Design Tablet on Right -->
+                  <rect x="250" y="185" width="95" height="75" rx="6" fill="#ffffff" transform="rotate(8 250 185)" stroke="#e2e8f0" stroke-width="1.5" />
+                  <circle cx="295" cy="225" r="14" fill="#38bdf8" opacity="0.6" />
+                </svg>
+
+              {%- elsif art_style == 'production' or forloop.index == 3 -%}
+                {%- comment -%} Step 3 Art: Industrial Screen Printing Machine & Workshop {%- endcomment -%}
+                <svg class="hiw-fallback-svg-{{ section_id }}" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="We print and produce it illustration">
+                  <defs>
+                    <linearGradient id="bg-grad-3-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#f8fafc" />
+                      <stop offset="100%" stop-color="#e2e8f0" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="400" height="300" fill="url(#bg-grad-3-{{ section_id }})" />
+                  <!-- Production Line Bed Rails -->
+                  <line x1="40" y1="210" x2="360" y2="210" stroke="#94a3af" stroke-width="8" stroke-linecap="round" />
+                  <line x1="40" y1="235" x2="360" y2="235" stroke="#64748b" stroke-width="6" stroke-linecap="round" />
+                  <!-- Conveyor Band Plates -->
+                  {% for i in (1..5) %}
+                    {% assign offset_x = i | times: 55 | plus: 20 %}
+                    <rect x="{{ offset_x }}" y="185" width="45" height="40" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+                    <path d="M {{ offset_x | plus: 14 }},205 L {{ offset_x | plus: 22.5 }},195 L {{ offset_x | plus: 31 }},205 Z" fill="#0284c7" />
+                  {% endfor %}
+                  <!-- Screen Printing Screen Frame Unit -->
+                  <rect x="120" y="65" width="160" height="95" rx="8" fill="#0284c7" stroke="#0369a1" stroke-width="3" />
+                  <rect x="135" y="80" width="130" height="65" rx="4" fill="#38bdf8" opacity="0.4" />
+                  <path d="M 180,120 L 200,98 L 220,120 Z" fill="#ffffff" opacity="0.9" />
+                  <!-- Squeegee Arm Assembly -->
+                  <rect x="100" y="45" width="200" height="14" rx="4" fill="#334155" />
+                  <rect x="185" y="20" width="30" height="40" rx="3" fill="#64748b" />
+                  <rect x="145" y="92" width="110" height="8" rx="2" fill="#f59e0b" />
+                  <!-- Mechanical Girders -->
+                  <line x1="100" y1="59" x2="60" y2="210" stroke="#64748b" stroke-width="4" />
+                  <line x1="300" y1="59" x2="340" y2="210" stroke="#64748b" stroke-width="4" />
+                </svg>
+
+              {%- else -%}
+                {%- comment -%} Step 4 Art: Branded Delivery Parcel Box Packed with Sweatbands {%- endcomment -%}
+                <svg class="hiw-fallback-svg-{{ section_id }}" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Delivered to your door illustration">
+                  <defs>
+                    <linearGradient id="bg-grad-4-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#f8fafc" />
+                      <stop offset="100%" stop-color="#fef3c7" />
+                    </linearGradient>
+                    <linearGradient id="box-kraft-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#d97706" />
+                      <stop offset="100%" stop-color="#b45309" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="400" height="300" fill="url(#bg-grad-4-{{ section_id }})" />
+                  <!-- Ground Shadow -->
+                  <ellipse cx="200" cy="255" rx="140" ry="16" fill="#0f172a" opacity="0.1" />
+                  <!-- Cardboard Parcel Box Body -->
+                  <path d="M 80,140 L 320,140 L 305,245 L 95,245 Z" fill="#d97706" stroke="#b45309" stroke-width="2" />
+                  <path d="M 95,245 L 200,250 L 305,245 L 320,140 L 200,150 L 80,140 Z" fill="#b45309" opacity="0.2" />
+                  <!-- Open Box Flaps -->
+                  <polygon points="80,140 130,85 200,90 200,150" fill="#f59e0b" opacity="0.9" />
+                  <polygon points="320,140 270,85 200,90 200,150" fill="#d97706" opacity="0.95" />
+                  <polygon points="80,140 200,150 200,170 65,155" fill="#f59e0b" />
+                  <polygon points="320,140 200,150 200,170 335,155" fill="#b45309" />
+                  <!-- Colorful Rolled Sweatbands Neatly Packed in Box -->
+                  <rect x="110" y="160" width="30" height="50" rx="8" fill="#1e3a8a" />
+                  <rect x="145" y="160" width="30" height="50" rx="8" fill="#dc2626" />
+                  <rect x="180" y="160" width="30" height="50" rx="8" fill="#059669" />
+                  <rect x="215" y="160" width="30" height="50" rx="8" fill="#eab308" />
+                  <rect x="250" y="160" width="30" height="50" rx="8" fill="#38bdf8" />
+                  <!-- Branded Box Stamp -->
+                  <rect x="150" y="220" width="100" height="14" rx="2" fill="#78350f" opacity="0.7" />
+                  <path d="M 190,223 L 200,217 L 210,223 Z" fill="#ffffff" />
+                </svg>
+              {%- endif -%}
+
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} Step Details Content {%- endcomment -%}
+          <div class="hiw-content-{{ section_id }}">
+            <{{ block.settings.title_tag | default: 'h3' }} class="hiw-step-title-{{ section_id }}">
+              {%- if block.settings.step_link != blank -%}
+                <a href="{{ block.settings.step_link }}">{{ block.settings.title }}</a>
+              {%- else -%}
+                {{ block.settings.title }}
+              {%- endif -%}
+            </{{ block.settings.title_tag | default: 'h3' }}>
+
+            {%- if block.settings.description != blank -%}
+              <p class="hiw-step-desc-{{ section_id }}">
+                {{ block.settings.description }}
+              </p>
+            {%- endif -%}
+
+            {%- if block.settings.step_link != blank and block.settings.link_text != blank -%}
+              <a href="{{ block.settings.step_link }}" class="hiw-step-link-{{ section_id }}">
+                <span>{{ block.settings.link_text }}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            {%- endif -%}
+          </div>
+
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Mobile Pagination Dots (Used in Slider Layout) {%- endcomment -%}
+    {%- if section.settings.mobile_layout == 'slider' and section.blocks.size > 1 -%}
+      <div class="hiw-dots-{{ section_id }}" id="hiw-dots-{{ section_id }}" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            class="hiw-dot-{{ section_id }} {% if forloop.first %}is-active{% endif %}"
+            data-dot-index="{{ forloop.index0 }}"
+            aria-label="Go to step {{ forloop.index }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Footer Subtext Delivery Note {%- endcomment -%}
+    {%- if section.settings.show_footer_note and section.settings.footer_note_text != blank -%}
+      <div class="hiw-footer-note-{{ section_id }}">
+        {{ section.settings.footer_note_text }}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- comment -%} Mobile Slider Behavior Script {%- endcomment -%}
+{%- if section.settings.mobile_layout == 'slider' and section.blocks.size > 1 -%}
+  <script>
+    (function() {
+      var sectionId = {{ section_id | json }};
+      var track = document.getElementById('hiw-track-' + sectionId);
+      var dotsWrap = document.getElementById('hiw-dots-' + sectionId);
+      if (!track || !dotsWrap) return;
+
+      var dots = dotsWrap.querySelectorAll('.hiw-dot-' + sectionId);
+      var cards = track.querySelectorAll('.hiw-card-' + sectionId);
+      if (!dots.length || !cards.length) return;
+
+      // Scroll to clicked dot's step
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          var idx = parseInt(dot.getAttribute('data-dot-index'), 10);
+          if (!isNaN(idx) && cards[idx]) {
+            cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+          }
+        });
+      });
+
+      // Update active dot on scroll
+      var scrollTimeout;
+      track.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+          var trackRect = track.getBoundingClientRect();
+          var closestIndex = 0;
+          var minDiff = Infinity;
+
+          cards.forEach(function(card, idx) {
+            var cardRect = card.getBoundingClientRect();
+            var diff = Math.abs(cardRect.left - trackRect.left);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestIndex = idx;
+            }
+          });
+
+          dots.forEach(function(d, i) {
+            if (i === closestIndex) {
+              d.classList.add('is-active');
+            } else {
+              d.classList.remove('is-active');
+            }
+          });
+        }, 60);
+      }, { passive: true });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "How It Works Steps",
+  "tag": "section",
+  "class": "shopify-section-how-it-works-steps",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Section Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "HOW IT WORKS"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Text Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow Font Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading Text",
+      "default": "FROM YOUR LOGO TO YOUR DOOR IN FOUR STEPS"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "DIV" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_italic",
+      "label": "Italicize Heading Text",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Heading Font Size (Desktop)",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "default": 42,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Font Size (Mobile)",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Supporting Description",
+      "default": "No design skills needed, no hidden steps. You approve a proof before anything is printed, so there are no surprises."
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Text Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description Font Size",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Header Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header_link",
+      "label": "Show Header Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "header_link_text",
+      "label": "Header Link Text",
+      "default": "SEE THE FULL PROCESS"
+    },
+    {
+      "type": "url",
+      "id": "header_link_url",
+      "label": "Header Link Destination"
+    },
+    {
+      "type": "color",
+      "id": "header_link_color",
+      "label": "Header Link Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Sizing"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container Max Width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "default": 1280,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop Columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout Style",
+      "options": [
+        { "value": "stacked", "label": "Vertical Stack" },
+        { "value": "slider", "label": "Touch Swipeable Slider" }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "range",
+      "id": "card_gap_desktop",
+      "label": "Card Spacing Gap (Desktop)",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "label": "Card Spacing Gap (Mobile)",
+      "min": 12,
+      "max": 32,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Global Accent Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "header",
+      "content": "Media & Card Appearance"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image Aspect Ratio",
+      "options": [
+        { "value": "4/3", "label": "4:3 (Recommended Landscape)" },
+        { "value": "1/1", "label": "1:1 (Square)" },
+        { "value": "16/9", "label": "16:9 (Widescreen)" },
+        { "value": "3/2", "label": "3:2 (Classic Photo)" },
+        { "value": "auto", "label": "Auto" }
+      ],
+      "default": "4/3"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image Corner Radius",
+      "min": 4,
+      "max": 36,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_zoom",
+      "label": "Enable Image Hover Zoom Effect",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "card_hover_lift",
+      "label": "Enable Card Hover Lift Effect",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Step Number Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_step_badge",
+      "label": "Show Number Badge",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge Circle Size",
+      "min": 26,
+      "max": 48,
+      "step": 2,
+      "default": 34,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Badge Number Font Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Card Typography"
+    },
+    {
+      "type": "color",
+      "id": "step_title_color",
+      "label": "Step Title Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "range",
+      "id": "step_title_size_desktop",
+      "label": "Step Title Size (Desktop)",
+      "min": 15,
+      "max": 26,
+      "step": 1,
+      "default": 19,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "step_title_size_mobile",
+      "label": "Step Title Size (Mobile)",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "default": 17,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "step_title_italic",
+      "label": "Italicize Step Titles",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "text_muted_color",
+      "label": "Step Description Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "step_desc_size",
+      "label": "Step Description Font Size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Footer Delivery Note"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer_note",
+      "label": "Show Footer Note",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "footer_note_text",
+      "label": "Footer Note Text",
+      "default": "Estimated delivery: 4 to 5 weeks from proof approval · Minimum order 25 pieces"
+    },
+    {
+      "type": "color",
+      "id": "footer_note_color",
+      "label": "Footer Note Text Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "footer_note_size",
+      "label": "Footer Note Font Size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "footer_note_bg",
+      "label": "Footer Note Background Pill",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_number",
+          "label": "Step Number Override",
+          "info": "Leave blank to auto-number (01, 02, etc.)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Step Photo / Image",
+          "info": "Upload custom photo. If left empty, the fallback vector artwork will render automatically."
+        },
+        {
+          "type": "select",
+          "id": "fallback_art_type",
+          "label": "Fallback Vector Style",
+          "options": [
+            { "value": "sweatband", "label": "Choose Sweatband / Terry Products" },
+            { "value": "upload", "label": "Upload Logo / Digital Proof Desk" },
+            { "value": "production", "label": "Screen Printing & Workshop" },
+            { "value": "delivery", "label": "Delivery Box & Packing" }
+          ],
+          "default": "sweatband",
+          "info": "Shown only when no custom photo is uploaded."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "Choose your sweatband"
+        },
+        {
+          "type": "select",
+          "id": "title_tag",
+          "label": "Title HTML Tag",
+          "options": [
+            { "value": "h3", "label": "H3" },
+            { "value": "h4", "label": "H4" },
+            { "value": "h5", "label": "H5" },
+            { "value": "div", "label": "DIV" }
+          ],
+          "default": "h3"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Step Description",
+          "default": "Pick a wrist sweatband or a terry headband, then select colour and size. Mix colours in one order if your club needs it."
+        },
+        {
+          "type": "url",
+          "id": "step_link",
+          "label": "Optional Step Link Destination"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Optional Link Text",
+          "info": "e.g. Learn more, Upload now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "How It Works Steps",
+      "settings": {
+        "eyebrow": "HOW IT WORKS",
+        "heading": "FROM YOUR LOGO TO YOUR DOOR IN FOUR STEPS",
+        "heading_italic": true,
+        "description": "No design skills needed, no hidden steps. You approve a proof before anything is printed, so there are no surprises.",
+        "show_header_link": true,
+        "header_link_text": "SEE THE FULL PROCESS",
+        "columns_desktop": 4,
+        "mobile_layout": "stacked",
+        "footer_note_text": "Estimated delivery: 4 to 5 weeks from proof approval · Minimum order 25 pieces"
+      },
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "01",
+            "fallback_art_type": "sweatband",
+            "title": "Choose your sweatband",
+            "description": "Pick a wrist sweatband or a terry headband, then select colour and size. Mix colours in one order if your club needs it."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "02",
+            "fallback_art_type": "upload",
+            "title": "Upload your logo",
+            "description": "Send PNG, JPG, PDF, SVG, AI or EPS. Our studio prepares a free digital proof within two working days."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "03",
+            "fallback_art_type": "production",
+            "title": "We print and produce it",
+            "description": "Once you approve the proof, your bands go into production in our European workshop — screen printed, checked and packed by hand."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "step_number": "04",
+            "fallback_art_type": "delivery",
+            "title": "Delivered to your door",
+            "description": "Tracked shipping across the EU. Production takes 2 to 3 weeks and delivery 1 to 2 weeks, so your order arrives in 4 to 5 weeks."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

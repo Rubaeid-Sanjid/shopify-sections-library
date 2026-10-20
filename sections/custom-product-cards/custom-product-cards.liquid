@@ -1,0 +1,1969 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: Custom Product Cards / Collection Showcase
+  Description: High-converting 2-column or multi-column custom product showcase
+               section with dynamic Shopify product data, interactive color swatches,
+               built-in logo upload preview modal, volume pricing details, and fully
+               responsive desktop and mobile layouts.
+  File: sections/custom-product-cards/custom-product-cards.liquid
+  Author: Rubaeid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --cpc-section-bg: {{ section.settings.section_bg }};
+    --cpc-container-max-width: {{ section.settings.container_max_width }}px;
+    --cpc-pt-desktop: {{ section.settings.padding_top_desktop }}px;
+    --cpc-pb-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --cpc-pt-mobile: {{ section.settings.padding_top_mobile }}px;
+    --cpc-pb-mobile: {{ section.settings.padding_bottom_mobile }}px;
+
+    /* Card styling */
+    --cpc-card-bg: {{ section.settings.card_bg_color }};
+    --cpc-card-border: {{ section.settings.card_border_color }};
+    --cpc-card-radius: {{ section.settings.card_border_radius }}px;
+    --cpc-card-gap-desktop: {{ section.settings.card_gap_desktop }}px;
+    --cpc-card-gap-mobile: {{ section.settings.card_gap_mobile }}px;
+
+    /* Global Accent Colors */
+    --cpc-accent-color: {{ section.settings.accent_color | default: '#0284c7' }};
+    --cpc-heading-color: {{ section.settings.heading_color | default: '#0b1320' }};
+    --cpc-text-muted: {{ section.settings.text_muted_color | default: '#64748b' }};
+
+    background-color: var(--cpc-section-bg);
+    width: 100%;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .cpc-wrapper-{{ section_id }} {
+    padding-top: var(--cpc-pt-mobile);
+    padding-bottom: var(--cpc-pb-mobile);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--cpc-heading-color);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-wrapper-{{ section_id }} {
+      padding-top: var(--cpc-pt-desktop);
+      padding-bottom: var(--cpc-pb-desktop);
+    }
+  }
+
+  .cpc-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--cpc-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .cpc-container-{{ section_id }} {
+      padding-left: 36px;
+      padding-right: 36px;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Section Header Layout
+     --------------------------------------------------------------------------- */
+  .cpc-header-{{ section_id }} {
+    margin-bottom: 36px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-header-{{ section_id }} {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+  }
+
+  .cpc-header-content-{{ section_id }} {
+    max-width: 760px;
+  }
+
+  .cpc-eyebrow-{{ section_id }} {
+    display: inline-block;
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: {{ section.settings.eyebrow_color }};
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .cpc-heading-{{ section_id }} {
+    font-size: clamp(28px, 4.2vw, {{ section.settings.heading_size }}px);
+    font-weight: 900;
+    line-height: 1.08;
+    color: {{ section.settings.heading_color }};
+    text-transform: uppercase;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+    {% if section.settings.heading_italic %}
+      font-style: italic;
+    {% endif %}
+  }
+
+  .cpc-description-{{ section_id }} {
+    font-size: {{ section.settings.description_size }}px;
+    line-height: 1.6;
+    color: {{ section.settings.description_color }};
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .cpc-header-link-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: {{ section.settings.shop_all_color }};
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    font-style: italic;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-header-link-{{ section_id }} {
+      margin-top: 0;
+      padding-bottom: 6px;
+    }
+  }
+
+  .cpc-header-link-{{ section_id }}:hover {
+    color: var(--cpc-accent-color);
+    transform: translateX(4px);
+  }
+
+  .cpc-header-link-{{ section_id }} svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  .cpc-header-link-{{ section_id }}:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Products Grid Layout
+     --------------------------------------------------------------------------- */
+  .cpc-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--cpc-card-gap-mobile);
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-grid-{{ section_id }} {
+      grid-template-columns: repeat({{ section.settings.desktop_columns }}, 1fr);
+      gap: var(--cpc-card-gap-desktop);
+    }
+  }
+
+  /* Mobile Slider Mode */
+  {% if section.settings.mobile_layout == 'slider' %}
+    @media (max-width: 767px) {
+      .cpc-grid-{{ section_id }} {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 12px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        gap: 16px;
+      }
+      .cpc-grid-{{ section_id }}::-webkit-scrollbar {
+        display: none;
+      }
+      .cpc-card-{{ section_id }} {
+        flex: 0 0 85%;
+        scroll-snap-align: start;
+      }
+    }
+  {% endif %}
+
+  /* ---------------------------------------------------------------------------
+     Product Card Design
+     --------------------------------------------------------------------------- */
+  .cpc-card-{{ section_id }} {
+    background-color: var(--cpc-card-bg);
+    border: 1px solid var(--cpc-card-border);
+    border-radius: var(--cpc-card-radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-sizing: border-box;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.2s ease;
+  }
+
+  @media (min-width: 1024px) {
+    .cpc-card-{{ section_id }} {
+      padding: 32px;
+    }
+  }
+
+  {% if section.settings.card_hover_lift %}
+    .cpc-card-{{ section_id }}:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 36px -12px rgba(15, 23, 42, 0.1);
+      border-color: #cbd5e1;
+    }
+  {% endif %}
+
+  /* Top Media Area */
+  .cpc-media-box-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 8px 24px 8px;
+    box-sizing: border-box;
+    background: transparent;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-media-box-{{ section_id }} {
+      min-height: 340px;
+      padding: 20px 12px 32px 12px;
+    }
+  }
+
+  /* Floating Pill Badge */
+  .cpc-badge-{{ section_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    z-index: 3;
+    pointer-events: none;
+    box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (min-width: 768px) {
+    .cpc-badge-{{ section_id }} {
+      font-size: 12px;
+      padding: 6px 16px;
+    }
+  }
+
+  /* Product Media Wrapper */
+  .cpc-image-wrapper-{{ section_id }} {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .cpc-image-wrapper-{{ section_id }} img {
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+    /* object-fit: contain; */
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .cpc-card-{{ section_id }}:hover .cpc-image-wrapper-{{ section_id }} img,
+  .cpc-card-{{ section_id }}:hover .cpc-svg-product {
+    transform: scale(1.02);
+  }
+
+  .cpc-svg-product {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Uploaded Custom Logo Live Overlay on Band */
+  .cpc-live-logo-overlay-{{ section_id }} {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90px;
+    max-height: 48px;
+    pointer-events: none;
+    z-index: 4;
+    display: none;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+  }
+
+  /* Accent Line Divider */
+  .cpc-accent-bar-{{ section_id }} {
+    display: block;
+    margin: 8px 0 20px 0;
+    border-radius: 2px;
+  }
+
+  /* Card Information */
+  .cpc-card-body-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .cpc-title-{{ section_id }} {
+    font-size: clamp(20px, 2.2vw, 24px);
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px 0;
+    line-height: 1.15;
+  }
+
+  .cpc-title-{{ section_id }} a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .cpc-title-{{ section_id }} a:hover {
+    color: var(--cpc-accent-color);
+  }
+
+  .cpc-subtitle-{{ section_id }} {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--cpc-text-muted);
+    margin: 0 0 16px 0;
+  }
+
+  /* Price Line */
+  .cpc-price-box-{{ section_id }} {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .cpc-price-main-{{ section_id }} {
+    font-size: 19px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  .cpc-price-subtext-{{ section_id }} {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cpc-text-muted);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Color Swatches Row
+     --------------------------------------------------------------------------- */
+  .cpc-swatches-wrap-{{ section_id }} {
+    margin-bottom: 28px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 18px;
+  }
+
+  .cpc-swatches-header-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .cpc-swatches-count-{{ section_id }} {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cpc-text-muted);
+    font-style: italic;
+  }
+
+  .cpc-swatches-active-label-{{ section_id }} {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cpc-accent-color);
+  }
+
+  .cpc-swatches-list-{{ section_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cpc-swatch-btn-{{ section_id }} {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    background-color: #cbd5e1;
+  }
+
+  .cpc-swatch-btn-{{ section_id }}:hover {
+    transform: scale(1.15);
+  }
+
+  .cpc-swatch-btn-{{ section_id }}:focus-visible {
+    outline: 2px solid var(--cpc-accent-color);
+    outline-offset: 2px;
+  }
+
+  .cpc-swatch-btn-{{ section_id }}.is-active {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0 0 2px var(--cpc-card-bg), 0 0 0 4px var(--cpc-accent-color);
+  }
+
+  .cpc-swatch-check-{{ section_id }} {
+    width: 12px;
+    height: 12px;
+    display: none;
+    stroke-width: 2.5;
+  }
+
+  .cpc-swatch-btn-{{ section_id }}.is-active .cpc-swatch-check-{{ section_id }} {
+    display: block;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Action Buttons Row
+     --------------------------------------------------------------------------- */
+  .cpc-actions-row-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .cpc-btn-primary-{{ section_id }} {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 20px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    font-style: italic;
+  }
+
+  .cpc-btn-primary-{{ section_id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -4px rgba(2, 132, 199, 0.4);
+  }
+
+  .cpc-btn-primary-{{ section_id }} svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  .cpc-btn-secondary-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+    font-style: italic;
+  }
+
+  .cpc-btn-secondary-{{ section_id }}:hover {
+    transform: translateY(-2px);
+  }
+
+  .cpc-btn-secondary-{{ section_id }} svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  .cpc-btn-secondary-{{ section_id }}:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Logo Upload Customizer Modal Dialog
+     --------------------------------------------------------------------------- */
+  .cpc-modal-backdrop-{{ section_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cpc-modal-backdrop-{{ section_id }}.is-open {
+    display: flex;
+    opacity: 1;
+  }
+
+  .cpc-modal-card-{{ section_id }} {
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    padding: 32px;
+    box-sizing: border-box;
+    animation: cpcModalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes cpcModalPop {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .cpc-modal-close-{{ section_id }} {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f5f9;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .cpc-modal-close-{{ section_id }}:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    transform: rotate(90deg);
+  }
+
+  .cpc-modal-header-{{ section_id }} {
+    margin-bottom: 24px;
+    padding-right: 40px;
+  }
+
+  .cpc-modal-title-{{ section_id }} {
+    font-size: 22px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+  }
+
+  .cpc-modal-desc-{{ section_id }} {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .cpc-dropzone-{{ section_id }} {
+    border: 2px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .cpc-dropzone-{{ section_id }}:hover,
+  .cpc-dropzone-{{ section_id }}.is-dragover {
+    border-color: var(--cpc-accent-color);
+    background: #f0f9ff;
+  }
+
+  .cpc-dropzone-icon-{{ section_id }} {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 12px auto;
+    color: var(--cpc-accent-color);
+  }
+
+  .cpc-dropzone-text-{{ section_id }} {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+  }
+
+  .cpc-dropzone-hint-{{ section_id }} {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 0;
+  }
+
+  .cpc-modal-controls-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .cpc-modal-field-label-{{ section_id }} {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #475569;
+    margin-bottom: 6px;
+  }
+
+  .cpc-modal-select-{{ section_id }},
+  .cpc-modal-input-{{ section_id }} {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: #ffffff;
+    font-family: inherit;
+  }
+
+  .cpc-modal-pricing-box-{{ section_id }} {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .cpc-modal-pricing-title-{{ section_id }} {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #334155;
+    margin-bottom: 8px;
+  }
+
+  .cpc-modal-pricing-table-{{ section_id }} {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+
+  .cpc-modal-submit-btn-{{ section_id }} {
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 9999px;
+    background: var(--cpc-accent-color);
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    font-weight: 800;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cpc-modal-submit-btn-{{ section_id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+    filter: brightness(1.05);
+  }
+{%- endstyle -%}
+
+<div class="cpc-wrapper-{{ section_id }}">
+  <div class="cpc-container-{{ section_id }}">
+
+    {%- comment -%} Section Header {%- endcomment -%}
+    {%- if section.settings.show_header -%}
+      <div class="cpc-header-{{ section_id }}">
+        <div class="cpc-header-content-{{ section_id }}">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="cpc-eyebrow-{{ section_id }}">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+
+          {%- if section.settings.heading != blank -%}
+            <{{ section.settings.heading_tag }} class="cpc-heading-{{ section_id }}">
+              {{ section.settings.heading }}
+            </{{ section.settings.heading_tag }}>
+          {%- endif -%}
+
+          {%- if section.settings.description != blank -%}
+            <p class="cpc-description-{{ section_id }}">
+              {{ section.settings.description }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.show_shop_all and section.settings.shop_all_text != blank -%}
+          <a href="{{ section.settings.shop_all_url | default: routes.all_products_collection_url }}" class="cpc-header-link-{{ section_id }}">
+            <span>{{ section.settings.shop_all_text }}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Products Grid / Track {%- endcomment -%}
+    <div class="cpc-grid-{{ section_id }}" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign card_id = block.id | replace: '_', '' | downcase
+          assign product = block.settings.product
+
+          if product != blank and block.settings.override_product == false
+            assign card_title = product.title
+            assign card_url = product.url
+            assign card_price = product.price | money
+            assign card_subtitle = product.description | strip_html | truncate: 85
+          else
+            assign card_title = block.settings.title
+            assign card_url = block.settings.btn2_link | default: '#'
+            assign card_price = block.settings.price
+            assign card_subtitle = block.settings.subtitle
+          endif
+
+          if block.settings.enable_custom_image
+            assign primary_image = block.settings.image
+          elsif product != blank and block.settings.override_product == false
+            assign primary_image = product.featured_image
+          elsif product != blank and block.settings.image == blank
+            assign primary_image = product.featured_image
+          else
+            assign primary_image = block.settings.image
+          endif
+        -%}
+
+        <div class="cpc-card-{{ section_id }}" id="cpc-card-{{ card_id }}" data-card-id="{{ card_id }}" role="listitem" {{ block.shopify_attributes }}>
+          
+          {%- comment -%} Top Media Area {%- endcomment -%}
+          <div class="cpc-media-box-{{ section_id }}">
+            
+            {%- comment -%} Badge {%- endcomment -%}
+            {%- if block.settings.show_badge and block.settings.badge_text != blank -%}
+              <div class="cpc-badge-{{ section_id }}" style="background-color: {{ block.settings.badge_bg }}; color: {{ block.settings.badge_text_color }}; border: 1px solid {{ block.settings.badge_border_color }};">
+                {{ block.settings.badge_text }}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Product Image / Vector Artwork {%- endcomment -%}
+            <div class="cpc-image-wrapper-{{ section_id }}" id="media-wrap-{{ card_id }}">
+              {%- if primary_image != blank -%}
+                <img
+                  src="{{ primary_image | image_url: width: 900 }}"
+                  srcset="{{ primary_image | image_url: width: 450 }} 450w, {{ primary_image | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 1024px) 500px, 90vw"
+                  alt="{{ card_title | escape }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="cpc-main-img-{{ card_id }}"
+                >
+              {%- else -%}
+                {%- comment -%} Fallback High-Fidelity Vector Illustrations {%- endcomment -%}
+                {%- if forloop.first or block.settings.fallback_art_type == 'wristband' -%}
+                  {%- comment -%} Fallback 1: Custom Wrist Sweatband {%- endcomment -%}
+                  <svg class="cpc-svg-product cpc-svg-wristband-{{ card_id }}" viewBox="0 0 500 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ card_title | escape }}">
+                    <defs>
+                      <linearGradient id="wb-cylinder-{{ card_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#000000" stop-opacity="0.25" />
+                        <stop offset="15%" stop-color="#ffffff" stop-opacity="0.35" />
+                        <stop offset="50%" stop-color="#ffffff" stop-opacity="0" />
+                        <stop offset="85%" stop-color="#000000" stop-opacity="0.15" />
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0.35" />
+                      </linearGradient>
+                      <linearGradient id="wb-rim-{{ card_id }}" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#000000" stop-opacity="0.3" />
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0.05" />
+                      </linearGradient>
+                      <pattern id="wb-knit-{{ card_id }}" width="8" height="8" patternUnits="userSpaceOnUse">
+                        <path d="M1 2 Q4 0 7 2 T13 2" fill="none" stroke="#000000" stroke-width="0.8" opacity="0.06" />
+                        <path d="M0 6 Q3 4 6 6 T12 6" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.18" />
+                        <circle cx="2" cy="2" r="0.6" fill="#000000" opacity="0.04" />
+                      </pattern>
+                    </defs>
+
+                    <!-- Cast Ground Shadow -->
+                    <ellipse cx="250" cy="365" rx="160" ry="24" fill="#0f172a" opacity="0.12" filter="blur(14px)" />
+                    <ellipse cx="250" cy="362" rx="125" ry="16" fill="#0f172a" opacity="0.2" filter="blur(8px)" />
+
+                    <!-- Outer Wristband Body -->
+                    <path class="cpc-fabric-base-{{ card_id }}"
+                          d="M 125,180 C 125,120 180,105 250,105 C 320,105 375,120 375,180 L 368,300 C 368,345 315,360 250,360 C 185,360 132,345 132,300 Z" 
+                          fill="#ffffff" />
+
+                    <!-- Knit Terry Overlay -->
+                    <path d="M 125,180 C 125,120 180,105 250,105 C 320,105 375,120 375,180 L 368,300 C 368,345 315,360 250,360 C 185,360 132,345 132,300 Z" 
+                          fill="url(#wb-knit-{{ card_id }})" />
+
+                    <!-- Cylinder Light & Edge Shadow -->
+                    <path d="M 125,180 C 125,120 180,105 250,105 C 320,105 375,120 375,180 L 368,300 C 368,345 315,360 250,360 C 185,360 132,345 132,300 Z" 
+                          fill="url(#wb-cylinder-{{ card_id }})" />
+
+                    <!-- Inside Opening -->
+                    <ellipse cx="250" cy="170" rx="105" ry="42" fill="#e2e8f0" />
+                    <ellipse cx="250" cy="170" rx="105" ry="42" fill="url(#wb-rim-{{ card_id }})" />
+
+                    <!-- Rolled Lip Rim -->
+                    <ellipse cx="250" cy="168" rx="118" ry="46" fill="none" stroke="#f8fafc" stroke-width="8" opacity="0.8" />
+                    <ellipse cx="250" cy="168" rx="118" ry="46" fill="none" stroke="#cbd5e1" stroke-width="2" opacity="0.6" />
+
+                    <!-- Bottom Rim Contour -->
+                    <path d="M 132,300 C 132,345 185,360 250,360 C 315,360 368,345 368,300" fill="none" stroke="#e2e8f0" stroke-width="3" opacity="0.8" />
+
+                    <!-- Embroidered Center Chevron Logo -->
+                    <g transform="translate(250, 260) scale(1.15)">
+                      <path d="M -75,-28 L 0,26 L 75,-28 L 65,-42 L 0,6 L -65,-42 Z" fill="#0369a1" opacity="0.35" transform="translate(0, 2)" />
+                      <path d="M -75,-28 L 0,26 L 75,-28 L 65,-42 L 0,6 L -65,-42 Z" fill="#0ea5e9" />
+                      <path d="M -73,-29 L 0,24 L 73,-29" fill="none" stroke="#7dd3fc" stroke-width="2" opacity="0.8" />
+                    </g>
+                  </svg>
+                {%- else -%}
+                  {%- comment -%} Fallback 2: Custom Terry Headband {%- endcomment -%}
+                  <svg class="cpc-svg-product cpc-svg-headband-{{ card_id }}" viewBox="0 0 500 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ card_title | escape }}">
+                    <defs>
+                      <linearGradient id="hb-cylinder-{{ card_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#000000" stop-opacity="0.4" />
+                        <stop offset="25%" stop-color="#ffffff" stop-opacity="0.2" />
+                        <stop offset="50%" stop-color="#ffffff" stop-opacity="0.3" />
+                        <stop offset="75%" stop-color="#ffffff" stop-opacity="0.15" />
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0.45" />
+                      </linearGradient>
+                      <pattern id="hb-knit-{{ card_id }}" width="6" height="6" patternUnits="userSpaceOnUse">
+                        <path d="M1 2 Q3 0 5 2 T9 2" fill="none" stroke="#000000" stroke-width="0.75" opacity="0.12" />
+                        <circle cx="2" cy="2" r="0.7" fill="#ffffff" opacity="0.1" />
+                      </pattern>
+                    </defs>
+
+                    <!-- Cast Ground Shadow -->
+                    <ellipse cx="250" cy="320" rx="190" ry="24" fill="#0f172a" opacity="0.2" filter="blur(16px)" />
+                    <ellipse cx="250" cy="318" rx="150" ry="15" fill="#0f172a" opacity="0.3" filter="blur(8px)" />
+
+                    <!-- Headband Outer Fabric Body -->
+                    <path class="cpc-fabric-base-{{ card_id }}"
+                          d="M 60,210 C 60,170 140,150 250,150 C 360,150 440,170 440,210 L 435,260 C 435,295 355,315 250,315 C 145,315 65,295 65,260 Z" 
+                          fill="#18181b" />
+
+                    <!-- Knit Terry Overlay -->
+                    <path d="M 60,210 C 60,170 140,150 250,150 C 360,150 440,170 440,210 L 435,260 C 435,295 355,315 250,315 C 145,315 65,295 65,260 Z" 
+                          fill="url(#hb-knit-{{ card_id }})" opacity="0.4" />
+
+                    <!-- Cylinder Lighting Highlight & Shadow -->
+                    <path d="M 60,210 C 60,170 140,150 250,150 C 360,150 440,170 440,210 L 435,260 C 435,295 355,315 250,315 C 145,315 65,295 65,260 Z" 
+                          fill="url(#hb-cylinder-{{ card_id }})" />
+
+                    <!-- Top Opening Inside -->
+                    <ellipse cx="250" cy="205" rx="170" ry="32" fill="#090d16" />
+
+                    <!-- Top Rim Highlight -->
+                    <path d="M 65,210 C 65,172 145,152 250,152 C 355,152 435,172 435,210" fill="none" stroke="#52525b" stroke-width="3" opacity="0.6" />
+
+                    <!-- Bottom Rim Contour -->
+                    <path d="M 65,260 C 65,295 145,315 250,315 C 355,315 435,295 435,260" fill="none" stroke="#27272a" stroke-width="3" />
+
+                    <!-- Embroidered Center Chevron Logo -->
+                    <g transform="translate(250, 255) scale(1.15)">
+                      <path d="M -75,-20 L 0,26 L 75,-20 L 65,-34 L 0,8 L -65,-34 Z" fill="#0284c7" opacity="0.4" transform="translate(0, 2)" />
+                      <path d="M -75,-20 L 0,26 L 75,-20 L 65,-34 L 0,8 L -65,-34 Z" fill="#38bdf8" />
+                      <path d="M -73,-21 L 0,24 L 73,-21" fill="none" stroke="#bae6fd" stroke-width="1.8" opacity="0.9" />
+                    </g>
+                  </svg>
+                {%- endif -%}
+              {%- endif -%}
+
+              <!-- Live Logo Upload Overlay -->
+              <img id="live-logo-{{ card_id }}" class="cpc-live-logo-overlay-{{ section_id }}" alt="Custom Logo Preview">
+            </div>
+          </div>
+
+          {%- comment -%} Blue Accent Divider Bar {%- endcomment -%}
+          {%- if block.settings.show_accent_bar -%}
+            <div class="cpc-accent-bar-{{ section_id }}" style="width: {{ block.settings.accent_bar_width }}px; height: {{ block.settings.accent_bar_height }}px; background-color: {{ block.settings.accent_bar_color }};"></div>
+          {%- endif -%}
+
+          {%- comment -%} Card Content Body {%- endcomment -%}
+          <div class="cpc-card-body-{{ section_id }}">
+            
+            {%- comment -%} Title {%- endcomment -%}
+            <{{ block.settings.title_tag }} class="cpc-title-{{ section_id }}" style="color: {{ block.settings.title_color }};">
+              <a href="{{ card_url }}">{{ card_title }}</a>
+            </{{ block.settings.title_tag }}>
+
+            {%- comment -%} Subtitle / Tagline {%- endcomment -%}
+            {%- if card_subtitle != blank -%}
+              <p class="cpc-subtitle-{{ section_id }}" style="color: {{ block.settings.subtitle_color }};">
+                {{ card_subtitle }}
+              </p>
+            {%- endif -%}
+
+            {%- comment -%} Pricing {%- endcomment -%}
+            <div class="cpc-price-box-{{ section_id }}">
+              <span class="cpc-price-main-{{ section_id }}" style="color: {{ block.settings.price_color }};">
+                {{ block.settings.price_prefix }} {{ card_price }}
+              </span>
+              {%- if block.settings.price_subtext != blank -%}
+                <span class="cpc-price-subtext-{{ section_id }}" style="color: {{ block.settings.price_subtext_color }};">
+                  {{ block.settings.price_subtext }}
+                </span>
+              {%- endif -%}
+            </div>
+
+            {%- comment -%} Color Swatches {%- endcomment -%}
+            {%- if block.settings.show_swatches -%}
+              {%- assign colors_raw = block.settings.colors_list | split: ',' -%}
+              <div class="cpc-swatches-wrap-{{ section_id }}">
+                <div class="cpc-swatches-header-{{ section_id }}">
+                  <span class="cpc-swatches-count-{{ section_id }}">
+                    {{ block.settings.swatches_label | default: '11 COLOURS' }}
+                  </span>
+                  <span class="cpc-swatches-active-label-{{ section_id }}" id="swatch-label-{{ card_id }}">
+                    {{ block.settings.active_color_name | default: 'Selected' }}
+                  </span>
+                </div>
+
+                <div class="cpc-swatches-list-{{ section_id }}" role="radiogroup" aria-label="Product color choices">
+                  {%- for color_item in colors_raw -%}
+                    {%- assign color_parts = color_item | strip | split: ':' -%}
+                    {%- assign c_name = color_parts[0] | strip -%}
+                    {%- assign c_hex = color_parts[1] | default: '#000000' | strip -%}
+                    {%- assign is_active = false -%}
+                    {%- if c_name == block.settings.active_color_name -%}
+                      {%- assign is_active = true -%}
+                    {%- elsif forloop.first and block.settings.active_color_name == blank -%}
+                      {%- assign is_active = true -%}
+                    {%- endif -%}
+
+                    <button
+                      type="button"
+                      class="cpc-swatch-btn-{{ section_id }} {% if is_active %}is-active{% endif %}"
+                      style="background-color: {{ c_hex }};"
+                      data-color-name="{{ c_name }}"
+                      data-color-hex="{{ c_hex }}"
+                      data-card-id="{{ card_id }}"
+                      role="radio"
+                      aria-checked="{% if is_active %}true{% else %}false{% endif %}"
+                      aria-label="{{ c_name }}"
+                      title="{{ c_name }}"
+                    >
+                      {%- comment -%} Checkmark icon {%- endcomment -%}
+                      {%- assign c_hex_down = c_hex | downcase -%}
+                      <svg class="cpc-swatch-check-{{ section_id }}" viewBox="0 0 16 16" fill="none" stroke="{% if c_hex_down == '#ffffff' or c_hex_down == '#fff' or c_hex_down == '#facc15' %}#0f172a{% else %}#ffffff{% endif %}" aria-hidden="true">
+                        <polyline points="3.5 8.5 6.5 11.5 12.5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Action Buttons Row {%- endcomment -%}
+            <div class="cpc-actions-row-{{ section_id }}">
+              {%- if block.settings.btn1_text != blank -%}
+                {%- if block.settings.btn1_action == 'open_modal' and section.settings.enable_upload_modal -%}
+                  <button
+                    type="button"
+                    class="cpc-btn-primary-{{ section_id }} cpc-trigger-modal"
+                    data-product-title="{{ card_title | escape }}"
+                    data-card-id="{{ card_id }}"
+                    style="background-color: {{ block.settings.btn1_bg }}; color: {{ block.settings.btn1_text_color }};"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>{{ block.settings.btn1_text }}</span>
+                  </button>
+                {%- else -%}
+                  <a
+                    href="{{ block.settings.btn1_link | default: card_url }}"
+                    class="cpc-btn-primary-{{ section_id }}"
+                    style="background-color: {{ block.settings.btn1_bg }}; color: {{ block.settings.btn1_text_color }};"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>{{ block.settings.btn1_text }}</span>
+                  </a>
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if block.settings.btn2_text != blank -%}
+                <a
+                  href="{{ block.settings.btn2_link | default: card_url }}"
+                  class="cpc-btn-secondary-{{ section_id }}"
+                  style="border: 1.5px solid {{ block.settings.btn2_border_color }}; color: {{ block.settings.btn2_text_color }}; background-color: {{ block.settings.btn2_bg }};"
+                >
+                  <span>{{ block.settings.btn2_text }}</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              {%- endif -%}
+            </div>
+
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} Interactive Customizer Modal Dialog {%- endcomment -%}
+{%- if section.settings.enable_upload_modal -%}
+  <div class="cpc-modal-backdrop-{{ section_id }}" id="cpc-modal-{{ section_id }}" role="dialog" aria-modal="true" aria-labelledby="cpc-modal-title-{{ section_id }}">
+    <div class="cpc-modal-card-{{ section_id }}">
+      <button type="button" class="cpc-modal-close-{{ section_id }}" id="cpc-modal-close-{{ section_id }}" aria-label="Close dialog">✕</button>
+
+      <div class="cpc-modal-header-{{ section_id }}">
+        <h3 class="cpc-modal-title-{{ section_id }}" id="cpc-modal-title-{{ section_id }}">
+          {{ section.settings.modal_heading | default: 'Upload Your Logo' }}
+        </h3>
+        <p class="cpc-modal-desc-{{ section_id }}">
+          <span id="cpc-modal-product-name">Custom Order</span> — {{ section.settings.modal_subheading | default: 'Preview your brand logo instantly on this item' }}
+        </p>
+      </div>
+
+      <!-- File Dropzone -->
+      <label class="cpc-dropzone-{{ section_id }}" id="cpc-dropzone-{{ section_id }}" for="cpc-logo-input-{{ section_id }}">
+        <svg class="cpc-dropzone-icon-{{ section_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p class="cpc-dropzone-text-{{ section_id }}">Click or drag your logo file here</p>
+        <p class="cpc-dropzone-hint-{{ section_id }}">Supports PNG, SVG, JPG or WebP (transparent background recommended)</p>
+        <input type="file" id="cpc-logo-input-{{ section_id }}" accept="image/*" style="display: none;">
+      </label>
+
+      <!-- Upload Preview Controls -->
+      <div class="cpc-modal-controls-grid-{{ section_id }}">
+        <div>
+          <label class="cpc-modal-field-label-{{ section_id }}" for="cpc-method-{{ section_id }}">Branding Method</label>
+          <select id="cpc-method-{{ section_id }}" class="cpc-modal-select-{{ section_id }}">
+            <option value="embroidery">3D / Direct Embroidery</option>
+            <option value="woven_patch">Woven Damask Patch</option>
+            <option value="screen_print">Screen Print / Heat Transfer</option>
+          </select>
+        </div>
+        <div>
+          <label class="cpc-modal-field-label-{{ section_id }}" for="cpc-quantity-{{ section_id }}">Order Quantity</label>
+          <input type="number" id="cpc-quantity-{{ section_id }}" class="cpc-modal-input-{{ section_id }}" value="100" min="25" step="25">
+        </div>
+      </div>
+
+      <!-- Volume Pricing Info -->
+      <div class="cpc-modal-pricing-box-{{ section_id }}">
+        <div class="cpc-modal-pricing-title-{{ section_id }}">Volume Discount Tiers</div>
+        <div class="cpc-modal-pricing-table-{{ section_id }}">{{ section.settings.volume_pricing_tiers }}</div>
+      </div>
+
+      <!-- Action -->
+      <button type="button" class="cpc-modal-submit-btn-{{ section_id }}" id="cpc-modal-submit-{{ section_id }}">
+        Save Mockup & Request Digital Proof
+      </button>
+    </div>
+  </div>
+{%- endif -%}
+
+<script>
+  (function() {
+    var sectionId = {{ section_id | json }};
+    var root = document.getElementById('shopify-section-' + {{ section.id | json }});
+    if (!root) return;
+
+    // 1. Interactive Swatches: Live Color Switch & Label Update
+    var swatchButtons = root.querySelectorAll('.cpc-swatch-btn-' + sectionId);
+    swatchButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var cardId = btn.getAttribute('data-card-id');
+        var colorName = btn.getAttribute('data-color-name');
+        var colorHex = btn.getAttribute('data-color-hex');
+
+        // Update active swatch state in this card
+        var card = document.getElementById('cpc-card-' + cardId);
+        if (!card) return;
+
+        var siblingSwatches = card.querySelectorAll('.cpc-swatch-btn-' + sectionId);
+        siblingSwatches.forEach(function(s) {
+          s.classList.remove('is-active');
+          s.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-checked', 'true');
+
+        // Update active color name text
+        var label = document.getElementById('swatch-label-' + cardId);
+        if (label) {
+          label.textContent = colorName;
+        }
+
+        // If SVG fallback illustration exists, morph fabric color
+        var fabricPath = card.querySelector('.cpc-fabric-base-' + cardId);
+        if (fabricPath) {
+          fabricPath.setAttribute('fill', colorHex);
+        }
+      });
+    });
+
+    // 2. Interactive Logo Upload Customizer Modal
+    var modalBackdrop = document.getElementById('cpc-modal-' + sectionId);
+    if (!modalBackdrop) return;
+
+    var activeCardId = null;
+    var modalClose = document.getElementById('cpc-modal-close-' + sectionId);
+    var modalProductName = document.getElementById('cpc-modal-product-name');
+    var fileInput = document.getElementById('cpc-logo-input-' + sectionId);
+    var dropzone = document.getElementById('cpc-dropzone-' + sectionId);
+    var submitBtn = document.getElementById('cpc-modal-submit-' + sectionId);
+
+    // Open Modal
+    var modalTriggers = root.querySelectorAll('.cpc-trigger-modal');
+    modalTriggers.forEach(function(trigger) {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        activeCardId = trigger.getAttribute('data-card-id');
+        var productTitle = trigger.getAttribute('data-product-title') || 'Custom Item';
+        if (modalProductName) {
+          modalProductName.textContent = productTitle;
+        }
+        modalBackdrop.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Close Modal
+    function closeModal() {
+      modalBackdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    if (modalClose) {
+      modalClose.addEventListener('click', closeModal);
+    }
+
+    modalBackdrop.addEventListener('click', function(e) {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) {
+        closeModal();
+      }
+    });
+
+    // Handle File Drop & File Select
+    if (dropzone && fileInput) {
+      ['dragenter', 'dragover'].forEach(function(eventName) {
+        dropzone.addEventListener(eventName, function(e) {
+          e.preventDefault();
+          dropzone.classList.add('is-dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(function(eventName) {
+        dropzone.addEventListener(eventName, function(e) {
+          e.preventDefault();
+          dropzone.classList.remove('is-dragover');
+        });
+      });
+
+      dropzone.addEventListener('drop', function(e) {
+        if (e.dataTransfer && e.dataTransfer.files.length) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', function(e) {
+        if (fileInput.files && fileInput.files[0]) {
+          handleFile(fileInput.files[0]);
+        }
+      });
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.match('image.*')) {
+        alert('Please select an image file (PNG, JPG, SVG, or WebP).');
+        return;
+      }
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var logoDataUrl = e.target.result;
+        if (activeCardId) {
+          var liveLogo = document.getElementById('live-logo-' + activeCardId);
+          if (liveLogo) {
+            liveLogo.src = logoDataUrl;
+            liveLogo.style.display = 'block';
+          }
+        }
+        if (dropzone) {
+          var label = dropzone.querySelector('.cpc-dropzone-text-' + sectionId);
+          if (label) {
+            label.textContent = 'Uploaded: ' + file.name + ' ✓';
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Submit Action
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        submitBtn.textContent = 'Generating Visual Proof...';
+        setTimeout(function() {
+          submitBtn.textContent = 'Mockup Saved! Proof Sent to Designer ✓';
+          setTimeout(function() {
+            closeModal();
+            submitBtn.textContent = 'Save Mockup & Request Digital Proof';
+          }, 1400);
+        }, 800);
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Product Cards",
+  "tag": "section",
+  "class": "shopify-section-custom-product-cards",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show Section Header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Label",
+      "default": "THE COLLECTION"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow Font Size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "TWO BANDS. EVERY COLOUR. YOUR LOGO."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "DIV" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_italic",
+      "label": "Italicize Heading",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (Desktop)",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "default": 44,
+      "unit": "px"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "A focused range, because a custom order is about your brand — not about choosing from a catalogue of fifty."
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description Font Size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Header Link (Shop All)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shop_all",
+      "label": "Show 'Shop All' Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shop_all_text",
+      "label": "Link Text",
+      "default": "SHOP ALL"
+    },
+    {
+      "type": "url",
+      "id": "shop_all_url",
+      "label": "Link Destination"
+    },
+    {
+      "type": "color",
+      "id": "shop_all_color",
+      "label": "Link Color",
+      "default": "#0b1320"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Sizing"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container Max Width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "default": 1280,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop Columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile Layout",
+      "options": [
+        { "value": "stacked", "label": "Vertical Stack" },
+        { "value": "slider", "label": "Touch Swipeable Slider" }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "range",
+      "id": "card_gap_desktop",
+      "label": "Card Gap (Desktop)",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "label": "Card Gap (Mobile)",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Global Accent Color",
+      "default": "#0284c7"
+    },
+    {
+      "type": "color",
+      "id": "text_muted_color",
+      "label": "Muted Text Color",
+      "default": "#64748b"
+    },
+    {
+      "type": "header",
+      "content": "Card Container Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card Corner Radius",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_hover_lift",
+      "label": "Enable Card Hover Lift Effect",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Customizer Modal Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_upload_modal",
+      "label": "Enable Logo Upload Preview Modal",
+      "default": true,
+      "info": "Opens an interactive mockup dialog when clicking 'UPLOAD YOUR LOGO'"
+    },
+    {
+      "type": "text",
+      "id": "modal_heading",
+      "label": "Modal Heading",
+      "default": "Upload Your Brand Logo"
+    },
+    {
+      "type": "text",
+      "id": "modal_subheading",
+      "label": "Modal Subheading",
+      "default": "Preview your brand logo instantly on this custom item"
+    },
+    {
+      "type": "textarea",
+      "id": "volume_pricing_tiers",
+      "label": "Volume Pricing Tiers Text",
+      "default": "• 50–99 pcs: €2.45 each\n• 100–249 pcs: €2.10 each\n• 250–499 pcs: €1.85 each\n• 500+ pcs: €1.50 each"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom Padding (Desktop)",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 64,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom Padding (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Shopify Product (Optional)"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Shopify Product",
+          "info": "Pulls title, price, and images automatically if selected."
+        },
+        {
+          "type": "checkbox",
+          "id": "override_product",
+          "label": "Override Product Content (Title & Price)",
+          "default": false,
+          "info": "Enable to override product title, description, and price with custom text below."
+        },
+        {
+          "type": "header",
+          "content": "Badge"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show Badge",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "Made to order · 4–5 weeks"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg",
+          "label": "Badge Background",
+          "default": "#f8fafc"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Badge Text Color",
+          "default": "#334155"
+        },
+        {
+          "type": "color",
+          "id": "badge_border_color",
+          "label": "Badge Border Color",
+          "default": "#e2e8f0"
+        },
+        {
+          "type": "header",
+          "content": "Product Media"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_custom_image",
+          "label": "Enable Custom Image",
+          "default": false,
+          "info": "Enable to override the Shopify product image with your custom image below (keeps product title & price)."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Product Image",
+          "info": "Upload a custom product image. If left empty, a realistic vector illustration will render automatically."
+        },
+        {
+          "type": "select",
+          "id": "fallback_art_type",
+          "label": "Fallback Vector Style",
+          "options": [
+            { "value": "wristband", "label": "Wrist Sweatband" },
+            { "value": "headband", "label": "Terry Headband" }
+          ],
+          "default": "wristband",
+          "info": "Used only when no custom photo is uploaded."
+        },
+        {
+          "type": "header",
+          "content": "Accent Divider Bar"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_accent_bar",
+          "label": "Show Accent Divider Bar",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "accent_bar_color",
+          "label": "Accent Bar Color",
+          "default": "#0284c7"
+        },
+        {
+          "type": "range",
+          "id": "accent_bar_width",
+          "label": "Accent Bar Width",
+          "min": 40,
+          "max": 160,
+          "step": 5,
+          "default": 80,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "accent_bar_height",
+          "label": "Accent Bar Height",
+          "min": 2,
+          "max": 8,
+          "step": 1,
+          "default": 4,
+          "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "Titles & Descriptions"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "CUSTOM WRIST SWEATBAND"
+        },
+        {
+          "type": "select",
+          "id": "title_tag",
+          "label": "Title HTML Tag",
+          "options": [
+            { "value": "h2", "label": "H2" },
+            { "value": "h3", "label": "H3" },
+            { "value": "h4", "label": "H4" },
+            { "value": "div", "label": "DIV" }
+          ],
+          "default": "h3"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color",
+          "default": "#0b1320"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Product Subtitle / Tagline",
+          "default": "The classic terry wristband, printed with your logo"
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Subtitle Color",
+          "default": "#64748b"
+        },
+        {
+          "type": "header",
+          "content": "Pricing"
+        },
+        {
+          "type": "text",
+          "id": "price_prefix",
+          "label": "Price Prefix",
+          "default": "From"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price Value",
+          "default": "€2.45"
+        },
+        {
+          "type": "color",
+          "id": "price_color",
+          "label": "Price Color",
+          "default": "#0b1320"
+        },
+        {
+          "type": "text",
+          "id": "price_subtext",
+          "label": "Price Subtext Note",
+          "default": "per piece · volume pricing available"
+        },
+        {
+          "type": "color",
+          "id": "price_subtext_color",
+          "label": "Price Subtext Color",
+          "default": "#64748b"
+        },
+        {
+          "type": "header",
+          "content": "Color Swatches"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_swatches",
+          "label": "Show Color Swatches",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "swatches_label",
+          "label": "Swatches Counter Label",
+          "default": "11 COLOURS"
+        },
+        {
+          "type": "text",
+          "id": "active_color_name",
+          "label": "Default Active Color Name",
+          "default": "Green"
+        },
+        {
+          "type": "textarea",
+          "id": "colors_list",
+          "label": "Colors List (Comma-separated)",
+          "info": "Format: Name:HexCode, Name:HexCode",
+          "default": "Black:#111827, White:#ffffff, Red:#dc2626, Pink:#ec4899, Yellow:#eab308, Green:#059669, Navy:#1e3a8a, Gray:#94a3af, Purple:#7c3aed, Orange:#ea580c, Light Blue:#38bdf8"
+        },
+        {
+          "type": "header",
+          "content": "Button 1 (Upload Your Logo)"
+        },
+        {
+          "type": "text",
+          "id": "btn1_text",
+          "label": "Button 1 Text",
+          "default": "UPLOAD YOUR LOGO"
+        },
+        {
+          "type": "select",
+          "id": "btn1_action",
+          "label": "Button 1 Action",
+          "options": [
+            { "value": "open_modal", "label": "Open Logo Upload Modal" },
+            { "value": "custom_link", "label": "Navigate to Custom URL" }
+          ],
+          "default": "open_modal"
+        },
+        {
+          "type": "url",
+          "id": "btn1_link",
+          "label": "Button 1 URL (If Custom Link)"
+        },
+        {
+          "type": "color",
+          "id": "btn1_bg",
+          "label": "Button 1 Background",
+          "default": "#0284c7"
+        },
+        {
+          "type": "color",
+          "id": "btn1_text_color",
+          "label": "Button 1 Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Button 2 (Details)"
+        },
+        {
+          "type": "text",
+          "id": "btn2_text",
+          "label": "Button 2 Text",
+          "default": "DETAILS"
+        },
+        {
+          "type": "url",
+          "id": "btn2_link",
+          "label": "Button 2 URL"
+        },
+        {
+          "type": "color",
+          "id": "btn2_bg",
+          "label": "Button 2 Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "btn2_border_color",
+          "label": "Button 2 Border Color",
+          "default": "#cbd5e1"
+        },
+        {
+          "type": "color",
+          "id": "btn2_text_color",
+          "label": "Button 2 Text Color",
+          "default": "#0b1320"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Cards",
+      "settings": {
+        "eyebrow": "THE COLLECTION",
+        "heading": "TWO BANDS. EVERY COLOUR. YOUR LOGO.",
+        "heading_italic": true,
+        "description": "A focused range, because a custom order is about your brand — not about choosing from a catalogue of fifty.",
+        "show_shop_all": true,
+        "shop_all_text": "SHOP ALL",
+        "desktop_columns": 2,
+        "mobile_layout": "stacked"
+      },
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "title": "CUSTOM WRIST SWEATBAND",
+            "subtitle": "The classic terry wristband, printed with your logo",
+            "price_prefix": "From",
+            "price": "€2.45",
+            "price_subtext": "per piece · volume pricing available",
+            "badge_text": "Made to order · 4–5 weeks",
+            "fallback_art_type": "wristband",
+            "swatches_label": "11 COLOURS",
+            "active_color_name": "Green",
+            "colors_list": "Black:#111827, White:#ffffff, Red:#dc2626, Pink:#ec4899, Yellow:#eab308, Green:#059669, Navy:#1e3a8a, Gray:#94a3af, Purple:#7c3aed, Orange:#ea580c, Light Blue:#38bdf8",
+            "btn1_text": "UPLOAD YOUR LOGO",
+            "btn1_action": "open_modal",
+            "btn2_text": "DETAILS"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "title": "CUSTOM TERRY HEADBAND",
+            "subtitle": "Keep hair and sweat out of the way, with your logo front and centre",
+            "price_prefix": "From",
+            "price": "€3.20",
+            "price_subtext": "per piece · volume pricing available",
+            "badge_text": "Made to order · 4–5 weeks",
+            "fallback_art_type": "headband",
+            "swatches_label": "11 COLOURS",
+            "active_color_name": "White",
+            "colors_list": "Black:#111827, White:#ffffff, Red:#dc2626, Pink:#ec4899, Yellow:#eab308, Green:#059669, Navy:#1e3a8a, Gray:#94a3af, Purple:#7c3aed, Orange:#ea580c, Light Blue:#38bdf8",
+            "btn1_text": "UPLOAD YOUR LOGO",
+            "btn1_action": "open_modal",
+            "btn2_text": "DETAILS"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
