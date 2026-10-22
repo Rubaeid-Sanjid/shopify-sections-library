@@ -238,7 +238,7 @@
     }
   {% endif %}
 
-  /* Top Media Area */
+  /* Top Media Area 
   .cpc-media-box-{{ section_id }} {
     position: relative;
     width: 100%;
@@ -250,6 +250,7 @@
     box-sizing: border-box;
     background: transparent;
   }
+  */
 
   @media (min-width: 768px) {
     .cpc-media-box-{{ section_id }} {
@@ -284,7 +285,50 @@
     }
   }
 
+/* Top Media Area */
+  .cpc-media-box-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0; 
+    box-sizing: border-box;
+    background: transparent;
+    overflow: hidden; /* Image baire gele ta crop hobe */
+    border-top-left-radius: var(--cpc-card-radius);
+    border-top-right-radius: var(--cpc-card-radius);
+  }
+
   /* Product Media Wrapper */
+  .cpc-image-wrapper-{{ section_id }} {
+    width: 100%;
+    max-width: 100%; 
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    position: relative;
+  }
+
+  .cpc-image-wrapper-{{ section_id }} img {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    max-height: 320px; 
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .cpc-image-wrapper-{{ section_id }} img {
+      min-height: 340px;
+    }
+  }
+
+
+  /* Product Media Wrapper 
   .cpc-image-wrapper-{{ section_id }} {
     width: 100%;
     max-width: 440px;
@@ -292,17 +336,19 @@
     align-items: center;
     justify-content: center;
     position: relative;
-  }
+  } 
 
   .cpc-image-wrapper-{{ section_id }} img {
     width: 100%;
     height: auto;
     max-height: 320px;
-    /* object-fit: contain; */
+    object-fit: contain;
     object-fit: cover;
     display: block;
     transition: opacity 0.3s ease, transform 0.3s ease;
-  }
+  } 
+
+  */
 
   .cpc-card-{{ section_id }}:hover .cpc-image-wrapper-{{ section_id }} img,
   .cpc-card-{{ section_id }}:hover .cpc-svg-product {

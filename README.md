@@ -39,6 +39,9 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/featured-product/preview.png) | **Featured Product** | High-converting minimal DTC product showcase with vertical thumbnail rail, size swatches, quantity stepper, AJAX cart CTA, and trust badges | [View](sections/featured-product) |
 | ![preview](sections/instagram-feed/preview.png) | **Instagram Feed & Slider** | Responsive Instagram showcase with centered icon hover micro-animation, interactive carousel/slider modes, custom links, and full schema styling | [View](sections/instagram-feed) |
 | ![preview](sections/custom-product-cards/preview.png) | **Custom Product Cards** | Dynamic 2-column merch showcase with interactive color swatches, fallback realistic vector SVGs, volume pricing notes, and live logo upload customizer modal | [View](sections/custom-product-cards) |
+| ![preview](sections/how-it-works-steps/preview.png) | **How It Works Steps** | High-converting 4-step process guide with athletic italic typography, customizable circular number badges, mobile swipe slider, and fallback SVGs | [View](sections/how-it-works-steps) |
+| ![preview](sections/faq-accordion/preview.png) | **FAQ Accordion** | Modern 2-column expandable question card grid with smooth CSS transitions, Google FAQPage JSON-LD schema, and custom support footer | [View](sections/faq-accordion) |
+| ![preview](sections/made-to-order-stats/preview.png) | **Made to Order Stats** | High-impact dark athletic banner with custom production lead time metrics, segmented vertical accent dividers, and pill CTA | [View](sections/made-to-order-stats) |
 
 <!-- Add new rows above this line as you build new sections -->
 

@@ -1,0 +1,1027 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: Made to Order Stats / Production Process Showcase Banner
+  Description: High-impact dark-mode brand narrative banner featuring athletic
+               italic display typography, key production lead-time & order
+               metrics, vertical accent-segmented dividers, pill CTA button,
+               and an ambient workshop background with gradient overlay.
+  File: sections/made-to-order-stats/made-to-order-stats.liquid
+  Author: Rubaeid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --mto-bg-color: {{ section.settings.bg_color | default: '#080d16' }};
+    --mto-overlay-left: {{ section.settings.overlay_color_left | default: '#080d16' }};
+    --mto-overlay-right: {{ section.settings.overlay_color_right | default: '#080d16' }};
+    --mto-overlay-opacity-left: {{ section.settings.overlay_opacity_left | default: 94 | divided_by: 100.0 }};
+    --mto-overlay-opacity-right: {{ section.settings.overlay_opacity_right | default: 54 | divided_by: 100.0 }};
+
+    --mto-container-max-width: {{ section.settings.container_max_width | default: 1320 }}px;
+    --mto-content-max-width: {{ section.settings.content_max_width | default: 640 }}px;
+
+    --mto-pt-desktop: {{ section.settings.padding_top_desktop | default: 90 }}px;
+    --mto-pb-desktop: {{ section.settings.padding_bottom_desktop | default: 90 }}px;
+    --mto-pt-mobile: {{ section.settings.padding_top_mobile | default: 55 }}px;
+    --mto-pb-mobile: {{ section.settings.padding_bottom_mobile | default: 55 }}px;
+
+    /* Eyebrow & Headline */
+    --mto-eyebrow-color: {{ section.settings.eyebrow_color | default: '#0084ff' }};
+    --mto-eyebrow-size: {{ section.settings.eyebrow_size | default: 13 }}px;
+    --mto-heading-color: {{ section.settings.heading_color | default: '#ffffff' }};
+    --mto-heading-size-desktop: {{ section.settings.heading_size_desktop | default: 46 }}px;
+    --mto-heading-size-mobile: {{ section.settings.heading_size_mobile | default: 30 }}px;
+
+    /* Description */
+    --mto-desc-color: {{ section.settings.description_color | default: '#cbd5e1' }};
+    --mto-desc-size-desktop: {{ section.settings.description_size_desktop | default: 16 }}px;
+    --mto-desc-size-mobile: {{ section.settings.description_size_mobile | default: 15 }}px;
+
+    /* Stats */
+    --mto-stat-number-color: {{ section.settings.stat_number_color | default: '#ffffff' }};
+    --mto-stat-number-size-desktop: {{ section.settings.stat_number_size_desktop | default: 52 }}px;
+    --mto-stat-number-size-mobile: {{ section.settings.stat_number_size_mobile | default: 36 }}px;
+    --mto-stat-label-color: {{ section.settings.stat_label_color | default: '#cbd5e1' }};
+    --mto-stat-label-size: {{ section.settings.stat_label_size | default: 13 }}px;
+
+    /* Dividers */
+    --mto-divider-line: {{ section.settings.divider_color | default: 'rgba(255, 255, 255, 0.16)' }};
+    --mto-divider-accent: {{ section.settings.divider_accent_color | default: '#0084ff' }};
+
+    /* Button */
+    --mto-btn-bg: {{ section.settings.button_bg_color | default: '#0084ff' }};
+    --mto-btn-text: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --mto-btn-bg-hover: {{ section.settings.button_bg_hover | default: '#006ed6' }};
+
+    background-color: var(--mto-bg-color);
+    position: relative;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .mto-banner-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ section.settings.min_height_desktop | default: 540 }}px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Atmospheric Background & Overlays
+     --------------------------------------------------------------------------- */
+  .mto-backdrop-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .mto-backdrop-img-{{ section_id }},
+  .mto-backdrop-svg-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center right;
+  }
+
+  .mto-overlay-{{ section_id }} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(8, 13, 22, var(--mto-overlay-opacity-left)) 0%,
+      rgba(8, 13, 22, calc(var(--mto-overlay-opacity-left) * 0.96)) 48%,
+      rgba(8, 13, 22, var(--mto-overlay-opacity-right)) 100%
+    );
+    z-index: 2;
+  }
+
+  @media (max-width: 767px) {
+    .mto-overlay-{{ section_id }} {
+      background: linear-gradient(
+        180deg,
+        rgba(8, 13, 22, 0.95) 0%,
+        rgba(8, 13, 22, 0.92) 65%,
+        rgba(8, 13, 22, 0.84) 100%
+      );
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Content Container & Layout
+     --------------------------------------------------------------------------- */
+  .mto-container-{{ section_id }} {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: var(--mto-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: var(--mto-pt-mobile);
+    padding-bottom: var(--mto-pb-mobile);
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .mto-container-{{ section_id }} {
+      padding-top: var(--mto-pt-desktop);
+      padding-bottom: var(--mto-pb-desktop);
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+
+  .mto-content-col-{{ section_id }} {
+    max-width: var(--mto-content-max-width);
+    box-sizing: border-box;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Eyebrow & Headlines
+     --------------------------------------------------------------------------- */
+  .mto-eyebrow-{{ section_id }} {
+    display: inline-block;
+    font-size: var(--mto-eyebrow-size);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--mto-eyebrow-color);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  .mto-heading-{{ section_id }} {
+    margin: 0 0 18px 0;
+    color: var(--mto-heading-color);
+    font-size: var(--mto-heading-size-mobile);
+    line-height: 1.08;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+  }
+
+  @media (min-width: 768px) {
+    .mto-heading-{{ section_id }} {
+      font-size: var(--mto-heading-size-desktop);
+      letter-spacing: -1px;
+      margin-bottom: 22px;
+    }
+  }
+
+  .mto-description-{{ section_id }} {
+    margin: 0 0 36px 0;
+    color: var(--mto-desc-color);
+    font-size: var(--mto-desc-size-mobile);
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 580px;
+  }
+
+  @media (min-width: 768px) {
+    .mto-description-{{ section_id }} {
+      font-size: var(--mto-desc-size-desktop);
+      margin-bottom: 44px;
+    }
+  }
+
+  .mto-description-{{ section_id }} p {
+    margin: 0;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Stats Metric Grid & Segmented Vertical Dividers
+     --------------------------------------------------------------------------- */
+  .mto-stats-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 20px;
+    margin-bottom: 40px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .mto-stats-grid-{{ section_id }} {
+      grid-template-columns: repeat(4, auto);
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 46px;
+    }
+  }
+
+  .mto-stat-item-{{ section_id }} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .mto-stat-item-{{ section_id }} {
+      padding-right: 32px;
+      padding-left: 32px;
+      min-width: 130px;
+    }
+
+    .mto-stat-item-{{ section_id }}:first-child {
+      padding-left: 0;
+    }
+
+    /* Segmented vertical divider between stats:
+       Top accent segment (electric blue) with subtle translucent line body */
+    .mto-stat-item-{{ section_id }}:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      right: 0;
+      width: 2px;
+      background: linear-gradient(
+        to bottom,
+        var(--mto-divider-accent) 0,
+        var(--mto-divider-accent) 22px,
+        var(--mto-divider-line) 22px,
+        var(--mto-divider-line) 100%
+      );
+      pointer-events: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .mto-stat-item-{{ section_id }} {
+      padding-right: 42px;
+      padding-left: 42px;
+    }
+  }
+
+  /* Mobile Divider styling */
+  @media (max-width: 639px) {
+    .mto-stat-item-{{ section_id }} {
+      padding-left: 14px;
+      border-left: 2px solid var(--mto-divider-line);
+      position: relative;
+    }
+    .mto-stat-item-{{ section_id }}::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -2px;
+      width: 2px;
+      height: 18px;
+      background: var(--mto-divider-accent);
+    }
+  }
+
+  .mto-stat-value-wrap-{{ section_id }} {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .mto-stat-value-{{ section_id }} {
+    color: var(--mto-stat-number-color);
+    font-size: var(--mto-stat-number-size-mobile);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -1px;
+    display: inline-block;
+  }
+
+  @media (min-width: 768px) {
+    .mto-stat-value-{{ section_id }} {
+      font-size: var(--mto-stat-number-size-desktop);
+      letter-spacing: -1.5px;
+    }
+  }
+
+  .mto-stat-label-{{ section_id }} {
+    color: var(--mto-stat-label-color);
+    font-size: var(--mto-stat-label-size);
+    line-height: 1.35;
+    font-weight: 400;
+    max-width: 160px;
+  }
+
+  /* ---------------------------------------------------------------------------
+     CTA Pill Button
+     --------------------------------------------------------------------------- */
+  .mto-actions-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .mto-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 30px;
+    background-color: var(--mto-btn-bg);
+    color: var(--mto-btn-text);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-decoration: none;
+    border-radius: 9999px;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 4px 16px rgba(0, 132, 255, 0.25);
+    cursor: pointer;
+    border: none;
+  }
+
+  .mto-btn-{{ section_id }}:hover {
+    background-color: var(--mto-btn-bg-hover);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 132, 255, 0.45);
+  }
+
+  .mto-btn-{{ section_id }}:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 132, 255, 0.3);
+  }
+{%- endstyle -%}
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="mto-banner-{{ section_id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  {% comment %} Ambient Background Image or High-Fidelity Fallback SVG {% endcomment %}
+  <div class="mto-backdrop-{{ section_id }}" aria-hidden="true">
+    {% if section.settings.background_image != blank %}
+      <picture>
+        {% if section.settings.background_image_mobile != blank %}
+          <source
+            media="(max-width: 767px)"
+            srcset="{{ section.settings.background_image_mobile | image_url: width: 800 }}"
+          >
+        {% endif %}
+        <img
+          src="{{ section.settings.background_image | image_url: width: 2000 }}"
+          srcset="
+            {{ section.settings.background_image | image_url: width: 1000 }} 1000w,
+            {{ section.settings.background_image | image_url: width: 1600 }} 1600w,
+            {{ section.settings.background_image | image_url: width: 2200 }} 2200w
+          "
+          sizes="100vw"
+          alt="{{ section.settings.heading | escape }}"
+          loading="lazy"
+          class="mto-backdrop-img-{{ section_id }}"
+        >
+      </picture>
+    {% elsif section.settings.show_fallback_backdrop %}
+      {% comment %}
+        High-fidelity realistic SVG artwork representing a textile manufacturing atelier
+        with warehouse shelves, stacked rolled sweatbands, ambient lighting, and depth.
+      {% endcomment %}
+      <svg
+        class="mto-backdrop-svg-{{ section_id }}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920 1080"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <linearGradient id="mto-bg-dark-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#070c14" />
+            <stop offset="50%" stop-color="#0b1320" />
+            <stop offset="100%" stop-color="#111c2e" />
+          </linearGradient>
+
+          <linearGradient id="mto-shelf-grad-{{ section_id }}" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2a384f" />
+            <stop offset="100%" stop-color="#141c2a" />
+          </linearGradient>
+
+          <linearGradient id="mto-ambient-light-{{ section_id }}" x1="100%" y1="30%" x2="0%" y2="70%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.12" />
+            <stop offset="60%" stop-color="#1e293b" stop-opacity="0.04" />
+            <stop offset="100%" stop-color="#070c14" stop-opacity="0" />
+          </linearGradient>
+
+          <linearGradient id="mto-band-blue-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0f2b48" />
+            <stop offset="50%" stop-color="#1e4976" />
+            <stop offset="100%" stop-color="#0f2b48" />
+          </linearGradient>
+
+          <linearGradient id="mto-band-slate-{{ section_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1f2937" />
+            <stop offset="50%" stop-color="#374151" />
+            <stop offset="100%" stop-color="#1f2937" />
+          </linearGradient>
+
+          <filter id="mto-blur-ambient-{{ section_id }}">
+            <feGaussianBlur stdDeviation="6" />
+          </filter>
+        </defs>
+
+        <!-- Base Dark Atelier Room -->
+        <rect width="1920" height="1080" fill="url(#mto-bg-dark-{{ section_id }})" />
+
+        <!-- Ambient Depth Lights & Window Glow on Right -->
+        <circle cx="1600" cy="380" r="480" fill="url(#mto-ambient-light-{{ section_id }})" filter="url(#mto-blur-ambient-{{ section_id }})" />
+        <ellipse cx="1450" cy="240" rx="360" ry="220" fill="#38bdf8" opacity="0.04" filter="url(#mto-blur-ambient-{{ section_id }})" />
+
+        <!-- Shelving Unit Structural Posts (Right side workshop) -->
+        <g opacity="0.45" filter="url(#mto-blur-ambient-{{ section_id }})">
+          <!-- Upright beams -->
+          <rect x="1180" y="80" width="22" height="920" fill="url(#mto-shelf-grad-{{ section_id }})" />
+          <rect x="1440" y="80" width="22" height="920" fill="url(#mto-shelf-grad-{{ section_id }})" />
+          <rect x="1720" y="80" width="22" height="920" fill="url(#mto-shelf-grad-{{ section_id }})" />
+
+          <!-- Shelf Racks -->
+          <rect x="1140" y="240" width="640" height="16" fill="#334155" />
+          <rect x="1140" y="440" width="640" height="16" fill="#334155" />
+          <rect x="1140" y="660" width="640" height="16" fill="#334155" />
+          <rect x="1140" y="860" width="640" height="16" fill="#334155" />
+
+          <!-- Stacked Towels & Knit Terry Bands on Shelf 1 -->
+          <g transform="translate(1210, 160)">
+            <rect x="0" y="0" width="100" height="74" rx="8" fill="url(#mto-band-blue-{{ section_id }})" />
+            <rect x="110" y="10" width="94" height="64" rx="8" fill="url(#mto-band-slate-{{ section_id }})" />
+            <rect x="250" y="0" width="140" height="74" rx="10" fill="#132438" />
+            <rect x="400" y="15" width="85" height="59" rx="8" fill="#1e293b" />
+          </g>
+
+          <!-- Stacked Bands on Shelf 2 -->
+          <g transform="translate(1210, 360)">
+            <rect x="10" y="0" width="85" height="74" rx="8" fill="url(#mto-band-slate-{{ section_id }})" />
+            <rect x="105" y="0" width="100" height="74" rx="8" fill="url(#mto-band-blue-{{ section_id }})" />
+            <rect x="250" y="10" width="150" height="64" rx="8" fill="#0f1f33" />
+            <rect x="410" y="0" width="90" height="74" rx="8" fill="#1e2b40" />
+          </g>
+
+          <!-- Stacked Bands on Shelf 3 -->
+          <g transform="translate(1190, 580)">
+            <rect x="20" y="0" width="110" height="74" rx="8" fill="url(#mto-band-blue-{{ section_id }})" />
+            <rect x="140" y="10" width="90" height="64" rx="8" fill="#17263b" />
+            <rect x="245" y="0" width="160" height="74" rx="8" fill="url(#mto-band-slate-{{ section_id }})" />
+            <rect x="420" y="0" width="100" height="74" rx="8" fill="#0f2642" />
+          </g>
+
+          <!-- Studio Worktable in Foreground -->
+          <rect x="1480" y="720" width="440" height="340" rx="16" fill="#0c1726" opacity="0.9" />
+          <rect x="1530" y="690" width="220" height="90" rx="12" fill="#1a2d48" opacity="0.6" />
+        </g>
+      </svg>
+    {% endif %}
+
+    <!-- Vignette / Readability Gradient -->
+    <div class="mto-overlay-{{ section_id }}"></div>
+  </div>
+
+  <!-- Content Container -->
+  <div class="mto-container-{{ section_id }}">
+    <div class="mto-content-col-{{ section_id }}">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="mto-eyebrow-{{ section_id }}">
+          {{ section.settings.eyebrow | escape }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <{{ section.settings.heading_tag | default: 'h2' }} class="mto-heading-{{ section_id }}">
+          {{ section.settings.heading | escape }}
+        </{{ section.settings.heading_tag | default: 'h2' }}>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="mto-description-{{ section_id }}">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+
+      <!-- Key Metrics & Production Stats -->
+      {%- if section.blocks.size > 0 -%}
+        <div class="mto-stats-grid-{{ section_id }}">
+          {%- for block in section.blocks -%}
+            <div
+              class="mto-stat-item-{{ section_id }}"
+              {{ block.shopify_attributes }}
+              {% if block.settings.custom_accent_color != blank and block.settings.custom_accent_color != 'rgba(0,0,0,0)' %}
+                style="--mto-divider-accent: {{ block.settings.custom_accent_color }};"
+              {% endif %}
+            >
+              <div class="mto-stat-value-wrap-{{ section_id }}">
+                <span
+                  class="mto-stat-value-{{ section_id }}"
+                  data-raw-value="{{ block.settings.stat_value | escape }}"
+                >
+                  {{- block.settings.stat_value | escape -}}
+                </span>
+              </div>
+              {%- if block.settings.stat_label != blank -%}
+                <div class="mto-stat-label-{{ section_id }}">
+                  {{- block.settings.stat_label | escape -}}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <!-- Call to Action Button -->
+      {%- if section.settings.button_label != blank -%}
+        <div class="mto-actions-{{ section_id }}">
+          <a
+            href="{{ section.settings.button_link | default: '#' }}"
+            class="mto-btn-{{ section_id }}"
+            role="button"
+          >
+            {{ section.settings.button_label | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.enable_counter_animation -%}
+  <script>
+    (function() {
+      var sectionElement = document.getElementById('shopify-section-{{ section.id }}');
+      if (!sectionElement) return;
+
+      var statValues = sectionElement.querySelectorAll('.mto-stat-value-{{ section_id }}');
+      if (!statValues.length) return;
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            observer.disconnect();
+
+            statValues.forEach(function(el) {
+              var raw = el.getAttribute('data-raw-value') || el.textContent.trim();
+              
+              // Check if numeric with optional suffix (e.g. "100%", "25", "11")
+              var match = raw.match(/^([0-9]+)(.*)$/);
+              if (match) {
+                var target = parseInt(match[1], 10);
+                var suffix = match[2] || '';
+                var duration = 1400;
+                var startTime = null;
+
+                function animateCount(timestamp) {
+                  if (!startTime) startTime = timestamp;
+                  var progress = Math.min((timestamp - startTime) / duration, 1);
+                  // easeOutExpo
+                  var ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                  var current = Math.floor(ease * target);
+                  el.textContent = current + suffix;
+
+                  if (progress < 1) {
+                    requestAnimationFrame(animateCount);
+                  } else {
+                    el.textContent = raw;
+                  }
+                }
+
+                requestAnimationFrame(animateCount);
+              }
+            });
+          }
+        });
+      }, { threshold: 0.25 });
+
+      observer.observe(sectionElement);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Made to Order Stats",
+  "tag": "section",
+  "class": "section-made-to-order-stats",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content & Typography"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "MADE TO ORDER, MADE IN EUROPE"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#0084ff"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CUSTOM WORK TAKES A FEW WEEKS. THAT IS THE POINT."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "div", "label": "div" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Heading font size (desktop)",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading font size (mobile)",
+      "min": 22,
+      "max": 44,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Nothing here is pulled from a warehouse shelf. Your bands are knitted, printed, checked and packed for your order alone — which is why they arrive in 4 to 5 weeks, and why they look right.</p>"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#cbd5e1"
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "label": "Description font size (desktop)",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "label": "Description font size (mobile)",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content column max-width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640
+    },
+    {
+      "type": "header",
+      "content": "Stats & Metrics Styling"
+    },
+    {
+      "type": "color",
+      "id": "stat_number_color",
+      "label": "Stat number color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "stat_number_size_desktop",
+      "label": "Stat number font size (desktop)",
+      "min": 32,
+      "max": 76,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "stat_number_size_mobile",
+      "label": "Stat number font size (mobile)",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "stat_label_color",
+      "label": "Stat label color",
+      "default": "#cbd5e1"
+    },
+    {
+      "type": "range",
+      "id": "stat_label_size",
+      "label": "Stat label font size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider base line color",
+      "default": "rgba(255, 255, 255, 0.16)"
+    },
+    {
+      "type": "color",
+      "id": "divider_accent_color",
+      "label": "Divider top accent color",
+      "default": "#0084ff"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_counter_animation",
+      "label": "Enable smooth number count animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Call to Action Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SEE THE FULL PROCESS"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background color",
+      "default": "#0084ff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_hover",
+      "label": "Button hover background",
+      "default": "#006ed6"
+    },
+    {
+      "type": "header",
+      "content": "Background & Atmospheric Overlay"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Desktop background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Mobile background image (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fallback_backdrop",
+      "label": "Show built-in workshop illustration when no image is uploaded",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background base color",
+      "default": "#080d16"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_left",
+      "label": "Gradient overlay color (left)",
+      "default": "#080d16"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color_right",
+      "label": "Gradient overlay color (right)",
+      "default": "#080d16"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_left",
+      "label": "Overlay opacity left (%)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 94
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_right",
+      "label": "Overlay opacity right (%)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Minimum section height (desktop)",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 540
+    },
+    {
+      "type": "header",
+      "content": "Section Layout & Spacing"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Container maximum width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding (desktop)",
+      "min": 0,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding (desktop)",
+      "min": 0,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat_item",
+      "name": "Stat / Metric Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "Metric number / value",
+          "default": "25"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Metric label / description",
+          "default": "pieces minimum order, no design fee"
+        },
+        {
+          "type": "color",
+          "id": "custom_accent_color",
+          "label": "Custom divider accent color (optional)",
+          "info": "Leave blank or transparent to use the global divider accent color."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Made to Order Stats",
+      "settings": {
+        "eyebrow": "MADE TO ORDER, MADE IN EUROPE",
+        "heading": "CUSTOM WORK TAKES A FEW WEEKS. THAT IS THE POINT.",
+        "description": "<p>Nothing here is pulled from a warehouse shelf. Your bands are knitted, printed, checked and packed for your order alone — which is why they arrive in 4 to 5 weeks, and why they look right.</p>",
+        "button_label": "SEE THE FULL PROCESS"
+      },
+      "blocks": [
+        {
+          "type": "stat_item",
+          "settings": {
+            "stat_value": "4–5",
+            "stat_label": "weeks from approved proof to your doorstep"
+          }
+        },
+        {
+          "type": "stat_item",
+          "settings": {
+            "stat_value": "25",
+            "stat_label": "pieces minimum order, no design fee"
+          }
+        },
+        {
+          "type": "stat_item",
+          "settings": {
+            "stat_value": "11",
+            "stat_label": "terry colours held for the print range"
+          }
+        },
+        {
+          "type": "stat_item",
+          "settings": {
+            "stat_value": "100%",
+            "stat_label": "produced and printed inside the EU"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
