@@ -42,6 +42,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/how-it-works-steps/preview.png) | **How It Works Steps** | High-converting 4-step process guide with athletic italic typography, customizable circular number badges, mobile swipe slider, and fallback SVGs | [View](sections/how-it-works-steps) |
 | ![preview](sections/faq-accordion/preview.png) | **FAQ Accordion** | Modern 2-column expandable question card grid with smooth CSS transitions, Google FAQPage JSON-LD schema, and custom support footer | [View](sections/faq-accordion) |
 | ![preview](sections/made-to-order-stats/preview.png) | **Made to Order Stats** | High-impact dark athletic banner with custom production lead time metrics, segmented vertical accent dividers, and pill CTA | [View](sections/made-to-order-stats) |
+| ![preview](sections/image-with-text-slider/preview.png) | **Image with Text Slider** | Editorial split section with left/right image positioning, touch/drag multi-image carousel slider, clickable image links, and custom typography | [View](sections/image-with-text-slider) |
 
 <!-- Add new rows above this line as you build new sections -->
 
