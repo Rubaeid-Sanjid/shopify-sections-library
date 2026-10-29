@@ -1,0 +1,2103 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: Product Grid with Text (Editorial Showcase)
+  Description: High-converting split section featuring an editorial storytelling
+               text column paired with a customizable 2x2 or multi-card product
+               showcase. Includes per-card custom links, optional Shopify product
+               integration, customizable button positions, flexible desktop
+               left/right layout, and mobile grid vs. touch slider modes.
+  File: sections/product-grid-with-text/product-grid-with-text.liquid
+  Author: Rubaeid Sanjid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --pgwt-bg: {{ section.settings.section_bg }};
+    --pgwt-container-max-width: {{ section.settings.container_max_width }}px;
+    --pgwt-pt-desktop: {{ section.settings.padding_top_desktop }}px;
+    --pgwt-pb-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --pgwt-pt-mobile: {{ section.settings.padding_top_mobile }}px;
+    --pgwt-pb-mobile: {{ section.settings.padding_bottom_mobile }}px;
+
+    /* Column Sizing & Gaps */
+    --pgwt-col-gap-desktop: {{ section.settings.column_gap_desktop }}px;
+    --pgwt-col-gap-mobile: {{ section.settings.column_gap_mobile }}px;
+    --pgwt-grid-gap-desktop: {{ section.settings.grid_gap_desktop }}px;
+    --pgwt-grid-gap-mobile: {{ section.settings.grid_gap_mobile }}px;
+
+    /* Card Styling */
+    --pgwt-card-bg: {{ section.settings.card_bg_color }};
+    --pgwt-card-border-color: {{ section.settings.card_border_color }};
+    --pgwt-card-border-width: {{ section.settings.card_border_width }}px;
+    --pgwt-card-radius: {{ section.settings.card_border_radius }}px;
+    --pgwt-card-padding: {{ section.settings.card_padding }}px;
+
+    /* Colors */
+    --pgwt-header-color: {{ section.settings.section_header_color }};
+    --pgwt-content-heading-color: {{ section.settings.content_heading_color }};
+    --pgwt-content-eyebrow-color: {{ section.settings.content_eyebrow_color }};
+    --pgwt-content-body-color: {{ section.settings.content_body_color }};
+    --pgwt-content-btn-text: {{ section.settings.content_btn_text_color }};
+    --pgwt-content-btn-bg: {{ section.settings.content_btn_bg_color }};
+    --pgwt-content-btn-border: {{ section.settings.content_btn_border_color }};
+    --pgwt-content-btn-hover-text: {{ section.settings.content_btn_hover_text_color }};
+    --pgwt-content-btn-hover-bg: {{ section.settings.content_btn_hover_bg_color }};
+
+    --pgwt-card-text-color: {{ section.settings.card_text_color }};
+    --pgwt-card-price-color: {{ section.settings.card_price_color }};
+    --pgwt-card-btn-text: {{ section.settings.card_btn_text_color }};
+    --pgwt-card-btn-hover-text: {{ section.settings.card_btn_hover_text_color }};
+    --pgwt-card-btn-underline: {{ section.settings.card_btn_underline_color }};
+
+    --pgwt-slider-dot-color: {{ section.settings.slider_dot_color }};
+    --pgwt-slider-dot-active: {{ section.settings.slider_dot_active_color }};
+    --pgwt-slider-arrow-bg: {{ section.settings.slider_arrow_bg }};
+    --pgwt-slider-arrow-color: {{ section.settings.slider_arrow_color }};
+
+    background-color: var(--pgwt-bg);
+    width: 100%;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .pgwt-wrapper-{{ section_id }} {
+    padding-top: var(--pgwt-pt-mobile);
+    padding-bottom: var(--pgwt-pb-mobile);
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-wrapper-{{ section_id }} {
+      padding-top: var(--pgwt-pt-desktop);
+      padding-bottom: var(--pgwt-pb-desktop);
+    }
+  }
+
+  .pgwt-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--pgwt-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 1024px) {
+    .pgwt-container-{{ section_id }} {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Top Section Header (e.g. "Your Daily Glow")
+     --------------------------------------------------------------------------- */
+  .pgwt-section-header-{{ section_id }} {
+    text-align: {{ section.settings.section_header_align }};
+    margin-bottom: {{ section.settings.section_header_margin_bottom_mobile }}px;
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-section-header-{{ section_id }} {
+      margin-bottom: {{ section.settings.section_header_margin_bottom_desktop }}px;
+    }
+  }
+
+  .pgwt-section-header-eyebrow-{{ section_id }} {
+    display: block;
+    font-size: {{ section.settings.section_eyebrow_size }}px;
+    letter-spacing: {{ section.settings.section_eyebrow_letter_spacing }}px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--pgwt-content-eyebrow-color);
+  }
+
+  .pgwt-section-header-title-{{ section_id }} {
+    margin: 0;
+    color: var(--pgwt-header-color);
+    font-size: {{ section.settings.section_header_size_mobile }}px;
+    line-height: 1.25;
+    font-weight: {{ section.settings.section_header_font_weight }};
+    letter-spacing: {{ section.settings.section_header_letter_spacing }}px;
+    {% if section.settings.section_header_font_family == 'serif' %}
+      font-family: "Playfair Display", "Didot", "Bodoni MT", "Georgia", "Baskerville", serif;
+    {% elsif section.settings.section_header_font_family == 'sans' %}
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    {% else %}
+      font-family: inherit;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-section-header-title-{{ section_id }} {
+      font-size: {{ section.settings.section_header_size_desktop }}px;
+    }
+  }
+
+  .pgwt-section-header-desc-{{ section_id }} {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--pgwt-content-body-color);
+    max-width: 600px;
+    {% if section.settings.section_header_align == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% elsif section.settings.section_header_align == 'right' %}
+      margin-left: auto;
+      margin-right: 0;
+    {% endif %}
+  }
+
+  /* ---------------------------------------------------------------------------
+     Split Main Layout (Desktop & Mobile)
+     --------------------------------------------------------------------------- */
+  .pgwt-layout-{{ section_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pgwt-col-gap-mobile);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-layout-{{ section_id }} {
+      display: flex;
+      flex-direction: row;
+      gap: var(--pgwt-col-gap-desktop);
+      align-items: {{ section.settings.vertical_alignment }};
+    }
+
+    {% if section.settings.desktop_layout == 'cards_left_text_right' %}
+      .pgwt-layout-{{ section_id }} {
+        flex-direction: row-reverse;
+      }
+    {% endif %}
+  }
+
+  /* Mobile Stack Order */
+  @media (max-width: 767px) {
+    {% if section.settings.mobile_stack_order == 'cards_first_content_below' %}
+      .pgwt-layout-{{ section_id }} {
+        flex-direction: column-reverse;
+      }
+    {% else %}
+      .pgwt-layout-{{ section_id }} {
+        flex-direction: column;
+      }
+    {% endif %}
+  }
+
+  /* Column Width Distributions */
+  .pgwt-text-col-{{ section_id }} {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pgwt-cards-col-{{ section_id }} {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
+    {% if section.settings.desktop_column_ratio == '30_70' %}
+      .pgwt-text-col-{{ section_id }} { width: 30%; flex: 0 0 30%; }
+      .pgwt-cards-col-{{ section_id }} { width: 70%; flex: 0 0 70%; }
+    {% elsif section.settings.desktop_column_ratio == '35_65' %}
+      .pgwt-text-col-{{ section_id }} { width: 35%; flex: 0 0 35%; }
+      .pgwt-cards-col-{{ section_id }} { width: 65%; flex: 0 0 65%; }
+    {% elsif section.settings.desktop_column_ratio == '40_60' %}
+      .pgwt-text-col-{{ section_id }} { width: 40%; flex: 0 0 40%; }
+      .pgwt-cards-col-{{ section_id }} { width: 60%; flex: 0 0 60%; }
+    {% elsif section.settings.desktop_column_ratio == '45_55' %}
+      .pgwt-text-col-{{ section_id }} { width: 45%; flex: 0 0 45%; }
+      .pgwt-cards-col-{{ section_id }} { width: 55%; flex: 0 0 55%; }
+    {% elsif section.settings.desktop_column_ratio == '50_50' %}
+      .pgwt-text-col-{{ section_id }} { width: 50%; flex: 0 0 50%; }
+      .pgwt-cards-col-{{ section_id }} { width: 50%; flex: 0 0 50%; }
+    {% endif %}
+  }
+
+  /* ---------------------------------------------------------------------------
+     Text Content Column (Storytelling & Headline)
+     --------------------------------------------------------------------------- */
+  .pgwt-text-content-{{ section_id }} {
+    max-width: {{ section.settings.content_max_width }}px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: {{ section.settings.mobile_text_alignment }};
+    {% if section.settings.mobile_text_alignment == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% elsif section.settings.mobile_text_alignment == 'right' %}
+      margin-left: auto;
+      margin-right: 0;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-text-content-{{ section_id }} {
+      text-align: {{ section.settings.desktop_text_alignment }};
+      {% if section.settings.desktop_text_alignment == 'center' %}
+        margin-left: auto;
+        margin-right: auto;
+      {% elsif section.settings.desktop_text_alignment == 'right' %}
+        margin-left: auto;
+        margin-right: 0;
+      {% else %}
+        margin-left: 0;
+        margin-right: auto;
+      {% endif %}
+    }
+  }
+
+  .pgwt-content-eyebrow-{{ section_id }} {
+    display: inline-block;
+    font-size: {{ section.settings.content_eyebrow_size }}px;
+    letter-spacing: {{ section.settings.content_eyebrow_letter_spacing }}px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--pgwt-content-eyebrow-color);
+  }
+
+  .pgwt-content-heading-{{ section_id }} {
+    margin: 0 0 20px 0;
+    color: var(--pgwt-content-heading-color);
+    font-size: {{ section.settings.content_heading_size_mobile }}px;
+    line-height: 1.2;
+    font-weight: {{ section.settings.content_heading_font_weight }};
+    letter-spacing: {{ section.settings.content_heading_letter_spacing }}px;
+    {% if section.settings.content_heading_font_family == 'serif' %}
+      font-family: "Playfair Display", "Didot", "Bodoni MT", "Georgia", "Baskerville", serif;
+    {% elsif section.settings.content_heading_font_family == 'sans' %}
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    {% else %}
+      font-family: inherit;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-content-heading-{{ section_id }} {
+      font-size: {{ section.settings.content_heading_size_desktop }}px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .pgwt-content-desc-{{ section_id }} {
+    margin: 0 0 24px 0;
+    color: var(--pgwt-content-body-color);
+    font-size: {{ section.settings.content_desc_size }}px;
+    line-height: 1.65;
+  }
+
+  .pgwt-content-desc-{{ section_id }} p {
+    margin: 0 0 12px 0;
+  }
+
+  .pgwt-content-desc-{{ section_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Primary & Secondary Buttons in Content Column */
+  .pgwt-content-actions-{{ section_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    {% if section.settings.mobile_text_alignment == 'center' %}
+      justify-content: center;
+    {% elsif section.settings.mobile_text_alignment == 'right' %}
+      justify-content: flex-end;
+    {% else %}
+      justify-content: flex-start;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .pgwt-content-actions-{{ section_id }} {
+      {% if section.settings.desktop_text_alignment == 'center' %}
+        justify-content: center;
+      {% elsif section.settings.desktop_text_alignment == 'right' %}
+        justify-content: flex-end;
+      {% else %}
+        justify-content: flex-start;
+      {% endif %}
+    }
+  }
+
+  /* Signature Underline CTA Link (Exact match to reference photo) */
+  .pgwt-link-underline-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pgwt-content-btn-text);
+    font-size: {{ section.settings.content_btn_font_size }}px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--pgwt-content-btn-border);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .pgwt-link-underline-{{ section_id }}:hover {
+    color: var(--pgwt-content-btn-hover-text);
+    border-bottom-color: var(--pgwt-content-btn-hover-text);
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  /* Solid / Outline Button Styles */
+  .pgwt-btn-solid-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background-color: var(--pgwt-content-btn-bg);
+    color: var(--pgwt-content-btn-text);
+    border: 1px solid var(--pgwt-content-btn-border);
+    border-radius: {{ section.settings.content_btn_radius }}px;
+    font-size: {{ section.settings.content_btn_font_size }}px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .pgwt-btn-solid-{{ section_id }}:hover {
+    background-color: var(--pgwt-content-btn-hover-bg);
+    color: var(--pgwt-content-btn-hover-text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .pgwt-btn-outline-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 26px;
+    background-color: transparent;
+    color: var(--pgwt-content-btn-text);
+    border: 1.5px solid var(--pgwt-content-btn-border);
+    border-radius: {{ section.settings.content_btn_radius }}px;
+    font-size: {{ section.settings.content_btn_font_size }}px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .pgwt-btn-outline-{{ section_id }}:hover {
+    background-color: var(--pgwt-content-btn-hover-bg);
+    color: var(--pgwt-content-btn-hover-text);
+    border-color: var(--pgwt-content-btn-hover-bg);
+    transform: translateY(-1px);
+  }
+
+  /* Secondary Button */
+  .pgwt-btn-secondary-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: {{ section.settings.content_btn_font_size }}px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--pgwt-content-heading-color);
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--pgwt-content-heading-color);
+    transition: opacity 0.2s ease;
+  }
+
+  .pgwt-btn-secondary-{{ section_id }}:hover {
+    opacity: 0.7;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Product Cards Grid (Desktop & Mobile Grid Mode)
+     --------------------------------------------------------------------------- */
+  .pgwt-cards-grid-{{ section_id }} {
+    display: grid;
+    gap: var(--pgwt-grid-gap-desktop);
+    width: 100%;
+    box-sizing: border-box;
+    {% if section.settings.desktop_cards_per_row == 1 %}
+      grid-template-columns: 1fr;
+    {% elsif section.settings.desktop_cards_per_row == 3 %}
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    {% else %}
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    {% endif %}
+  }
+
+  @media (max-width: 767px) {
+    {% if section.settings.mobile_card_layout == 'grid' %}
+      .pgwt-cards-grid-{{ section_id }} {
+        gap: var(--pgwt-grid-gap-mobile);
+        {% if section.settings.mobile_cards_per_row == 1 %}
+          grid-template-columns: 1fr;
+        {% else %}
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        {% endif %}
+      }
+    {% endif %}
+  }
+
+  /* ---------------------------------------------------------------------------
+     Mobile Touch Slider / Carousel Mode
+     --------------------------------------------------------------------------- */
+  @media (max-width: 767px) {
+    {% if section.settings.mobile_card_layout == 'slider' %}
+      .pgwt-slider-track-{{ section_id }} {
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: var(--pgwt-grid-gap-mobile);
+        padding-bottom: 8px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        scrollbar-width: none; /* Firefox */
+      }
+
+      .pgwt-slider-track-{{ section_id }}::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+      }
+
+      .pgwt-slider-track-{{ section_id }} .pgwt-card-item-{{ section_id }} {
+        flex: 0 0 {{ section.settings.mobile_slider_card_width }}%;
+        scroll-snap-align: start;
+        box-sizing: border-box;
+      }
+    {% endif %}
+  }
+
+  /* Mobile Slider Controls (Arrows & Dots) */
+  .pgwt-slider-controls-{{ section_id }} {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    {% if section.settings.mobile_card_layout == 'slider' %}
+      .pgwt-slider-controls-{{ section_id }} {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+        padding: 0 4px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .pgwt-slider-dots-{{ section_id }} {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pgwt-slider-dot-{{ section_id }} {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--pgwt-slider-dot-color);
+        transition: all 0.25s ease;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .pgwt-slider-dot-{{ section_id }}.is-active {
+        width: 22px;
+        border-radius: 10px;
+        background-color: var(--pgwt-slider-dot-active);
+      }
+
+      .pgwt-slider-arrows-{{ section_id }} {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pgwt-slider-arrow-btn-{{ section_id }} {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--pgwt-slider-arrow-bg);
+        color: var(--pgwt-slider-arrow-color);
+        border: 1px solid rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: background-color 0.2s ease, opacity 0.2s ease;
+      }
+
+      .pgwt-slider-arrow-btn-{{ section_id }}:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      .pgwt-slider-arrow-btn-{{ section_id }} svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+
+      .pgwt-slider-counter-{{ section_id }} {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--pgwt-card-text-color);
+      }
+    {% endif %}
+  }
+
+  /* ---------------------------------------------------------------------------
+     Individual Card Styling
+     --------------------------------------------------------------------------- */
+  .pgwt-card-item-{{ section_id }} {
+    position: relative;
+    background-color: var(--pgwt-card-bg);
+    border-radius: var(--pgwt-card-radius);
+    border: var(--pgwt-card-border-width) solid var(--pgwt-card-border-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+  }
+
+  {% if section.settings.card_hover_effect == 'lift' %}
+    .pgwt-card-item-{{ section_id }}:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    }
+  {% elsif section.settings.card_hover_effect == 'border' %}
+    .pgwt-card-item-{{ section_id }}:hover {
+      border-color: var(--pgwt-content-heading-color);
+    }
+  {% endif %}
+
+  /* Card Image Container & Aspect Ratio */
+  .pgwt-card-media-wrap-{{ section_id }} {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--pgwt-card-padding);
+    box-sizing: border-box;
+    overflow: hidden;
+    {% if section.settings.card_aspect_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.card_aspect_ratio == 'portrait_4_5' %}
+      aspect-ratio: 4 / 5;
+    {% elsif section.settings.card_aspect_ratio == 'portrait_3_4' %}
+      aspect-ratio: 3 / 4;
+    {% elsif section.settings.card_aspect_ratio == 'tall_2_3' %}
+      aspect-ratio: 2 / 3;
+    {% else %}
+      aspect-ratio: auto;
+      min-height: 240px;
+    {% endif %}
+  }
+
+  .pgwt-card-blank-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    display: block;
+  }
+
+  .pgwt-card-img-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.card_image_fit }};
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  {% if section.settings.card_hover_effect == 'zoom' %}
+    .pgwt-card-item-{{ section_id }}:hover .pgwt-card-img-{{ section_id }} {
+      transform: scale(1.05);
+    }
+  {% endif %}
+
+  /* Card Whole Link Overlay (if merchant wants whole card clickable) */
+  .pgwt-card-clickable-overlay-{{ section_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    text-indent: -9999px;
+  }
+
+  /* Floating Card Badge (e.g. "NEW", "BESTSELLER") */
+  .pgwt-card-badge-{{ section_id }} {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+
+  /* Card Content / Info Area */
+  .pgwt-card-info-{{ section_id }} {
+    position: relative;
+    z-index: 3;
+    padding: 0 16px 16px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Overlay button style (Bottom-left link right on the card, as in reference photo) */
+  .pgwt-card-overlay-btn-wrap-{{ section_id }} {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    z-index: 3;
+  }
+
+  .pgwt-card-overlay-btn-wrap-{{ section_id }}.pos-bottom_right {
+    left: auto;
+    right: 16px;
+  }
+
+  .pgwt-card-overlay-btn-wrap-{{ section_id }}.pos-bottom_center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Card Underline Button Link */
+  .pgwt-card-btn-underline-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--pgwt-card-btn-text);
+    font-size: {{ section.settings.card_btn_font_size }}px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 3px;
+    border-bottom: 1.5px solid var(--pgwt-card-btn-underline);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .pgwt-card-btn-underline-{{ section_id }}:hover {
+    color: var(--pgwt-card-btn-hover-text);
+    border-bottom-color: var(--pgwt-card-btn-hover-text);
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+
+  /* Card Solid / Outline Button */
+  .pgwt-card-btn-solid-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: var(--pgwt-card-btn-text);
+    color: var(--pgwt-card-bg);
+    border: 1px solid var(--pgwt-card-btn-text);
+    border-radius: 4px;
+    font-size: {{ section.settings.card_btn_font_size }}px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .pgwt-card-btn-solid-{{ section_id }}:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  .pgwt-card-btn-outline-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 15px;
+    background-color: transparent;
+    color: var(--pgwt-card-btn-text);
+    border: 1.5px solid var(--pgwt-card-btn-text);
+    border-radius: 4px;
+    font-size: {{ section.settings.card_btn_font_size }}px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .pgwt-card-btn-outline-{{ section_id }}:hover {
+    background-color: var(--pgwt-card-btn-text);
+    color: #ffffff;
+  }
+
+  /* Optional Card Headings & Prices */
+  .pgwt-card-title-{{ section_id }} {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--pgwt-card-text-color);
+    line-height: 1.35;
+  }
+
+  .pgwt-card-subtitle-{{ section_id }} {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(0,0,0,0.6);
+    line-height: 1.4;
+  }
+
+  .pgwt-card-price-{{ section_id }} {
+    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--pgwt-card-price-color);
+  }
+{%- endstyle -%}
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="pgwt-section-{{ section_id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="{{ section.settings.section_header_title | default: section.settings.content_heading | escape }}"
+>
+  <div class="pgwt-wrapper-{{ section_id }}">
+    <div class="pgwt-container-{{ section_id }}">
+
+      {% comment %} --- Top Section Header (e.g. "Your Daily Glow") --- {% endcomment %}
+      {% if section.settings.show_section_header and section.settings.section_header_title != blank %}
+        <header class="pgwt-section-header-{{ section_id }}">
+          {% if section.settings.section_eyebrow != blank %}
+            <span class="pgwt-section-header-eyebrow-{{ section_id }}">{{ section.settings.section_eyebrow | escape }}</span>
+          {% endif %}
+          <{{ section.settings.section_header_tag }} class="pgwt-section-header-title-{{ section_id }}">
+            {{ section.settings.section_header_title | escape }}
+          </{{ section.settings.section_header_tag }}>
+          {% if section.settings.section_header_desc != blank %}
+            <div class="pgwt-section-header-desc-{{ section_id }}">{{ section.settings.section_header_desc }}</div>
+          {% endif %}
+        </header>
+      {% endif %}
+
+      {% comment %} --- Main Split Layout --- {% endcomment %}
+      <div class="pgwt-layout-{{ section_id }}">
+
+        {% comment %} --- Story / Text Content Column --- {% endcomment %}
+        <div class="pgwt-text-col-{{ section_id }}">
+          <div class="pgwt-text-content-{{ section_id }}">
+            {% if section.settings.content_eyebrow != blank %}
+              <span class="pgwt-content-eyebrow-{{ section_id }}">{{ section.settings.content_eyebrow | escape }}</span>
+            {% endif %}
+
+            {% if section.settings.content_heading != blank %}
+              <{{ section.settings.content_heading_tag }} class="pgwt-content-heading-{{ section_id }}">
+                {{ section.settings.content_heading | escape }}
+              </{{ section.settings.content_heading_tag }}>
+            {% endif %}
+
+            {% if section.settings.content_body != blank %}
+              <div class="pgwt-content-desc-{{ section_id }}">
+                {{ section.settings.content_body }}
+              </div>
+            {% endif %}
+
+            {% if section.settings.primary_btn_label != blank or section.settings.secondary_btn_label != blank %}
+              <div class="pgwt-content-actions-{{ section_id }}">
+                {% if section.settings.primary_btn_label != blank %}
+                  <a
+                    href="{{ section.settings.primary_btn_link | default: '#' }}"
+                    class="{% if section.settings.primary_btn_style == 'underline' %}pgwt-link-underline-{{ section_id }}{% elsif section.settings.primary_btn_style == 'solid' %}pgwt-btn-solid-{{ section_id }}{% else %}pgwt-btn-outline-{{ section_id }}{% endif %}"
+                    {% if section.settings.primary_btn_target_blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                  >
+                    <span>{{ section.settings.primary_btn_label | escape }}</span>
+                    {% if section.settings.primary_btn_show_arrow %}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% endif %}
+
+                {% if section.settings.secondary_btn_label != blank %}
+                  <a
+                    href="{{ section.settings.secondary_btn_link | default: '#' }}"
+                    class="pgwt-btn-secondary-{{ section_id }}"
+                    {% if section.settings.secondary_btn_target_blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                  >
+                    <span>{{ section.settings.secondary_btn_label | escape }}</span>
+                    {% if section.settings.secondary_btn_show_arrow %}
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% comment %} --- Product Cards Column --- {% endcomment %}
+        <div class="pgwt-cards-col-{{ section_id }}">
+          <product-grid-slider-{{ section_id }} class="pgwt-slider-component-{{ section_id }}" data-cards-count="{{ section.blocks.size }}">
+            <div class="pgwt-cards-grid-{{ section_id }} {% if section.settings.mobile_card_layout == 'slider' %}pgwt-slider-track-{{ section_id }}{% endif %}" id="pgwt-track-{{ section_id }}">
+              {% for block in section.blocks %}
+                {% assign card_product = block.settings.product %}
+                {% assign card_img = block.settings.image | default: card_product.featured_image %}
+                {% assign card_title = block.settings.title | default: card_product.title %}
+                {% assign card_target_url = block.settings.card_link | default: card_product.url | default: '#' %}
+                {% assign card_btn_label = block.settings.button_label | default: section.settings.default_card_btn_label %}
+                {% assign card_btn_label = block.settings.button_label %}
+                {% assign card_btn_url = block.settings.button_link | default: card_target_url %}
+
+                <article
+                  class="pgwt-card-item-{{ section_id }} pgwt-card-block-{{ block.id }}"
+                  {{ block.shopify_attributes }}
+                  data-index="{{ forloop.index0 }}"
+                >
+                  {% comment %} Optional Floating Badge {% endcomment %}
+                  {% if block.settings.badge_text != blank %}
+                    <span
+                      class="pgwt-card-badge-{{ section_id }}"
+                      style="background-color: {{ block.settings.badge_bg_color | default: '#111111' }}; color: {{ block.settings.badge_text_color | default: '#ffffff' }};"
+                    >
+                      {{ block.settings.badge_text | escape }}
+                    </span>
+                  {% endif %}
+
+                  {% comment %} Clickable Whole Card Overlay (if whole card is linkable) {% endcomment %}
+                  {% if section.settings.enable_whole_card_link and card_target_url != blank and card_target_url != '#' %}
+                    <a
+                      href="{{ card_target_url }}"
+                      class="pgwt-card-clickable-overlay-{{ section_id }}"
+                      {% if block.settings.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                      aria-label="{{ card_title | default: 'View product' | escape }}"
+                    >
+                      {{ card_title | default: 'View product' | escape }}
+                    </a>
+                  {% endif %}
+
+                  {% comment %} Card Image / Media {% endcomment %}
+                  <div class="pgwt-card-media-wrap-{{ section_id }}">
+                    {% if card_img != blank %}
+                      <img
+                        src="{{ card_img | image_url: width: 900 }}"
+                        srcset="{{ card_img | image_url: width: 400 }} 400w, {{ card_img | image_url: width: 700 }} 700w, {{ card_img | image_url: width: 1000 }} 1000w"
+                        sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 85vw"
+                        alt="{{ card_img.alt | default: card_title | default: 'Product showcase item' | escape }}"
+                        class="pgwt-card-img-{{ section_id }}"
+                        loading="lazy"
+                        width="{{ card_img.width | default: 800 }}"
+                        height="{{ card_img.height | default: 800 }}"
+                      >
+                    {% else %}
+                      {% comment %} Blank area when no image is uploaded {% endcomment %}
+                      <div class="pgwt-card-blank-{{ section_id }}" aria-hidden="true"></div>
+                    {% endif %}
+
+                    {% comment %} Overlay Button Link on the Card (As shown in screenshot) {% endcomment %}
+                    {% if block.settings.button_position != 'below_image' and card_btn_label != blank %}
+                      <div class="pgwt-card-overlay-btn-wrap-{{ section_id }} pos-{{ block.settings.button_position }}">
+                        <a
+                          href="{{ card_btn_url }}"
+                          class="{% if block.settings.button_style == 'underline' %}pgwt-card-btn-underline-{{ section_id }}{% elsif block.settings.button_style == 'solid' %}pgwt-card-btn-solid-{{ section_id }}{% else %}pgwt-card-btn-outline-{{ section_id }}{% endif %}"
+                          {% if block.settings.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                        >
+                          <span>{{ card_btn_label | escape }}</span>
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% comment %} Card Info below image (Optional: Product Title, Subtitle, Price, Button) {% endcomment %}
+                  {% if card_title != blank or block.settings.subtitle != blank or block.settings.price != blank or block.settings.button_position == 'below_image' %}
+                  {% assign show_below_button = false %}
+                  {% if block.settings.button_position == 'below_image' and card_btn_label != blank %}
+                    {% assign show_below_button = true %}
+                  {% endif %}
+                  {% if card_title != blank or block.settings.subtitle != blank or block.settings.price != blank or show_below_button %}
+                    <div class="pgwt-card-info-{{ section_id }}">
+                      {% if card_title != blank %}
+                        <h3 class="pgwt-card-title-{{ section_id }}">{{ card_title | escape }}</h3>
+                      {% endif %}
+
+                      {% if block.settings.subtitle != blank %}
+                        <p class="pgwt-card-subtitle-{{ section_id }}">{{ block.settings.subtitle | escape }}</p>
+                      {% endif %}
+
+                      {% if block.settings.price != blank or card_product.price != blank %}
+                        <div class="pgwt-card-price-{{ section_id }}">
+                          {% if block.settings.price != blank %}
+                            {{ block.settings.price | escape }}
+                          {% elsif card_product.price != blank %}
+                            {{ card_product.price | money }}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+
+                      {% if block.settings.button_position == 'below_image' and card_btn_label != blank %}
+                        <div style="margin-top: 6px;">
+                          <a
+                            href="{{ card_btn_url }}"
+                            class="{% if block.settings.button_style == 'underline' %}pgwt-card-btn-underline-{{ section_id }}{% elsif block.settings.button_style == 'solid' %}pgwt-card-btn-solid-{{ section_id }}{% else %}pgwt-card-btn-outline-{{ section_id }}{% endif %}"
+                            {% if block.settings.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                          >
+                            <span>{{ card_btn_label | escape }}</span>
+                          </a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% endif %}
+
+                </article>
+              {% endfor %}
+            </div>
+
+            {% comment %} Mobile Slider Navigation Controls {% endcomment %}
+            {% if section.settings.mobile_card_layout == 'slider' and section.blocks.size > 1 %}
+              <div class="pgwt-slider-controls-{{ section_id }}" aria-label="Product carousel controls">
+                {% if section.settings.show_mobile_slider_dots %}
+                  <div class="pgwt-slider-dots-{{ section_id }}" role="tablist">
+                    {% for block in section.blocks %}
+                      <button
+                        type="button"
+                        class="pgwt-slider-dot-{{ section_id }} {% if forloop.first %}is-active{% endif %}"
+                        data-slide-index="{{ forloop.index0 }}"
+                        aria-label="Go to slide {{ forloop.index }}"
+                        role="tab"
+                        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                      ></button>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {% if section.settings.show_mobile_slider_counter %}
+                  <div class="pgwt-slider-counter-{{ section_id }}">
+                    <span class="pgwt-counter-current-{{ section_id }}">1</span> / {{ section.blocks.size }}
+                  </div>
+                {% endif %}
+
+                {% if section.settings.show_mobile_slider_arrows %}
+                  <div class="pgwt-slider-arrows-{{ section_id }}">
+                    <button
+                      type="button"
+                      class="pgwt-slider-arrow-btn-{{ section_id }} pgwt-arrow-prev-{{ section_id }}"
+                      aria-label="Previous slide"
+                      disabled
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="pgwt-slider-arrow-btn-{{ section_id }} pgwt-arrow-next-{{ section_id }}"
+                      aria-label="Next slide"
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </product-grid-slider-{{ section_id }}>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% comment %} --- Lightweight Vanilla JS Component for Mobile Slider Navigation --- {% endcomment %}
+<script>
+  (function () {
+    const componentName = 'product-grid-slider-{{ section_id }}';
+    if (customElements.get(componentName)) return;
+
+    class ProductGridSlider extends HTMLElement {
+      connectedCallback() {
+        this.track = this.querySelector('#pgwt-track-{{ section_id }}');
+        this.cards = this.querySelectorAll('.pgwt-card-item-{{ section_id }}');
+        this.dots = this.querySelectorAll('.pgwt-slider-dot-{{ section_id }}');
+        this.prevBtn = this.querySelector('.pgwt-arrow-prev-{{ section_id }}');
+        this.nextBtn = this.querySelector('.pgwt-arrow-next-{{ section_id }}');
+        this.counterEl = this.querySelector('.pgwt-counter-current-{{ section_id }}');
+
+        if (!this.track || this.cards.length <= 1) return;
+
+        this.initEventListeners();
+      }
+
+      initEventListeners() {
+        let scrollTimeout;
+        this.track.addEventListener(
+          'scroll',
+          () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => this.updateActiveSlide(), 50);
+          },
+          { passive: true }
+        );
+
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        if (this.prevBtn) {
+          this.prevBtn.addEventListener('click', () => this.scrollByDirection(-1));
+        }
+
+        if (this.nextBtn) {
+          this.nextBtn.addEventListener('click', () => this.scrollByDirection(1));
+        }
+      }
+
+      getCurrentIndex() {
+        if (!this.cards.length) return 0;
+        const trackRect = this.track.getBoundingClientRect();
+        let closestIndex = 0;
+        let minDiff = Infinity;
+
+        this.cards.forEach((card, i) => {
+          const cardRect = card.getBoundingClientRect();
+          const diff = Math.abs(cardRect.left - trackRect.left);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestIndex = i;
+          }
+        });
+
+        return closestIndex;
+      }
+
+      updateActiveSlide() {
+        const activeIndex = this.getCurrentIndex();
+
+        // Update Dots
+        this.dots.forEach((dot, i) => {
+          const isActive = i === activeIndex;
+          dot.classList.toggle('is-active', isActive);
+          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        // Update Counter
+        if (this.counterEl) {
+          this.counterEl.textContent = activeIndex + 1;
+        }
+
+        // Update Arrow States
+        if (this.prevBtn) {
+          this.prevBtn.disabled = activeIndex === 0;
+        }
+        if (this.nextBtn) {
+          this.nextBtn.disabled = activeIndex >= this.cards.length - 1;
+        }
+      }
+
+      goToSlide(index) {
+        if (!this.cards[index]) return;
+        const targetCard = this.cards[index];
+        this.track.scrollTo({
+          left: targetCard.offsetLeft - this.track.offsetLeft,
+          behavior: 'smooth',
+        });
+      }
+
+      scrollByDirection(direction) {
+        const currentIndex = this.getCurrentIndex();
+        const nextIndex = Math.max(0, Math.min(this.cards.length - 1, currentIndex + direction));
+        this.goToSlide(nextIndex);
+      }
+    }
+
+    customElements.define(componentName, ProductGridSlider);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Grid with Text",
+  "tag": "section",
+  "class": "section-product-grid-with-text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Top Section Header (Optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_header",
+      "label": "Show top section header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_eyebrow",
+      "label": "Header eyebrow",
+      "placeholder": "e.g. CURATED ROUTINE"
+    },
+    {
+      "type": "text",
+      "id": "section_header_title",
+      "label": "Header title",
+      "default": "Your Daily Glow"
+    },
+    {
+      "type": "select",
+      "id": "section_header_tag",
+      "label": "Header heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "section_header_font_family",
+      "label": "Header font family",
+      "options": [
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans", "label": "Modern Sans-serif" },
+        { "value": "theme", "label": "Theme Default" }
+      ],
+      "default": "serif"
+    },
+    {
+      "type": "select",
+      "id": "section_header_font_weight",
+      "label": "Header font weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "section_header_size_desktop",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Header size (desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "section_header_size_mobile",
+      "min": 20,
+      "max": 42,
+      "step": 2,
+      "unit": "px",
+      "label": "Header size (mobile)",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "section_header_letter_spacing",
+      "min": -2,
+      "max": 6,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Header letter spacing",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "section_header_align",
+      "label": "Header alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "richtext",
+      "id": "section_header_desc",
+      "label": "Header description (optional)"
+    },
+    {
+      "type": "range",
+      "id": "section_header_margin_bottom_desktop",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Header bottom margin (desktop)",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_header_margin_bottom_mobile",
+      "min": 12,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Header bottom margin (mobile)",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Desktop Layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop content position",
+      "options": [
+        { "value": "text_left_cards_right", "label": "Text Left, Cards Right (Reference Style)" },
+        { "value": "cards_left_text_right", "label": "Cards Left, Text Right" }
+      ],
+      "default": "text_left_cards_right"
+    },
+    {
+      "type": "select",
+      "id": "desktop_column_ratio",
+      "label": "Column width ratio (Text / Cards)",
+      "options": [
+        { "value": "30_70", "label": "30% Text / 70% Cards" },
+        { "value": "35_65", "label": "35% Text / 65% Cards (Recommended)" },
+        { "value": "40_60", "label": "40% Text / 60% Cards" },
+        { "value": "45_55", "label": "45% Text / 55% Cards" },
+        { "value": "50_50", "label": "50% Text / 50% Cards" }
+      ],
+      "default": "35_65"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Text column vertical alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "flex-start", "label": "Top" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "column_gap_desktop",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Column gap (desktop)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "column_gap_mobile",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Column gap (mobile)",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Story Text Column"
+    },
+    {
+      "type": "text",
+      "id": "content_eyebrow",
+      "label": "Eyebrow / Kicker",
+      "placeholder": "e.g. SELF-CARE SUNDAY"
+    },
+    {
+      "type": "range",
+      "id": "content_eyebrow_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow font size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "content_eyebrow_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Eyebrow letter spacing",
+      "default": 1.5
+    },
+    {
+      "type": "text",
+      "id": "content_heading",
+      "label": "Main heading",
+      "default": "Little Joys, Everyday"
+    },
+    {
+      "type": "select",
+      "id": "content_heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "content_heading_font_family",
+      "label": "Heading font family",
+      "options": [
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans", "label": "Modern Sans-serif" },
+        { "value": "theme", "label": "Theme Default" }
+      ],
+      "default": "serif"
+    },
+    {
+      "type": "select",
+      "id": "content_heading_font_weight",
+      "label": "Heading font weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "content_heading_size_desktop",
+      "min": 24,
+      "max": 68,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size (desktop)",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "content_heading_size_mobile",
+      "min": 20,
+      "max": 44,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size (mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "content_heading_letter_spacing",
+      "min": -2,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Heading letter spacing",
+      "default": 0
+    },
+    {
+      "type": "richtext",
+      "id": "content_body",
+      "label": "Description text (optional)"
+    },
+    {
+      "type": "range",
+      "id": "content_desc_size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description font size",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "desktop_text_alignment",
+      "label": "Desktop text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_alignment",
+      "label": "Mobile text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 300,
+      "max": 650,
+      "step": 10,
+      "unit": "px",
+      "label": "Content max width",
+      "default": 440
+    },
+    {
+      "type": "header",
+      "content": "Story Button / CTA"
+    },
+    {
+      "type": "text",
+      "id": "primary_btn_label",
+      "label": "Primary button label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "primary_btn_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "select",
+      "id": "primary_btn_style",
+      "label": "Primary button style",
+      "options": [
+        { "value": "underline", "label": "Editorial Underline Link (Reference Style)" },
+        { "value": "solid", "label": "Solid Button" },
+        { "value": "outline", "label": "Outline Button" }
+      ],
+      "default": "underline"
+    },
+    {
+      "type": "checkbox",
+      "id": "primary_btn_show_arrow",
+      "label": "Show inline arrow icon",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "primary_btn_target_blank",
+      "label": "Open in new window",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_btn_font_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button font size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "content_btn_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius (for solid/outline)",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "secondary_btn_label",
+      "label": "Secondary button label (optional)"
+    },
+    {
+      "type": "url",
+      "id": "secondary_btn_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_btn_show_arrow",
+      "label": "Show arrow on secondary button",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_btn_target_blank",
+      "label": "Open secondary button in new window",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product Cards Grid & Container"
+    },
+    {
+      "type": "select",
+      "id": "desktop_cards_per_row",
+      "label": "Desktop cards per row",
+      "options": [
+        { "value": "1", "label": "1 Card per row" },
+        { "value": "2", "label": "2 Cards per row (Reference 2x2 Grid)" },
+        { "value": "3", "label": "3 Cards per row" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_desktop",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Cards grid gap (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "min": 6,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Cards grid gap (mobile)",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Card aspect ratio",
+      "options": [
+        { "value": "square", "label": "Square (1:1 - Reference Style)" },
+        { "value": "portrait_4_5", "label": "Portrait (4:5)" },
+        { "value": "portrait_3_4", "label": "Portrait (3:4)" },
+        { "value": "tall_2_3", "label": "Tall Portrait (2:3)" },
+        { "value": "auto", "label": "Natural Image Ratio" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Card image fit",
+      "options": [
+        { "value": "contain", "label": "Contain (Product cutout inside card)" },
+        { "value": "cover", "label": "Cover (Fills entire card frame)" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Card inner padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border width",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "card_hover_effect",
+      "label": "Card hover effect",
+      "options": [
+        { "value": "zoom", "label": "Delicate Image Zoom" },
+        { "value": "lift", "label": "Elevate Card (Shadow Lift)" },
+        { "value": "border", "label": "Border Glow / Highlight" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "zoom"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_whole_card_link",
+      "label": "Make entire card surface clickable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "default_card_btn_label",
+      "label": "Default card button label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "range",
+      "id": "card_btn_font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Card button font size",
+      "default": 11
+    },
+    {
+      "type": "header",
+      "content": "Mobile Experience"
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile vertical order",
+      "options": [
+        { "value": "cards_first_content_below", "label": "Cards First, Content Below (As requested)" },
+        { "value": "content_first_cards_below", "label": "Content First, Cards Below" }
+      ],
+      "default": "cards_first_content_below"
+    },
+    {
+      "type": "select",
+      "id": "mobile_card_layout",
+      "label": "Mobile card display mode",
+      "options": [
+        { "value": "grid", "label": "Grid Layout" },
+        { "value": "slider", "label": "Interactive Swipe Slider / Carousel" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "mobile_cards_per_row",
+      "label": "Mobile cards per row (if Grid mode)",
+      "options": [
+        { "value": "1", "label": "1 Card per row" },
+        { "value": "2", "label": "2 Cards per row (Compact)" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "mobile_slider_card_width",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile slider card width (peek effect)",
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_slider_dots",
+      "label": "Show pagination dots on mobile slider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_slider_arrows",
+      "label": "Show prev/next arrows on mobile slider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_slider_counter",
+      "label": "Show slide counter (e.g. 1 / 4)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Sizing & Padding"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container maximum width",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding (desktop)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding (desktop)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding (mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding (mobile)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors & Theme"
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "section_header_color",
+      "label": "Section header title color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "content_eyebrow_color",
+      "label": "Content eyebrow color",
+      "default": "#767676"
+    },
+    {
+      "type": "color",
+      "id": "content_heading_color",
+      "label": "Content main heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "content_body_color",
+      "label": "Content body text color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "content_btn_text_color",
+      "label": "Content button text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "content_btn_border_color",
+      "label": "Content button underline / border color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "content_btn_bg_color",
+      "label": "Content button background (for solid)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "content_btn_hover_text_color",
+      "label": "Content button hover text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "content_btn_hover_bg_color",
+      "label": "Content button hover background",
+      "default": "#2b2b2b"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card title text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_price_color",
+      "label": "Card price color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_btn_text_color",
+      "label": "Card button label color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_btn_hover_text_color",
+      "label": "Card button hover label color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_btn_underline_color",
+      "label": "Card button underline color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "slider_dot_color",
+      "label": "Mobile slider dot inactive color",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "color",
+      "id": "slider_dot_active_color",
+      "label": "Mobile slider dot active color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "slider_arrow_bg",
+      "label": "Mobile slider arrow button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "slider_arrow_color",
+      "label": "Mobile slider arrow button icon color",
+      "default": "#111111"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Shopify product (optional)",
+          "info": "Automatically fetches product title, image, price and URL if not customized below."
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Card link URL (overrides product link)"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "Open link in new window",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card title (optional)",
+          "info": "Leave blank if you prefer the clean look shown in the reference photo."
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Card subtitle / short detail (optional)"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Custom price (optional)",
+          "placeholder": "e.g. $24.00"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label (leave blank to hide)",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Custom button link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "underline", "label": "Underline Link (Reference Style)" },
+            { "value": "solid", "label": "Solid Button" },
+            { "value": "outline", "label": "Outline Button" }
+          ],
+          "default": "underline"
+        },
+        {
+          "type": "select",
+          "id": "button_position",
+          "label": "Button position",
+          "options": [
+            { "value": "bottom_left", "label": "Bottom Left (On Image Card - Reference Style)" },
+            { "value": "bottom_right", "label": "Bottom Right" },
+            { "value": "bottom_center", "label": "Bottom Center" },
+            { "value": "below_image", "label": "Below Image in Info Area" }
+          ],
+          "default": "bottom_left"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge label (optional)",
+          "placeholder": "e.g. BESTSELLER"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_color",
+          "label": "Badge background color",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Badge text color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Grid with Text",
+      "settings": {
+        "show_section_header": true,
+        "section_header_title": "Your Daily Glow",
+        "desktop_layout": "text_left_cards_right",
+        "desktop_column_ratio": "35_65",
+        "content_heading": "Little Joys, Everyday",
+        "primary_btn_label": "SHOP NOW",
+        "primary_btn_style": "underline",
+        "card_aspect_ratio": "square",
+        "card_bg_color": "#f4f4f4",
+        "card_padding": 24,
+        "desktop_cards_per_row": "2",
+        "mobile_stack_order": "cards_first_content_below",
+        "mobile_card_layout": "grid",
+        "mobile_cards_per_row": "2"
+      },
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_position": "bottom_left",
+            "button_style": "underline"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_position": "bottom_left",
+            "button_style": "underline"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_position": "bottom_left",
+            "button_style": "underline"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "button_label": "SHOP NOW",
+            "button_position": "bottom_left",
+            "button_style": "underline"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Grid with Text - Preview</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #ffffff;
+      color: #111111;
+      padding: 0;
+      margin: 0;
+    }
+
+    .preview-toolbar {
+      background: #111;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .preview-toolbar h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+    }
+    .toggle-btn {
+      background: #333;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .toggle-btn.active {
+      background: #fff;
+      color: #111;
+    }
+
+    /* Simulation wrapper for mobile preview */
+    .preview-frame-container {
+      transition: max-width 0.3s ease;
+      margin: 0 auto;
+    }
+    .preview-frame-container.mobile-mode {
+      max-width: 420px;
+      border: 12px solid #222;
+      border-radius: 36px;
+      margin: 30px auto;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    /* Section Styles */
+    #shopify-section-preview {
+      --pgwt-bg: #ffffff;
+      --pgwt-container-max-width: 1320px;
+      --pgwt-pt-desktop: 70px;
+      --pgwt-pb-desktop: 70px;
+      --pgwt-pt-mobile: 40px;
+      --pgwt-pb-mobile: 40px;
+
+      --pgwt-col-gap-desktop: 64px;
+      --pgwt-col-gap-mobile: 32px;
+      --pgwt-grid-gap-desktop: 16px;
+      --pgwt-grid-gap-mobile: 12px;
+
+      --pgwt-card-bg: #f4f4f4;
+      --pgwt-card-border-color: #e5e5e5;
+      --pgwt-card-border-width: 0px;
+      --pgwt-card-radius: 0px;
+      --pgwt-card-padding: 24px;
+
+      --pgwt-header-color: #111111;
+      --pgwt-content-heading-color: #111111;
+      --pgwt-content-eyebrow-color: #767676;
+      --pgwt-content-body-color: #555555;
+      --pgwt-content-btn-text: #111111;
+      --pgwt-content-btn-bg: #111111;
+      --pgwt-content-btn-border: #111111;
+      --pgwt-content-btn-hover-text: #000000;
+      --pgwt-content-btn-hover-bg: #2b2b2b;
+
+      --pgwt-card-text-color: #111111;
+      --pgwt-card-price-color: #111111;
+      --pgwt-card-btn-text: #111111;
+      --pgwt-card-btn-hover-text: #000000;
+      --pgwt-card-btn-underline: #111111;
+
+      --pgwt-slider-dot-color: #d1d5db;
+      --pgwt-slider-dot-active: #111111;
+      --pgwt-slider-arrow-bg: #ffffff;
+      --pgwt-slider-arrow-color: #111111;
+
+      background-color: var(--pgwt-bg);
+      width: 100%;
+      position: relative;
+      display: block;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .pgwt-wrapper {
+      padding-top: var(--pgwt-pt-desktop);
+      padding-bottom: var(--pgwt-pb-desktop);
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .pgwt-container {
+      width: 100%;
+      max-width: var(--pgwt-container-max-width);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 1024px) {
+      .pgwt-container {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+    }
+
+    .pgwt-section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .pgwt-section-header-title {
+      margin: 0;
+      color: var(--pgwt-header-color);
+      font-size: 38px;
+      line-height: 1.25;
+      font-weight: 400;
+      font-family: "Playfair Display", "Didot", "Bodoni MT", "Georgia", "Baskerville", serif;
+      letter-spacing: 0px;
+    }
+
+    .pgwt-layout {
+      display: flex;
+      flex-direction: row;
+      gap: var(--pgwt-col-gap-desktop);
+      align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .pgwt-text-col {
+      width: 35%;
+      flex: 0 0 35%;
+      box-sizing: border-box;
+    }
+
+    .pgwt-cards-col {
+      width: 65%;
+      flex: 0 0 65%;
+      box-sizing: border-box;
+    }
+
+    .pgwt-text-content {
+      max-width: 440px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .pgwt-content-heading {
+      margin: 0 0 24px 0;
+      color: var(--pgwt-content-heading-color);
+      font-size: 44px;
+      line-height: 1.2;
+      font-weight: 500;
+      font-family: "Playfair Display", "Didot", "Bodoni MT", "Georgia", "Baskerville", serif;
+    }
+
+    .pgwt-link-underline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--pgwt-content-btn-text);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid var(--pgwt-content-btn-border);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pgwt-link-underline:hover {
+      opacity: 0.75;
+      transform: translateY(-1px);
+    }
+
+    .pgwt-cards-grid {
+      display: grid;
+      gap: var(--pgwt-grid-gap-desktop);
+      width: 100%;
+      box-sizing: border-box;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pgwt-card-item {
+      position: relative;
+      background-color: var(--pgwt-card-bg);
+      border-radius: var(--pgwt-card-radius);
+      border: var(--pgwt-card-border-width) solid var(--pgwt-card-border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    }
+
+    .pgwt-card-media-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--pgwt-card-padding);
+      box-sizing: border-box;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+    }
+
+    .pgwt-card-media-wrap svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pgwt-card-item:hover .pgwt-card-media-wrap svg {
+      transform: scale(1.05);
+    }
+
+    .pgwt-card-overlay-btn-wrap {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 3;
+    }
+
+    .pgwt-card-btn-underline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--pgwt-card-btn-text);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 3px;
+      border-bottom: 1.5px solid var(--pgwt-card-btn-underline);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pgwt-card-btn-underline:hover {
+      opacity: 0.75;
+    }
+
+    /* Mobile overrides when container is mobile width */
+    @media (max-width: 767px) {
+      .pgwt-wrapper {
+        padding-top: var(--pgwt-pt-mobile);
+        padding-bottom: var(--pgwt-pb-mobile);
+      }
+      .pgwt-layout {
+        flex-direction: column-reverse;
+        gap: var(--pgwt-col-gap-mobile);
+      }
+      .pgwt-text-col, .pgwt-cards-col {
+        width: 100%;
+        flex: 0 0 100%;
+      }
+      .pgwt-section-header {
+        margin-bottom: 28px;
+      }
+      .pgwt-section-header-title {
+        font-size: 28px;
+      }
+      .pgwt-content-heading {
+        font-size: 30px;
+        margin-bottom: 18px;
+      }
+      .pgwt-cards-grid {
+        gap: var(--pgwt-grid-gap-mobile);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-toolbar">
+    <h1>Product Grid with Text — Live HTML Demo</h1>
+    <div class="toggle-group">
+      <button class="toggle-btn active" onclick="setMode('desktop')">Desktop View</button>
+      <button class="toggle-btn" onclick="setMode('mobile')">Mobile View (420px)</button>
+    </div>
+  </div>
+
+  <div class="preview-frame-container" id="frame-container">
+    <section id="shopify-section-preview">
+      <div class="pgwt-wrapper">
+        <div class="pgwt-container">
+
+          <!-- Section Header -->
+          <header class="pgwt-section-header">
+            <h2 class="pgwt-section-header-title">Your Daily Glow</h2>
+          </header>
+
+          <!-- Main Split Layout -->
+          <div class="pgwt-layout">
+
+            <!-- Story Text Column -->
+            <div class="pgwt-text-col">
+              <div class="pgwt-text-content">
+                <h2 class="pgwt-content-heading">Little Joys, Everyday</h2>
+                <div>
+                  <a href="#" class="pgwt-link-underline">SHOP NOW</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Cards Column -->
+            <div class="pgwt-cards-col">
+              <div class="pgwt-cards-grid">
+
+                <!-- Card 1 -->
+                <article class="pgwt-card-item">
+                  <div class="pgwt-card-media-wrap">
+                    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="400" height="400" fill="#f4f4f4"/>
+                      <defs>
+                        <radialGradient id="tieDye1" cx="50%" cy="50%" r="65%">
+                          <stop offset="0%" stop-color="#ff4b8b"/>
+                          <stop offset="45%" stop-color="#ff758c"/>
+                          <stop offset="70%" stop-color="#ffb199"/>
+                          <stop offset="100%" stop-color="#e02871"/>
+                        </radialGradient>
+                        <radialGradient id="tieDye2" cx="40%" cy="40%" r="55%">
+                          <stop offset="0%" stop-color="#ff8fab"/>
+                          <stop offset="50%" stop-color="#fb6f92"/>
+                          <stop offset="100%" stop-color="#d90466"/>
+                        </radialGradient>
+                        <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+                          <feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity="0.08"/>
+                        </filter>
+                      </defs>
+                      <g filter="url(#softShadow)">
+                        <path d="M125 150 C125 90 275 90 275 150 C275 180 250 195 240 180 C230 165 210 135 200 135 C190 135 170 165 160 180 C150 195 125 180 125 150 Z" fill="url(#tieDye1)" stroke="#f25f8c" stroke-width="2"/>
+                        <path d="M200 140 C170 105 110 115 105 145 C100 175 160 185 200 150 Z" fill="url(#tieDye1)" opacity="0.95"/>
+                        <path d="M200 140 C230 105 290 115 295 145 C300 175 240 185 200 150 Z" fill="url(#tieDye1)" opacity="0.95"/>
+                        <ellipse cx="200" cy="144" rx="16" ry="14" fill="url(#tieDye2)"/>
+                        <path d="M194 135 C192 145 192 150 195 155 M206 135 C208 145 208 150 205 155" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                      </g>
+                      <g filter="url(#softShadow)">
+                        <ellipse cx="150" cy="245" rx="30" ry="22" fill="url(#tieDye2)"/>
+                        <ellipse cx="150" cy="243" rx="15" ry="9" fill="#f4f4f4" opacity="0.85"/>
+                        <path d="M130 238 C135 252 142 258 150 258 C158 258 165 252 170 238" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                        <ellipse cx="250" cy="245" rx="30" ry="22" fill="url(#tieDye2)"/>
+                        <ellipse cx="250" cy="243" rx="15" ry="9" fill="#f4f4f4" opacity="0.85"/>
+                        <path d="M230 238 C235 252 242 258 250 258 C258 258 265 252 270 238" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                      </g>
+                    </svg>
+                    <div class="pgwt-card-overlay-btn-wrap">
+                      <a href="#" class="pgwt-card-btn-underline">SHOP NOW</a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="pgwt-card-item">
+                  <div class="pgwt-card-media-wrap">
+                    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="400" height="400" fill="#f4f4f4"/>
+                      <defs>
+                        <radialGradient id="bubblePink" cx="35%" cy="30%" r="70%">
+                          <stop offset="0%" stop-color="#ffe5ec"/>
+                          <stop offset="60%" stop-color="#ffb3c6"/>
+                          <stop offset="100%" stop-color="#fb6f92"/>
+                        </radialGradient>
+                        <filter id="cloudShadow" x="-10%" y="-10%" width="130%" height="130%">
+                          <feDropShadow dx="0" dy="10" stdDeviation="12" flood-opacity="0.08"/>
+                        </filter>
+                      </defs>
+                      <g filter="url(#cloudShadow)">
+                        <path d="M120 240 C110 160 140 100 200 95 C260 100 290 160 280 240 C265 242 255 220 258 185 C262 135 235 120 200 120 C165 120 138 135 142 185 C145 220 135 242 120 240 Z" fill="#ffaec0"/>
+                        <circle cx="128" cy="215" r="22" fill="url(#bubblePink)"/>
+                        <circle cx="138" cy="165" r="25" fill="url(#bubblePink)"/>
+                        <circle cx="165" cy="122" r="26" fill="url(#bubblePink)"/>
+                        <circle cx="200" cy="105" r="28" fill="url(#bubblePink)"/>
+                        <circle cx="235" cy="122" r="26" fill="url(#bubblePink)"/>
+                        <circle cx="262" cy="165" r="25" fill="url(#bubblePink)"/>
+                        <circle cx="272" cy="215" r="22" fill="url(#bubblePink)"/>
+                        <ellipse cx="196" cy="98" rx="10" ry="5" fill="#ffffff" opacity="0.6"/>
+                        <ellipse cx="162" cy="116" rx="8" ry="4" fill="#ffffff" opacity="0.5"/>
+                        <ellipse cx="238" cy="116" rx="8" ry="4" fill="#ffffff" opacity="0.5"/>
+                      </g>
+                    </svg>
+                    <div class="pgwt-card-overlay-btn-wrap">
+                      <a href="#" class="pgwt-card-btn-underline">SHOP NOW</a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="pgwt-card-item">
+                  <div class="pgwt-card-media-wrap">
+                    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="400" height="400" fill="#f4f4f4"/>
+                      <defs>
+                        <radialGradient id="bowSoftPink" cx="40%" cy="35%" r="65%">
+                          <stop offset="0%" stop-color="#fff0f3"/>
+                          <stop offset="50%" stop-color="#ffccd5"/>
+                          <stop offset="100%" stop-color="#ff758f"/>
+                        </radialGradient>
+                        <filter id="bowGlow" x="-10%" y="-10%" width="130%" height="130%">
+                          <feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity="0.08"/>
+                        </filter>
+                      </defs>
+                      <g filter="url(#bowGlow)">
+                        <ellipse cx="200" cy="245" rx="46" ry="44" stroke="url(#bowSoftPink)" stroke-width="24" fill="none"/>
+                        <ellipse cx="200" cy="245" rx="46" ry="44" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 6" fill="none" opacity="0.4"/>
+                        <path d="M195 180 C165 145 125 155 120 182 C115 208 160 218 195 190 Z" fill="url(#bowSoftPink)"/>
+                        <path d="M140 178 C155 180 175 185 190 186" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+                        <path d="M205 180 C235 145 275 155 280 182 C285 208 240 218 205 190 Z" fill="url(#bowSoftPink)"/>
+                        <path d="M260 178 C245 180 225 185 210 186" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+                        <rect x="187" y="172" width="26" height="26" rx="7" fill="url(#bowSoftPink)"/>
+                        <path d="M193 175 L193 195 M207 175 L207 195" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+                      </g>
+                    </svg>
+                    <div class="pgwt-card-overlay-btn-wrap">
+                      <a href="#" class="pgwt-card-btn-underline">SHOP NOW</a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Card 4 -->
+                <article class="pgwt-card-item">
+                  <div class="pgwt-card-media-wrap">
+                    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="400" height="400" fill="#f4f4f4"/>
+                      <defs>
+                        <linearGradient id="jadeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#99d98c"/>
+                          <stop offset="50%" stop-color="#52b788"/>
+                          <stop offset="100%" stop-color="#2d6a4f"/>
+                        </linearGradient>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#ffe49e"/>
+                          <stop offset="50%" stop-color="#d4af37"/>
+                          <stop offset="100%" stop-color="#aa7c11"/>
+                        </linearGradient>
+                        <filter id="toolShadow" x="-10%" y="-10%" width="130%" height="130%">
+                          <feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity="0.09"/>
+                        </filter>
+                      </defs>
+                      <g filter="url(#toolShadow)">
+                        <g transform="translate(130, 95)">
+                          <rect x="18" y="15" width="46" height="14" rx="6" fill="url(#jadeGrad)"/>
+                          <path d="M18 22 C8 22 25 45 38 52 C51 45 68 22 64 22" stroke="url(#goldGrad)" stroke-width="3.5" fill="none"/>
+                          <rect x="36" y="50" width="10" height="10" rx="2" fill="url(#goldGrad)"/>
+                          <rect x="37" y="60" width="8" height="65" rx="4" fill="url(#jadeGrad)"/>
+                          <rect x="36" y="125" width="10" height="10" rx="2" fill="url(#goldGrad)"/>
+                          <rect x="26" y="138" width="30" height="11" rx="5" fill="url(#jadeGrad)"/>
+                          <path d="M26 143 C22 143 36 132 41 132 C46 132 60 143 56 143" stroke="url(#goldGrad)" stroke-width="2.5" fill="none"/>
+                        </g>
+                        <g transform="translate(230, 140)">
+                          <path d="M30 15 C45 0 65 5 70 25 C75 55 55 95 35 125 C15 95 5 55 10 30 C15 10 25 10 30 15 Z" fill="url(#jadeGrad)"/>
+                          <path d="M28 35 C38 55 42 75 32 105" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+                        </g>
+                      </g>
+                    </svg>
+                    <div class="pgwt-card-overlay-btn-wrap">
+                      <a href="#" class="pgwt-card-btn-underline">SHOP NOW</a>
+                    </div>
+                  </div>
+                </article>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function setMode(mode) {
+      const container = document.getElementById('frame-container');
+      const buttons = document.querySelectorAll('.toggle-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      if (mode === 'mobile') {
+        container.classList.add('mobile-mode');
+        buttons[1].classList.add('active');
+      } else {
+        container.classList.remove('mobile-mode');
+        buttons[0].classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
+
