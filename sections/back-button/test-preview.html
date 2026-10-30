@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Back Button — Interactive Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f7f7f8;
+      color: #111111;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .demo-bar {
+      width: 100%;
+      background: #111;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .demo-bar h1 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+    .ctrl-btn {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .ctrl-btn.active {
+      background: #fff;
+      color: #111;
+      font-weight: 600;
+    }
+
+    /* Mobile Device Frame Simulation */
+    .mobile-frame {
+      width: 390px;
+      min-height: 720px;
+      background: #ffffff;
+      border: 12px solid #1a1a1a;
+      border-radius: 40px;
+      margin: 24px auto;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Simulated Mobile Header (Minimog Style) */
+    .sim-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid #eeeeee;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .sim-header .menu-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .sim-header .logo {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .sim-header .actions svg {
+      width: 20px;
+      height: 20px;
+      margin-left: 14px;
+    }
+
+    /* Back Button Section Preview */
+    .bb-preview-section {
+      padding: 12px 20px;
+      border-bottom: 1px solid #f2f2f2;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      transition: all 0.25s ease;
+    }
+
+    .bb-preview-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #111111;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .bb-preview-btn:hover {
+      opacity: 0.75;
+      transform: translateX(-2px);
+    }
+    .bb-preview-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.4;
+    }
+
+    /* Style variants */
+    .style-pill {
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 30px;
+      padding: 8px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .style-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .style-circle span {
+      display: none;
+    }
+
+    /* Simulated Collection / Product Content */
+    .sim-content {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .sim-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 26px;
+      margin-bottom: 16px;
+      color: #111;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .sim-card {
+      background: #f8f8f9;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .sim-card-img {
+      height: 140px;
+      background: #eaeaea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 11px;
+    }
+    .sim-card-info {
+      padding: 10px;
+    }
+    .sim-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sim-card-price {
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-bar">
+    <h1>Smart Back Button — Mobile Simulation</h1>
+    <div class="controls">
+      <button class="ctrl-btn active" onclick="setStyle('text_link')">Text Link</button>
+      <button class="ctrl-btn" onclick="setStyle('pill')">Pill Style</button>
+      <button class="ctrl-btn" onclick="setStyle('circle')">Circle Style</button>
+      <button class="ctrl-btn" onclick="setLabel('Back')">Label: Back</button>
+      <button class="ctrl-btn" onclick="setLabel('Back to Handbags')">Label: Back to Handbags</button>
+    </div>
+  </div>
+
+  <div class="mobile-frame">
+    <!-- Header -->
+    <header class="sim-header">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </div>
+      <div class="logo">goodmorning</div>
+      <div class="actions">
+        <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+    </header>
+
+    <!-- Back Button Section -->
+    <div class="bb-preview-section" id="bb-section">
+      <a href="javascript:void(0)" class="bb-preview-btn" id="bb-btn" onclick="alert('Smart Back Clicked: Instantly navigates back to the previous collection category!')">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span id="bb-label-text">Back to Handbags</span>
+      </a>
+    </div>
+
+    <!-- Product / Category Page Simulation -->
+    <div class="sim-content">
+      <h2 class="sim-title">Handbags</h2>
+      <div class="sim-grid">
+        <div class="sim-card">
+          <div class="sim-card-img">PU Leather Bag</div>
+          <div class="sim-card-info">
+            <div class="sim-card-title">PU Leather Crossbody</div>
+            <div class="sim-card-price">$39.07</div>
+          </div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-img">Striped Bag</div>
+          <div class="sim-card-info">
+            <div class="sim-card-title">Striped Casual Tote</div>
+            <div class="sim-card-price">$30.34</div>
+          </div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-img">Classic Satchel</div>
+          <div class="sim-card-info">
+            <div class="sim-card-title">Retro Shoulder Bag</div>
+            <div class="sim-card-price">$45.00</div>
+          </div>
+        </div>
+        <div class="sim-card">
+          <div class="sim-card-img">Mini Crossbody</div>
+          <div class="sim-card-info">
+            <div class="sim-card-title">Evening Clutch</div>
+            <div class="sim-card-price">$28.50</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setStyle(style) {
+      const btn = document.getElementById('bb-btn');
+      btn.className = 'bb-preview-btn';
+      if (style === 'pill') {
+        btn.classList.add('style-pill');
+      } else if (style === 'circle') {
+        btn.classList.add('style-circle');
+      }
+    }
+
+    function setLabel(text) {
+      document.getElementById('bb-label-text').textContent = text;
+    }
+  </script>
+</body>
+</html>
+

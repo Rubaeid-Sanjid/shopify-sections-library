@@ -44,6 +44,7 @@ No attribution required, but a ⭐ on this repo is always appreciated.
 | ![preview](sections/made-to-order-stats/preview.png) | **Made to Order Stats** | High-impact dark athletic banner with custom production lead time metrics, segmented vertical accent dividers, and pill CTA | [View](sections/made-to-order-stats) |
 | ![preview](sections/image-with-text-slider/preview.png) | **Image with Text Slider** | Editorial split section with left/right image positioning, touch/drag multi-image carousel slider, clickable image links, and custom typography | [View](sections/image-with-text-slider) |
 | ![preview](sections/product-grid-with-text/preview.png) | **Product Grid with Text** | Editorial DTC beauty & lifestyle split showcase with 2x2 product card grid, customizable links, signature underline CTAs, and mobile grid/slider modes | [View](sections/product-grid-with-text) |
+| ![preview](sections/back-button/preview.png) | **Back Button** | Smart mobile & desktop back navigation resolving deep submenu fatigue with smart history back, dynamic collection naming, and floating/inline modes | [View](sections/back-button) |
 
 <!-- Add new rows above this line as you build new sections -->
 

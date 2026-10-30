@@ -1,0 +1,907 @@
+{% comment %}
+  -----------------------------------------------------------------------------
+  Section: Smart Back Button (Mobile & Desktop Navigation)
+  Description: Lightweight, high-converting back button section designed for
+               Shopify Online Store 2.0 (perfect for Minimog, Dawn, Prestige, etc.).
+               Solves deep nested mobile menu frustration by allowing users to
+               instantly return to their previous collection/category without
+               starting over from the mobile hamburger menu. Includes smart
+               browser history fallback, dynamic collection title detection,
+               floating/sticky/inline modes, and complete styling controls.
+  File: sections/back-button/back-button.liquid
+  Author: Rubaeid Sanjid
+  -----------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --bb-text-color: {{ section.settings.text_color }};
+    --bb-text-hover-color: {{ section.settings.text_hover_color }};
+    --bb-icon-color: {{ section.settings.icon_color }};
+    --bb-icon-hover-color: {{ section.settings.icon_hover_color }};
+    --bb-bg-color: {{ section.settings.bg_color }};
+    --bb-bg-hover-color: {{ section.settings.bg_hover_color }};
+    --bb-border-color: {{ section.settings.border_color }};
+    --bb-border-hover-color: {{ section.settings.border_hover_color }};
+    --bb-border-radius: {{ section.settings.border_radius }}px;
+    --bb-font-size: {{ section.settings.font_size }}px;
+    --bb-icon-size: {{ section.settings.icon_size }}px;
+    --bb-container-max-width: {{ section.settings.container_max_width }}px;
+
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+    background-color: {{ section.settings.section_bg_color | default: 'transparent' }};
+  }
+
+  /* Device Visibility */
+  {% if section.settings.device_visibility == 'mobile_only' %}
+    @media (min-width: 768px) {
+      #shopify-section-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  {% elsif section.settings.device_visibility == 'desktop_only' %}
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  {% endif %}
+
+  /* Container & Section Padding */
+  .bb-wrapper-{{ section_id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (min-width: 768px) {
+    .bb-wrapper-{{ section_id }} {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  .bb-container-{{ section_id }} {
+    width: 100%;
+    max-width: var(--bb-container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: {{ section.settings.padding_horizontal_mobile }}px;
+    padding-right: {{ section.settings.padding_horizontal_mobile }}px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    {% if section.settings.alignment == 'center' %}
+      justify-content: center;
+    {% elsif section.settings.alignment == 'right' %}
+      justify-content: flex-end;
+    {% else %}
+      justify-content: flex-start;
+    {% endif %}
+  }
+
+  @media (min-width: 768px) {
+    .bb-container-{{ section_id }} {
+      padding-left: {{ section.settings.padding_horizontal_desktop }}px;
+      padding-right: {{ section.settings.padding_horizontal_desktop }}px;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------
+     Placement Modes: Inline vs. Sticky Top vs. Floating Pill
+     --------------------------------------------------------------------------- */
+  {% if section.settings.placement_style == 'sticky_top' %}
+    #shopify-section-{{ section.id }} {
+      position: sticky;
+      top: {{ section.settings.sticky_top_offset }}px;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      {% if section.settings.sticky_shadow %}
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      {% endif %}
+    }
+  {% elsif section.settings.placement_style == 'floating' %}
+    .bb-wrapper-{{ section_id }} {
+      position: fixed;
+      z-index: 99;
+      pointer-events: none;
+      padding: 0 !important;
+      {% case section.settings.floating_position %}
+        {% when 'bottom_left' %}
+          bottom: {{ section.settings.floating_offset_bottom }}px;
+          left: {{ section.settings.floating_offset_side }}px;
+          right: auto;
+          top: auto;
+        {% when 'bottom_right' %}
+          bottom: {{ section.settings.floating_offset_bottom }}px;
+          right: {{ section.settings.floating_offset_side }}px;
+          left: auto;
+          top: auto;
+        {% when 'top_left' %}
+          top: {{ section.settings.floating_offset_top }}px;
+          left: {{ section.settings.floating_offset_side }}px;
+          right: auto;
+          bottom: auto;
+        {% else %}
+          bottom: {{ section.settings.floating_offset_bottom }}px;
+          left: {{ section.settings.floating_offset_side }}px;
+      {% endcase %}
+    }
+
+    .bb-container-{{ section_id }} {
+      padding: 0 !important;
+      max-width: none !important;
+      width: auto !important;
+      pointer-events: auto;
+    }
+  {% endif %}
+
+  /* ---------------------------------------------------------------------------
+     Back Button Anchor Element & Typography
+     --------------------------------------------------------------------------- */
+  .bb-btn-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: {{ section.settings.icon_gap }}px;
+    font-size: var(--bb-font-size);
+    font-weight: {{ section.settings.font_weight }};
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+    text-transform: {{ section.settings.text_transform }};
+    text-decoration: none;
+    color: var(--bb-text-color);
+    background-color: var(--bb-bg-color);
+    border: {{ section.settings.border_width }}px solid var(--bb-border-color);
+    border-radius: var(--bb-border-radius);
+    line-height: 1;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    {% if section.settings.font_family == 'serif' %}
+      font-family: "Playfair Display", "Didot", "Georgia", serif;
+    {% elsif section.settings.font_family == 'sans' %}
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    {% else %}
+      font-family: inherit;
+    {% endif %}
+
+    /* Padding based on Button Style */
+    {% if section.settings.button_style == 'text_link' %}
+      padding: 6px 0;
+      background: transparent;
+      border: none;
+    {% elsif section.settings.button_style == 'pill' %}
+      padding: 10px 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    {% elsif section.settings.button_style == 'circle' %}
+      width: {{ section.settings.circle_button_size }}px;
+      height: {{ section.settings.circle_button_size }}px;
+      padding: 0;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    {% elsif section.settings.button_style == 'outline' %}
+      padding: 9px 18px;
+    {% elsif section.settings.button_style == 'solid' %}
+      padding: 10px 20px;
+    {% endif %}
+  }
+
+  .bb-btn-{{ section_id }}:hover {
+    color: var(--bb-text-hover-color);
+    background-color: var(--bb-bg-hover-color);
+    border-color: var(--bb-border-hover-color);
+    {% if section.settings.button_style != 'text_link' %}
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    {% else %}
+      opacity: 0.75;
+      transform: translateX(-3px);
+    {% endif %}
+  }
+
+  .bb-btn-{{ section_id }}:active {
+    transform: scale(0.96);
+  }
+
+  /* Optional Underline for Text Link Style */
+  {% if section.settings.button_style == 'text_link' and section.settings.show_text_underline %}
+    .bb-btn-{{ section_id }} .bb-text-{{ section_id }} {
+      border-bottom: 1.5px solid var(--bb-text-color);
+      padding-bottom: 2px;
+      transition: border-color 0.25s ease;
+    }
+    .bb-btn-{{ section_id }}:hover .bb-text-{{ section_id }} {
+      border-bottom-color: var(--bb-text-hover-color);
+    }
+  {% endif %}
+
+  /* Icon Styling */
+  .bb-icon-{{ section_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--bb-icon-size);
+    height: var(--bb-icon-size);
+    flex-shrink: 0;
+    color: var(--bb-icon-color);
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .bb-btn-{{ section_id }}:hover .bb-icon-{{ section_id }} {
+    color: var(--bb-icon-hover-color);
+    transform: translateX(-2px);
+  }
+
+  .bb-icon-{{ section_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    display: block;
+  }
+
+  /* Secondary Breadcrumb hint (optional) */
+  .bb-context-hint-{{ section_id }} {
+    margin-left: 12px;
+    font-size: 13px;
+    color: #888888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+{%- endstyle -%}
+
+<nav
+  id="shopify-section-{{ section.id }}"
+  class="bb-section-{{ section_id }}"
+  data-section-id="{{ section.id }}"
+  aria-label="Back navigation"
+>
+  <div class="bb-wrapper-{{ section_id }}">
+    <div class="bb-container-{{ section_id }}">
+
+      {% comment %} Determine Smart Fallback Destination {% endcomment %}
+      {% assign fallback_destination = section.settings.fallback_url %}
+      {% if fallback_destination == blank %}
+        {% if collection.url != blank %}
+          {% assign fallback_destination = collection.url %}
+        {% elsif product.collections.first.url != blank %}
+          {% assign fallback_destination = product.collections.first.url %}
+        {% else %}
+          {% assign fallback_destination = routes.all_products_collection_url | default: '/collections/all' %}
+        {% endif %}
+      {% endif %}
+
+      <a
+        href="{{ fallback_destination }}"
+        id="back-btn-{{ section_id }}"
+        class="bb-btn-{{ section_id }}"
+        aria-label="{{ section.settings.button_text | default: 'Go back to previous page' | escape }}"
+      >
+        {% comment %} Left Arrow Icon {% endcomment %}
+        {% if section.settings.show_arrow_icon and section.settings.arrow_position == 'left' %}
+          <span class="bb-icon-{{ section_id }}" aria-hidden="true">
+            {% case section.settings.arrow_icon_style %}
+              {% when 'arrow_left_long' %}
+                <!-- Long Sleek Arrow -->
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              {% when 'chevron_left' %}
+                <!-- Clean Modern Chevron -->
+                <svg viewBox="0 0 24 24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              {% when 'arrow_left_curved' %}
+                <!-- Curved Return Arrow -->
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              {% when 'chevron_double' %}
+                <!-- Double Chevron -->
+                <svg viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="11 17 6 12 11 7"></polyline>
+                  <polyline points="18 17 13 12 18 7"></polyline>
+                </svg>
+              {% else %}
+                <!-- Default Chevron -->
+                <svg viewBox="0 0 24 24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            {% endcase %}
+          </span>
+        {% endif %}
+
+        {% comment %} Button Label Text {% endcomment %}
+        {% if section.settings.button_style != 'circle' and section.settings.button_text != blank %}
+          <span class="bb-text-{{ section_id }}">{{ section.settings.button_text | escape }}</span>
+        {% endif %}
+
+        {% comment %} Right Arrow Icon {% endcomment %}
+        {% if section.settings.show_arrow_icon and section.settings.arrow_position == 'right' %}
+          <span class="bb-icon-{{ section_id }}" aria-hidden="true">
+            <svg viewBox="0 0 24 24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </span>
+        {% endif %}
+      </a>
+
+      {% comment %} Optional Collection Title Hint on Desktop {% endcomment %}
+      {% if section.settings.show_breadcrumbs and collection.title != blank %}
+        <span class="bb-context-hint-{{ section_id }}">
+          / {{ collection.title | escape }}
+        </span>
+      {% endif %}
+
+    </div>
+  </div>
+</nav>
+
+{% comment %}
+  -----------------------------------------------------------------------------
+  Smart Navigation Script
+  1. Tracks collection visits in sessionStorage across the session.
+  2. Dynamically updates label to "Back to [Collection Name]" if enabled.
+  3. Uses window.history.back() to restore exact scroll and filter positions.
+  4. Automatically falls back to parent collection or configured URL if
+     user landed from a direct link or external site.
+  -----------------------------------------------------------------------------
+{% endcomment %}
+<script>
+  (function () {
+    // 1. Session Storage Tracking: Remember the last visited collection on collection pages
+    try {
+      {% if template.name == 'collection' %}
+        sessionStorage.setItem('shopify_last_collection_url', window.location.href);
+        sessionStorage.setItem('shopify_last_collection_title', {{ collection.title | json }});
+      {% endif %}
+    } catch (err) {}
+
+    const btn = document.getElementById('back-btn-{{ section_id }}');
+    if (!btn) return;
+
+    // 2. Dynamic Title: Replace button text with "Back to [Collection Name]" if visited from collection
+    {% if section.settings.use_dynamic_title and section.settings.button_style != 'circle' %}
+      try {
+        const storedTitle = sessionStorage.getItem('shopify_last_collection_title');
+        const textSpan = btn.querySelector('.bb-text-{{ section_id }}');
+        if (storedTitle && textSpan) {
+          const prefix = {{ section.settings.button_label_prefix | default: 'Back to ' | json }};
+          textSpan.textContent = prefix + storedTitle;
+        }
+      } catch (err) {}
+    {% endif %}
+
+    // 3. Click Handler with Smart Multi-Tier Fallback
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const actionType = {{ section.settings.action_type | json }};
+      const customFallback = {{ section.settings.fallback_url | default: '' | json }};
+      const liquidDestination = {{ fallback_destination | json }};
+
+      let storedUrl = '';
+      try {
+        storedUrl = sessionStorage.getItem('shopify_last_collection_url') || '';
+      } catch (err) {}
+
+      // Mode A: Fixed URL
+      if (actionType === 'fixed_link' && customFallback) {
+        window.location.href = customFallback;
+        return;
+      }
+
+      // Mode B: Always Parent Collection
+      if (actionType === 'parent_collection') {
+        const target = storedUrl || liquidDestination || customFallback || '/';
+        window.location.href = target;
+        return;
+      }
+
+      // Mode C: Smart History Back (Default & Recommended)
+      const hasValidReferrer = document.referrer &&
+        document.referrer.indexOf(window.location.host) !== -1 &&
+        document.referrer !== window.location.href;
+
+      if (window.history.length > 1 && hasValidReferrer) {
+        window.history.back();
+      } else if (storedUrl && storedUrl !== window.location.href) {
+        window.location.href = storedUrl;
+      } else if (liquidDestination && liquidDestination !== window.location.href) {
+        window.location.href = liquidDestination;
+      } else if (customFallback) {
+        window.location.href = customFallback;
+      } else {
+        window.history.back();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Back Button",
+  "tag": "section",
+  "class": "section-smart-back-button",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Behavior & Navigation Action"
+    },
+    {
+      "type": "select",
+      "id": "action_type",
+      "label": "Click action",
+      "options": [
+        {
+          "value": "smart_history",
+          "label": "Smart History Back (Recommended)"
+        },
+        {
+          "value": "parent_collection",
+          "label": "Always return to Parent Collection"
+        },
+        {
+          "value": "fixed_link",
+          "label": "Fixed Link URL"
+        }
+      ],
+      "default": "smart_history",
+      "info": "Smart History Back returns to previous category/filter state; falls back to collection if user came directly."
+    },
+    {
+      "type": "url",
+      "id": "fallback_url",
+      "label": "Custom fallback URL (optional)",
+      "info": "Used if user landed directly on the page without previous browsing history."
+    },
+    {
+      "type": "header",
+      "content": "Device Visibility & Placement"
+    },
+    {
+      "type": "select",
+      "id": "device_visibility",
+      "label": "Show on devices",
+      "options": [
+        { "value": "mobile_only", "label": "Mobile Only (< 768px - Recommended for Minimog)" },
+        { "value": "desktop_only", "label": "Desktop Only (≥ 768px)" },
+        { "value": "all_devices", "label": "All Devices (Mobile & Desktop)" }
+      ],
+      "default": "mobile_only"
+    },
+    {
+      "type": "select",
+      "id": "placement_style",
+      "label": "Placement style",
+      "options": [
+        { "value": "inline", "label": "Inline Section (Flows within page layout)" },
+        { "value": "sticky_top", "label": "Sticky Top (Fixed under header when scrolling)" },
+        { "value": "floating", "label": "Floating Pill / Circle Button (Fixed on screen)" }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "select",
+      "id": "floating_position",
+      "label": "Floating button position",
+      "options": [
+        { "value": "bottom_left", "label": "Bottom Left (Floating)" },
+        { "value": "bottom_right", "label": "Bottom Right (Floating)" },
+        { "value": "top_left", "label": "Top Left (Floating)" }
+      ],
+      "default": "bottom_left",
+      "info": "Applies when Placement Style is set to Floating."
+    },
+    {
+      "type": "range",
+      "id": "floating_offset_side",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Floating side offset",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "floating_offset_bottom",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Floating bottom offset",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "floating_offset_top",
+      "min": 60,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "label": "Floating top offset",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "sticky_top_offset",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Sticky top offset (below header)",
+      "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_shadow",
+      "label": "Add subtle shadow to sticky bar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button Text & Dynamic Label"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Back",
+      "info": "Leave blank if you want an icon-only circular button."
+    },
+    {
+      "type": "checkbox",
+      "id": "use_dynamic_title",
+      "label": "Dynamic collection name (e.g. 'Back to Handbags')",
+      "default": true,
+      "info": "Automatically detects the previous collection name from session history."
+    },
+    {
+      "type": "text",
+      "id": "button_label_prefix",
+      "label": "Dynamic title prefix",
+      "default": "Back to "
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show category crumb beside button",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Arrow Icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow_icon",
+      "label": "Show back arrow icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrow_icon_style",
+      "label": "Arrow icon style",
+      "options": [
+        { "value": "chevron_left", "label": "Clean Chevron (‹)" },
+        { "value": "arrow_left_long", "label": "Thin Line Arrow (←)" },
+        { "value": "arrow_left_curved", "label": "Curved Return Arrow (↩)" },
+        { "value": "chevron_double", "label": "Double Chevron («)" }
+      ],
+      "default": "chevron_left"
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow position",
+      "options": [
+        { "value": "left", "label": "Left of text" },
+        { "value": "right", "label": "Right of text" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Arrow icon size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "min": 4,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Gap between icon and text",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Button Styling & Shape"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button visual style",
+      "options": [
+        { "value": "text_link", "label": "Minimalist Text Link (Minimog Style)" },
+        { "value": "pill", "label": "Pill Badge with Soft Shadow" },
+        { "value": "circle", "label": "Circular Icon Button (Icon Only)" },
+        { "value": "outline", "label": "Outlined Border Button" },
+        { "value": "solid", "label": "Solid Filled Button" }
+      ],
+      "default": "text_link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_underline",
+      "label": "Show subtle underline for Text Link style",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "circle_button_size",
+      "min": 32,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Circle button size (if Circle style selected)",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius (for pill/outline/solid)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Button alignment",
+      "options": [
+        { "value": "left", "label": "Left (Standard)" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font family",
+      "options": [
+        { "value": "theme", "label": "Theme Default" },
+        { "value": "serif", "label": "Editorial Serif" },
+        { "value": "sans", "label": "Modern Sans-serif" }
+      ],
+      "default": "theme"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.5
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text case",
+      "options": [
+        { "value": "none", "label": "Normal Case (e.g. Back)" },
+        { "value": "uppercase", "label": "UPPERCASE (e.g. BACK)" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Sizing"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container maximum width",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding (mobile)",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding (mobile)",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_desktop",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Side padding (desktop)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Side padding (mobile)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Button text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Button text hover color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Arrow icon color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Arrow icon hover color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Button background (pill/solid/circle)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bg_hover_color",
+      "label": "Button background hover",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Button border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Button border hover color",
+      "default": "#111111"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back Button",
+      "settings": {
+        "button_text": "Back",
+        "device_visibility": "mobile_only",
+        "placement_style": "inline",
+        "button_style": "text_link",
+        "arrow_icon_style": "chevron_left",
+        "use_dynamic_title": true,
+        "button_label_prefix": "Back to "
+      }
+    }
+  ]
+}
+{% endschema %}
+
